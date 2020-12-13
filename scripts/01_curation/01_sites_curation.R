@@ -52,6 +52,11 @@ if (!file.exists("data/remote_sensing/canopy_height/global_coverage/global_canop
 colnames(sites) <- tolower(colnames(sites))
 colnames(sites) <- gsub(" ", "_", colnames(sites))
 
+
+## ....B. Variable recoding ------------
+
+sites <- sites %>% 
+  mutate(treatment = dplyr::recode(treatment, "Old-regrowth" = "Old regrowth"))
 # Extract out sites without canopy heights
 
 sites <- sites %>% 
@@ -66,6 +71,7 @@ sites <- sites %>%
                                            data.frame(x = longitude, y = latitude), 
                                            method = 'simple'),
                                   canopy_height))
+
 ## 3. Write out files ------------
 
 if (exists("global_canopy_height") & !file.exists("data/remote_sensing/canopy_height/global_coverage/global_canopy_height.tif")) {
