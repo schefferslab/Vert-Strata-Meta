@@ -31,28 +31,29 @@ if (!"min_strata_height" %in% colnames(plots)) {
   
 ## B. Join data --------------
 
-data_joined <- sites %>% 
-  full_join(plots)
+sites$link = paste(sites$study_id, "_", sites$sites) 
+plots$link = paste(plots$study_id, "_", plots$linking_id)
+
+
+data_joined = merge(sites, plots, by = "link")
+
 
 ## C. Filter down data according to study bounds ------------
 
 data_joined <- data_joined %>% 
   # Has a data quality flag
-  filter(!is.na(data_quality), 
+  filter(!is.na(spatial_rank), !is.na(data_quality),
          # Is in the tropics or sub-tropics
          latitude >= -30 & latitude <= 30, 
          # Only undisturbed forest
          treatment %in% c("Unlogged", "Old regrowth", "Unlogged and secondary", "Unlogged (with some degraded forest)", "100 ha fragments",
                           "10 ha fragments", "1 ha fragments", "Fragment"),
          # Birds or mammals
-         taxa %in% c("Birds", "Small mammals", "Bats"))
+         taxa %in% c("Birds", "Small mammals", "Bats", "Amphibians", "Primates", "All mammals"))
 
 ## D. Corrections to biodiversity metric values --------------
 ## ....Gather abundance data into 1-m bins -----------
 
-# Do this for just point counts and human observation
-# Have different rows for each 1-meter bin. The abundance of those rows
-# will be the total divided by the bin width
 data_joined <- data_joined %>% 
   mutate(min_strata_height = as.double(min_strata_height), 
          max_strata_height = as.double(max_strata_height)) %>% 
@@ -64,6 +65,7 @@ data_joined <- data_joined %>%
                                               c("needs 1m intervals", "needs 1m height intervals"),
                                             biodiversity_metric_value / strata_width, 
                                             biodiversity_metric_value))
+
 
 ## ....Filter to just previously corrected, or use values corrected on Google Sheet --------
 
@@ -134,7 +136,7 @@ data_joined <- data_joined %>%
   # Convert heights to proportions of max forest height
   mutate(min_strata_height = as.double(min_strata_height) / canopy_height) %>% 
   mutate(max_strata_height = as.double(max_strata_height) / canopy_height) %>% 
-  mutate(mean_strata_height = as.double(mean_strata_height) / canopy_height)
+  mutate(mean_strata_height_p = as.double(mean_strata_height) / canopy_height)
 
 ## 3. QA/QC -------------
 

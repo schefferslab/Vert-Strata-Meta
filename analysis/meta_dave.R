@@ -2,25 +2,35 @@ library(lme4)
 library(AICcmodavg)
 library(glmmTMB)
 library(tidyverse)
+library(readr)
 library(scales)
 library(sjPlot)
 library(scales)
 library(visreg)
 
-dat = read.csv("data/stripped_data/final/data_joined.csv");
-  
-dat$weight = dat$spatial_rank + dat$temporal_bredth_rank + dat$temporal_resolution_rank;
-dat$scaled_met <- rescale(dat$corrected_biodiversity_metric_value, to = c(0.00001, 0.99999));
 
-dat <- dat %>%
-  select(link, study_id.x, method, taxa, continent, biodiversity_metric,
+dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
+  dplyr::mutate(weight = spatial_rank + temporal_bredth_rank + temporal_resolution_rank,
+         taxa = as.factor(taxa),
+         elevation = as.numeric(elevation),
+         scaled_met = as.numeric(rescale(corrected_biodiversity_metric_value, to = c(0.00001, 0.99999))),
+         link = as.factor(link), 
+         method = as.factor(method), 
+         treatment = as.factor(treatment),
+         continent = as.factor(continent),
+         biodiversity_metric = as.factor(biodiversity_metric), 
+         season = as.factor(season), 
+         forest_type = as.factor(forest_type),  
+         mean_strata_height_p = as.numeric(mean_strata_height_p)) %>%
+  dplyr::select(link, study_id.x, method, taxa, continent, biodiversity_metric,
          treatment, season, forest_type, elevation, canopy_height, latitude, longitude, 
-         scaled_met, strata = mean_strata_height_p) %>%
-  mutate(taxa = as.factor(taxa),
-         elevation = as.numeric(elevation))
+         scaled_met, strata = mean_strata_height_p) 
+glimpse(dat)
 
-abund = subset(dat, biodiversity_metric == "abundance")
-rich  = subset(dat, biodiversity_metric == "richness")
+abund <- dat %>%
+  subset(biodiversity_metric == "abundance")
+rich <- dat %>% 
+  subset(biodiversity_metric == "richness")
   
 ggplot(abund, aes(x = strata, y = scaled_met, color = method))+
   geom_point() +
@@ -172,7 +182,7 @@ ggplot(taxa_link_rich, aes(x = reorder(link, estimate), y = estimate, col = reor
   geom_pointrange(aes(ymin = conf.low, 
                       ymax = conf.high)) +
   facet_wrap(~facet) + scale_color_viridis_d("Taxa") + theme_bw()
-ggsave("figures/predictions_richness_parameters_estimates.jpeg", width = 8, height = 8, units = "in", dpi = 300)
+ggsave("analysis/figures/predictions_richness_parameters_estimates_GH.jpeg", width = 8, height = 8, units = "in", dpi = 300)
 
 
 
