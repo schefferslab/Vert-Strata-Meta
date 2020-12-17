@@ -168,7 +168,7 @@ ggsave("figures/predictions_richness_verticality_se.jpeg", width = 8, height = 5
 taxa_link_rich <- rich_cut %>% 
   group_by(taxa,link) %>%
   summarise() %>%
-<<<<<<< HEAD
+<<<<<<< HEAD    
   left_join(model_estimates_rich, by = c("link" = "term"))
 
 ggplot(taxa_link_rich, aes(x = reorder(link, estimate), y = estimate, col = reorder(taxa, taxa))) + 
