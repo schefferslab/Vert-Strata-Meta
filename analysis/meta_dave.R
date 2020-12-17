@@ -8,6 +8,7 @@ library(scales)
 library(sjPlot)
 library(scales)
 library(visreg)
+library(ggplot2)
 
 dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
   dplyr::mutate(weight = spatial_rank + temporal_bredth_rank + temporal_resolution_rank,
@@ -159,18 +160,10 @@ ggplot(rich_cut, aes(y = predictions_fit, x = strata,
                  ymax = predictions_fit + predictions_se.fit*1.96,
                  color = link, fill = link)) + 
   geom_line(size = 1, alpha = 0.3) +
-  geom_ribbon(color = NA, alpha = 0.3) +
+  geom_ribbon(color = NA, alpha = 0.15) +
   facet_wrap(~taxa, scales = "free") + theme_bw() + 
   theme(legend.position = "none") 
 ggsave("figures/predictions_richness_verticality_se.jpeg", width = 8, height = 5, units = "in", dpi = 300)
-
-ggplot(rich, aes(y = predictions_fit, x = strata,
-                 ymin = predictions_lower, ymax = predictions_upper,
-                 color = link, fill = link)) + 
-  geom_line(size = 1, alpha = 0.5) +
-  facet_wrap(~taxa, scales = "free") + theme_bw() + 
-  theme(legend.position = "none")
-ggsave("figures/predictions_richness_verticality.jpeg", width = 8, height = 5, units = "in", dpi = 300)
 
 taxa_link_rich <- rich_cut %>% 
   group_by(taxa,link) %>%
@@ -252,17 +245,16 @@ abund_cut$predictions_se.fit <- abund_predictions$se.fit
 # abund$predictions_upper <- abund_predictions$fit + abund_predictions$se.fit
 # abund$predictions_lower <- abund_predictions$fit - abund_predictions$se.fit
 
-<<<<<<< HEAD
+
 ggplot(abund_cut, aes(y = predictions_fit, x = strata,
                  ymin = predictions_fit - predictions_se.fit*1.96, 
                  ymax = predictions_fit + predictions_se.fit*1.96,
                  color = link, fill = link)) + 
-=======
-ggplot(abund, aes(y = predictions_fit, x = strata,
+
+ggplot(abund_cut, aes(y = predictions_fit, x = strata,
                   ymin = predictions_fit - predictions_se.fit*1.96, 
                   ymax = predictions_fit + predictions_se.fit*1.96,
                   color = link, fill = link)) + 
->>>>>>> 9c1fa5725043f2be02c002bfaf5fd9056b027cb6
   geom_line(size = 1, alpha = 0.3) +
   geom_ribbon(color = NA, alpha = 0.15) +
   facet_wrap(~taxa, scales = "free") + theme_bw() + 
