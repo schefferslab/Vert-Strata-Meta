@@ -189,52 +189,55 @@ ggsave("analysis/figures/predictions_richness_parameters_estimates_GH.jpeg", wid
 ################# abund 
 
 
-
+abund_cut =abund %>% 
+  filter(taxa != "All mammals") %>%
+  filter(taxa != "Primates") 
+  
 mods_abund <- list()
 # strata only models 
-mods_abund[[1]]  <- glmmTMB(scaled_met ~ 1 +                                                                   (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[2]]  <- glmmTMB(scaled_met ~ strata +                                                              (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[3]]  <- glmmTMB(scaled_met ~ strata + I(strata^2) +                                                (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[4]]  <- glmmTMB(scaled_met ~ strata + I(strata^2) + I(strata^3) +                                  (strata|link), family = beta_family(link = "logit"), data = abund)
+mods_abund[[1]]  <- glmmTMB(scaled_met ~ 1 +                                                                   (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[2]]  <- glmmTMB(scaled_met ~ strata +                                                              (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[3]]  <- glmmTMB(scaled_met ~ strata + I(strata^2) +                                                (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[4]]  <- glmmTMB(scaled_met ~ strata + I(strata^2) + I(strata^3) +                                  (strata|link), family = beta_family(link = "logit"), data = abund_cut)
 # strata and taxa
-mods_abund[[5]]  <- glmmTMB(scaled_met ~ strata + taxa +                                                       (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[6]]  <- glmmTMB(scaled_met ~ strata + I(strata^2) + I(strata^2) + taxa +                           (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[7]]  <- glmmTMB(scaled_met ~ strata + I(strata^2) + I(strata^3) + taxa +                           (strata|link), family = beta_family(link = "logit"), data = abund)
+mods_abund[[5]]  <- glmmTMB(scaled_met ~ strata + taxa +                                                       (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[6]]  <- glmmTMB(scaled_met ~ strata + I(strata^2) + I(strata^2) + taxa +                           (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[7]]  <- glmmTMB(scaled_met ~ strata + I(strata^2) + I(strata^3) + taxa +                           (strata|link), family = beta_family(link = "logit"), data = abund_cut)
 # strata and continent 
-mods_abund[[8]]  <- glmmTMB(scaled_met ~ strata + continent +                                                  (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[9]]  <- glmmTMB(scaled_met ~ strata + I(strata^2) + continent +                                    (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[10]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + I(strata^3) + continent +                      (strata|link), family = beta_family(link = "logit"), data = abund)
+mods_abund[[8]]  <- glmmTMB(scaled_met ~ strata + continent +                                                  (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[9]]  <- glmmTMB(scaled_met ~ strata + I(strata^2) + continent +                                    (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[10]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + I(strata^3) + continent +                      (strata|link), family = beta_family(link = "logit"), data = abund_cut)
 # strata and elevation
-mods_abund[[11]] <- glmmTMB(scaled_met ~ strata + elevation +                                                  (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[12]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + elevation +                                    (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[13]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + I(strata^3) + elevation +                      (strata|link), family = beta_family(link = "logit"), data = abund)
+mods_abund[[11]] <- glmmTMB(scaled_met ~ strata + elevation +                                                  (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[12]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + elevation +                                    (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[13]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + I(strata^3) + elevation +                      (strata|link), family = beta_family(link = "logit"), data = abund_cut)
 # strata method
-mods_abund[[14]] <- glmmTMB(scaled_met ~ strata + method +                                                     (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[15]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + method +                                       (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[16]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + I(strata^3) + method +                         (strata|link), family = beta_family(link = "logit"), data = abund)
+mods_abund[[14]] <- glmmTMB(scaled_met ~ strata + method +                                                     (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[15]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + method +                                       (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[16]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + I(strata^3) + method +                         (strata|link), family = beta_family(link = "logit"), data = abund_cut)
 # strata, elevation, and continent 
-mods_abund[[17]] <- glmmTMB(scaled_met ~ strata + elevation + continent +                                      (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[18]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + elevation + continent +                        (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[19]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + I(strata^3) + elevation + continent +          (strata|link), family = beta_family(link = "logit"), data = abund)
+mods_abund[[17]] <- glmmTMB(scaled_met ~ strata + elevation + continent +                                      (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[18]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + elevation + continent +                        (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[19]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + I(strata^3) + elevation + continent +          (strata|link), family = beta_family(link = "logit"), data = abund_cut)
 # strata, method, and continent 
-mods_abund[[20]] <- glmmTMB(scaled_met ~ strata + method + continent +                                         (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[21]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + method + continent +                           (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[22]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + I(strata^3) + method + continent +             (strata|link), family = beta_family(link = "logit"), data = abund)
+mods_abund[[20]] <- glmmTMB(scaled_met ~ strata + method + continent +                                         (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[21]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + method + continent +                           (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[22]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + I(strata^3) + method + continent +             (strata|link), family = beta_family(link = "logit"), data = abund_cut)
 # strata, method, and elevation 
-mods_abund[[23]] <- glmmTMB(scaled_met ~ strata + method + continent + elevation +                             (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[24]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + method + continent + elevation +               (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[25]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + I(strata^3) + method + continent + elevation + (strata|link), family = beta_family(link = "logit"), data = abund)
+mods_abund[[23]] <- glmmTMB(scaled_met ~ strata + method + continent + elevation +                             (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[24]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + method + continent + elevation +               (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[25]] <- glmmTMB(scaled_met ~ strata + I(strata^2) + I(strata^3) + method + continent + elevation + (strata|link), family = beta_family(link = "logit"), data = abund_cut)
 # strata interactions with methods or continent or elevation 
-mods_abund[[26]] <- glmmTMB(scaled_met ~ strata*method +                                                       (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[27]] <- glmmTMB(scaled_met ~ strata*continent +                                                    (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[28]] <- glmmTMB(scaled_met ~ strata*elevation +                                                    (strata|link), family = beta_family(link = "logit"), data = abund)
+mods_abund[[26]] <- glmmTMB(scaled_met ~ strata*method +                                                       (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[27]] <- glmmTMB(scaled_met ~ strata*continent +                                                    (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[28]] <- glmmTMB(scaled_met ~ strata*elevation +                                                    (strata|link), family = beta_family(link = "logit"), data = abund_cut)
 # strata interactions with methods or continent or elevation plus additive relationships continent and elevation and methods 
-mods_abund[[29]] <- glmmTMB(scaled_met ~ strata*method + continent +                                           (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[30]] <- glmmTMB(scaled_met ~ strata*method + elevation +                                           (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[31]] <- glmmTMB(scaled_met ~ strata*continent + method +                                           (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[32]] <- glmmTMB(scaled_met ~ strata*continent + elevation +                                        (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[33]] <- glmmTMB(scaled_met ~ strata*elevation + method +                                           (strata|link), family = beta_family(link = "logit"), data = abund)
-mods_abund[[34]] <- glmmTMB(scaled_met ~ strata*elevation + continent +                                        (strata|link), family = beta_family(link = "logit"), data = abund)
+mods_abund[[29]] <- glmmTMB(scaled_met ~ strata*method + continent +                                           (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[30]] <- glmmTMB(scaled_met ~ strata*method + elevation +                                           (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[31]] <- glmmTMB(scaled_met ~ strata*continent + method +                                           (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[32]] <- glmmTMB(scaled_met ~ strata*continent + elevation +                                        (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[33]] <- glmmTMB(scaled_met ~ strata*elevation + method +                                           (strata|link), family = beta_family(link = "logit"), data = abund_cut)
+mods_abund[[34]] <- glmmTMB(scaled_met ~ strata*elevation + continent +                                        (strata|link), family = beta_family(link = "logit"), data = abund_cut)
 
 aictab(mods_abund)
 
@@ -244,23 +247,31 @@ model_estimates_abund <- get_model_data(mods_abund[[16]], type = "re", transform
 
 abund_predictions <- predict(mods_abund[[16]], se.fit = T, type = "response")
 
-abund$predictions_fit <- abund_predictions$fit
-abund$predictions_se.fit <- abund_predictions$se.fit
+abund_cut$predictions_fit <- abund_predictions$fit
+abund_cut$predictions_se.fit <- abund_predictions$se.fit
 # abund$predictions_upper <- abund_predictions$fit + abund_predictions$se.fit
 # abund$predictions_lower <- abund_predictions$fit - abund_predictions$se.fit
 
-ggplot(abund, aes(y = predictions_fit, x = strata,
+ggplot(abund_cut, aes(y = predictions_fit, x = strata,
                  ymin = predictions_fit - predictions_se.fit*1.96, 
                  ymax = predictions_fit + predictions_se.fit*1.96,
                  color = link, fill = link)) + 
   geom_line(size = 1, alpha = 0.3) +
-  geom_ribbon(color = NA, alpha = 0.3) +
+  geom_ribbon(color = NA, alpha = 0.15) +
   facet_wrap(~taxa, scales = "free") + theme_bw() + 
   theme(legend.position = "none") 
 ggsave("figures/predictions_abundness_verticality_se.jpeg", width = 8, height = 5, units = "in", dpi = 300)
 
+ggplot(abund_cut, aes(y = predictions_fit, x = strata,
+                  ymin = predictions_fit - predictions_se.fit*1.96, 
+                  ymax = predictions_fit + predictions_se.fit*1.96)) + 
+  geom_line(size = 1, alpha = 0.3) +
+  geom_ribbon(color = NA, alpha = 0.3) +
+  coord_cartesian(xlim = c(0,1)) +
+  facet_wrap(~taxa, scales = "free") + theme_bw() + 
+  theme(legend.position = "none") 
 
-taxa_link_abund <- abund %>% 
+taxa_link_abund <- abund_cut %>% 
   filter(taxa != "All mammals") %>%
   filter(taxa != "Primates") %>%
   group_by(taxa,link) %>%
@@ -275,3 +286,18 @@ ggplot(taxa_link_abund, aes(x = reorder(link, estimate), y = estimate, col = reo
   facet_wrap(~facet) + scale_color_viridis_d("Taxa") + theme_bw()
 ggsave("analysis/figures/predictions_abundness_parameters_estimates_GH.jpeg", width = 8, height = 8, units = "in", dpi = 300)
 
+
+
+#
+#
+#    trying to get taxa specific lines
+#
+
+
+mods_overall <- list()
+
+mods_overall[[1]]  <- glmmTMB(scaled_met ~ strata + taxa + biodiversity_metric, family = beta_family(link = "logit"), data = dat)
+
+
+
+plot_model(mods_overall[[1]], type = "re", transform = NULL)
