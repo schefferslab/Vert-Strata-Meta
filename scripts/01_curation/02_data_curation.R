@@ -36,6 +36,7 @@ plots$link = paste(plots$study_id, "_", plots$linking_id)
 
 
 data_joined = merge(sites, plots, by = "link")
+data_joined$study_id =  data_joined$study_id.x
 
 
 ## C. Filter down data according to study bounds ------------
