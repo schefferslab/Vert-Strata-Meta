@@ -199,7 +199,7 @@ ggplot(taxa_link_rich, aes(x = reorder(link, estimate), y = estimate, col = taxa
                     ymax = estimate + ((conf.high - estimate)/1.96)*1.28), size = 1.1) +
   geom_linerange(aes(ymin = conf.low, 
                      ymax = conf.high)) +
-  facet_wrap(~facet) + 
+  facet_wrap(~facet, scales = "free") + 
   scale_color_viridis_d("Taxa") + theme_bw() + theme(legend.position = "bottom")
 ggsave("analysis/figures/predictions_richness_parameters_estimates.jpeg", width = 8, height = 8, units = "in", dpi = 300)
 
