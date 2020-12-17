@@ -168,6 +168,7 @@ ggsave("figures/predictions_richness_verticality_se.jpeg", width = 8, height = 5
 taxa_link_rich <- rich_cut %>% 
   group_by(taxa,link) %>%
   summarise() %>%
+<<<<<<< HEAD
   left_join(model_estimates_rich, by = c("link" = "term"))
 
 ggplot(taxa_link_rich, aes(x = reorder(link, estimate), y = estimate, col = reorder(taxa, taxa))) + 
@@ -181,6 +182,23 @@ ggsave("analysis/figures/predictions_richness_parameters_estimates_GH.jpeg", wid
 
 
 ################# abund   
+=======
+  left_join(model_estimates_rich, by = c("link" = "term")) 
+taxa_link_rich$facet[taxa_link_rich$facet == "link (Intercept)"] <- "Intercept"
+taxa_link_rich$facet[taxa_link_rich$facet == "strata"] <- "Slope"
+
+
+ggplot(taxa_link_rich, aes(x = reorder(link, estimate), y = estimate, col = taxa)) + 
+  ylab("Estimate") + xlab(" ") + coord_flip() + 
+  geom_hline(yintercept = 0, col = "grey80", size = 1, linetype = 1) + geom_point(size = 1.5) + 
+  geom_linerange(aes(ymin = estimate - ((estimate - conf.low)/1.96)*1.28, 
+                    ymax = estimate + ((conf.high - estimate)/1.96)*1.28), size = 1.1) +
+  geom_linerange(aes(ymin = conf.low, 
+                     ymax = conf.high)) +
+  facet_wrap(~facet, scales = "free") + 
+  scale_color_viridis_d("Taxa") + theme_bw() + theme(legend.position = "bottom")
+ggsave("analysis/figures/predictions_richness_parameters_estimates.jpeg", width = 8, height = 8, units = "in", dpi = 300)
+>>>>>>> e1d42c5bd0197a885f654c9a38958857bd591e08
 
 
 abund_cut =abund %>% 
