@@ -14,6 +14,7 @@ library(visreg)
 dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
   dplyr::mutate(weight = spatial_rank + temporal_bredth_rank + temporal_resolution_rank,
                 taxa = as.factor(taxa),
+                taxa_order = factor(taxa, levels = c("Birds","Bats","Small mammals","Amphibians")),
                 elevation = as.numeric(elevation),
                 scaled_met = as.numeric(rescale(corrected_biodiversity_metric_value, to = c(0.00001, 0.99999))),
                 link = as.factor(link), 
@@ -24,7 +25,7 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
                 season = as.factor(season), 
                 forest_type = as.factor(forest_type),  
                 mean_strata_height_p = as.numeric(mean_strata_height_p)) %>%
-  dplyr::select(link, study_id.x, method, taxa, continent, biodiversity_metric,
+  dplyr::select(link, study_id.x, method, taxa, continent, biodiversity_metric, taxa_order,
                 treatment, season, forest_type, elevation, canopy_height, latitude, longitude, 
                 scaled_met, strata = mean_strata_height_p) 
 glimpse(dat)
@@ -164,144 +165,93 @@ rich_cut$predictions_95CI_upper <- rich_cut$predictions_fit + rich_cut$predictio
 rich_cut$predictions_95CI_lower[rich_cut$predictions_95CI_lower < 0] <- 0
 rich_cut$predictions_95CI_upper[rich_cut$predictions_95CI_upper > 1] <- 1
 
-ggplot(rich_cut, aes(y = predictions_fit, x = strata,
+{ggplot(rich_cut, aes(y = predictions_fit, x = strata,
                  ymin = predictions_95CI_lower, 
                  ymax = predictions_95CI_upper,
-                 color = link, fill = link)) + 
-  ylab("Predicted species richness") + xlab("Mean strata height") +
+                 fill = taxa_order, group = link)) + 
+  ylab("Predicted species richness") + xlab("Mean strata height measure") +
   geom_line(size = 1, alpha = 0.3) +
-  geom_ribbon(color = NA, alpha = 0.3) +
-  facet_wrap(~taxa) + theme_bw() + 
-  theme(legend.position = "none") 
-ggsave("analysis/figures/predictions_richness_verticality_se.jpeg", width = 8, height = 5, units = "in", dpi = 300)
+  geom_ribbon(color = NA, alpha = 0.2) +
+  scale_fill_viridis_d("Taxa") +
+  facet_grid(rows = vars(taxa), cols = vars(continent)) + theme_bw() + 
+  theme(legend.position = "bottom")
+ggsave("analysis/figures/richness_strata_full_continent.jpeg", width = 8, height = 6, units = "in", dpi = 300)}
 
-<<<<<<< HEAD
-taxa_link_rich <- rich_cut %>% 
-  group_by(taxa,link) %>%
-  summarise() %>%
-<<<<<<< HEAD    
-  left_join(model_estimates_rich, by = c("link" = "term"))
 
-ggplot(taxa_link_rich, aes(x = reorder(link, estimate), y = estimate, col = reorder(taxa, taxa))) + 
-  ylab("Effect Size") + xlab(" ") + coord_flip() + 
-  geom_pointrange(aes(ymin = conf.low, 
-                      ymax = conf.high)) +
-  geom_hline(yintercept = 0) +
-  facet_wrap(~facet) + scale_color_viridis_d("Taxa") + theme_bw()
-ggsave("analysis/figures/predictions_richness_parameters_estimates_GH.jpeg", width = 8, height = 8, units = "in", dpi = 300)
-=======
-ggplot(rich_cut, aes(y = predictions_fit, x = strata,
+{ggplot(rich_cut, aes(y = predictions_fit, x = strata,
                      ymin = predictions_95CI_lower, 
                      ymax = predictions_95CI_upper,
-                     color = link, fill = link)) + 
-  ylab("Predicted species richness") + xlab("Mean strata height") +
+                     fill = taxa_order)) + 
+  ylab("Predicted species richness") + xlab("Mean strata height measure") +
   geom_line(size = 1, alpha = 0.3) +
   geom_ribbon(color = NA, alpha = 0.3) +
-  facet_wrap(~ taxa + link) +
-  theme_bw() + 
-  theme(legend.position = "none") 
-ggsave("analysis/figures/predictions_richness_verticality_se.jpeg", width = 8, height = 5, units = "in", dpi = 300)
->>>>>>> 3979867d44a99d0197d997d0bbfb28b1f5d3107f
+  facet_wrap(~link + taxa) + theme_bw() + 
+  scale_fill_viridis_d("Taxa") + theme_bw() +
+  theme(legend.position = c(0.3,0.06), legend.box = "horizontal") 
+ggsave("analysis/figures/richness_strata_full.jpeg", width = 18, height = 12, units = "in", dpi = 300)}
 
-ggplot(rich_cut, aes(y = predictions_fit, x = strata,
-                     ymin = predictions_95CI_lower, 
-                     ymax = predictions_95CI_upper,
-                 color = link, fill = link)) + 
-  geom_line(size = 1, alpha = 0.5) +
-  facet_wrap(~taxa) + theme_bw() + 
-  theme(legend.position = "none")
-ggsave("analysis/figures/predictions_richness_verticality.jpeg", width = 8, height = 5, units = "in", dpi = 300)
 
-model_estimates_rich <- get_model_data(mods_rich[[5]], type = "re", transform = NULL)
 
 taxa_link_rich <- rich_cut %>% 
-  group_by(taxa,link,continent) %>%
+  group_by(taxa_order,link,continent) %>%
   summarise() %>%
   full_join(model_estimates_rich, by = c("link" = "term")) 
-taxa_link_rich$facet[taxa_link_rich$facet == "link (Intercept)"] <- "Intercept"
-taxa_link_rich$facet[taxa_link_rich$facet == "strata"] <- "Slope"
 
+taxa_link_rich$facet[taxa_link_rich$facet == "link (Intercept)"] <- "Richness at lowest strata"
+taxa_link_rich$facet[taxa_link_rich$facet == "strata"] <- "Change in richness with increasing strata"
 
-ggplot(taxa_link_rich, aes(x = reorder(link, estimate), y = estimate, col = taxa)) + 
-  ylab("Estimate") + xlab(" ") + coord_flip() + 
-  geom_hline(yintercept = 0, col = "grey80", size = 1, linetype = 1) + geom_point(size = 1.5) + 
-  geom_linerange(aes(ymin = estimate - ((estimate - conf.low)/1.96)*1.28, 
-                    ymax = estimate + ((conf.high - estimate)/1.96)*1.28), size = 1.1) +
-  geom_linerange(aes(ymin = conf.low, 
-                     ymax = conf.high)) +
-  facet_wrap(~facet) + 
-  scale_color_viridis_d("Taxa") + theme_bw() + theme(legend.position = "bottom")
-ggsave("analysis/figures/predictions_richness_parameters_estimates.jpeg", width = 8, height = 8, units = "in", dpi = 300)
+taxa_link_rich_order <- taxa_link_rich %>%
+  group_by(facet, factor(taxa_order, levels = c("Birds","Bats","Small mammals","Amphibians"))) %>%
+  arrange(estimate, .by_group = T)
 
-ggplot(taxa_link_rich, aes(x = reorder(link, estimate), y = estimate, col = continent)) + 
-  ylab("Estimate") + xlab(" ") + coord_flip() + 
-  geom_hline(yintercept = 0, col = "grey80", size = 1, linetype = 1) + geom_point(size = 1.5) + 
-  geom_linerange(aes(ymin = estimate - ((estimate - conf.low)/1.96)*1.28, 
-                     ymax = estimate + ((conf.high - estimate)/1.96)*1.28), size = 1.1) +
-  geom_linerange(aes(ymin = conf.low, 
-                     ymax = conf.high)) +
-  facet_wrap(~facet * taxa, scales = "free") + 
-  scale_color_viridis_d("Taxa") + theme_bw() + 
-  theme(legend.position = c(0.8,0.1))
-ggsave("analysis/figures/predictions_richness_parameters_estimates_taxa.jpeg", width = 12, height = 12, units = "in", dpi = 300)
+taxa_link_rich_order$order <- rep(NA, nrow(taxa_link_rich))
+taxa_link_rich_order$order[taxa_link_rich_order$facet == "Richness at lowest strata"] <- 
+  1:length(taxa_link_rich_order$order[taxa_link_rich_order$facet == "Richness at lowest strata"])
+taxa_link_rich_order$order[taxa_link_rich_order$facet == "Change in richness with increasing strata"] <- 
+  1:length(taxa_link_rich_order$order[taxa_link_rich_order$facet == "Change in richness with increasing strata"])
+glimpse(taxa_link_rich_order)
 
-ggplot(taxa_link_rich, aes(x = reorder(link, estimate), y = estimate, col = continent)) + 
-  ylab("Estimate") + xlab(" ") + coord_flip() + 
-  geom_hline(yintercept = 0, col = "grey80", size = 1, linetype = 1) + geom_point(size = 1.5) + 
-  geom_linerange(aes(ymin = estimate - ((estimate - conf.low)/1.96)*1.28, 
-                     ymax = estimate + ((conf.high - estimate)/1.96)*1.28), size = 1.1) +
-  geom_linerange(aes(ymin = conf.low, 
-                     ymax = conf.high)) +
-  facet_grid(rows = vars(facet),
-             cols = vars(taxa), scales = "free") + 
-  scale_color_viridis_d("Taxa") + theme_bw() + 
-  theme(legend.position = "bottom")
-ggsave("analysis/figures/predictions_richness_parameters_estimates_taxa_grid.jpeg", width = 8, height = 12, units = "in", dpi = 300)
-
-ggplot(taxa_link_rich, aes(x = reorder(link, estimate), y = estimate, col = continent)) + 
-  ylab("Estimate") + xlab(" ") + coord_flip() + 
-  geom_hline(yintercept = 0, col = "grey80", size = 1, linetype = 1) + geom_point(size = 1.5) + 
-  geom_linerange(aes(ymin = estimate - ((estimate - conf.low)/1.96)*1.28, 
-                     ymax = estimate + ((conf.high - estimate)/1.96)*1.28), size = 1.1) +
-  geom_linerange(aes(ymin = conf.low, 
-                     ymax = conf.high)) +
-  facet_grid(cols = vars(facet),
-             rows = vars(taxa), scales = "free") + 
-  scale_color_viridis_d("Taxa") + theme_bw() + 
-  theme(legend.position = "bottom")
-ggsave("analysis/figures/predictions_richness_parameters_estimates_taxa_grid_rev.jpeg", width = 8, height = 12, units = "in", dpi = 300)
-
-taxa_link_rich_avg <- taxa_link_rich %>%
-  group_by(taxa, facet) %>%
+taxa_link_rich_avg <- taxa_link_rich_order %>%
+  group_by(taxa_order, facet) %>%
   summarize(estimate = mean(estimate),
-            conf.high = mean(conf.high),
-            conf.low = mean(conf.low))
+          conf.high = mean(conf.high),
+          conf.low = mean(conf.low))
+taxa_link_rich_avg$order <- rep(NA, nrow(taxa_link_rich_avg))
+taxa_link_rich_avg$order[taxa_link_rich_avg$facet == "Richness at lowest strata"] <- 
+  1:length(taxa_link_rich_avg$order[taxa_link_rich_avg$facet == "Richness at lowest strata"])
+taxa_link_rich_avg$order[taxa_link_rich_avg$facet == "Change in richness with increasing strata"] <- 
+  1:length(taxa_link_rich_avg$order[taxa_link_rich_avg$facet == "Change in richness with increasing strata"])
+glimpse(taxa_link_rich_avg)
 
 ## Two panel figure
-col_2_est <- ggplot(taxa_link_rich, aes(x = reorder(link, estimate), y = estimate, col = taxa)) + 
+col_2_est <- ggplot(taxa_link_rich_order, aes(x = rev(order), y = estimate, col = taxa_order)) + 
+  ylab(" ") + xlab(" ") + coord_flip() + 
+  geom_hline(yintercept = 0, col = "grey80", size = 1, linetype = 1) + geom_point(size = 1.5) + 
+  geom_linerange(aes(ymin = estimate - ((estimate - conf.low)/1.96)*1.28, 
+                     ymax = estimate + ((conf.high - estimate)/1.96)*1.28), size = 1.1) +
+  geom_linerange(aes(ymin = conf.low, 
+                     ymax = conf.high)) +
+  scale_x_continuous(breaks = rev(taxa_link_rich_order$order[1:50]), labels = taxa_link_rich_order$link[1:50]) +
+  facet_grid(cols = vars(factor(facet, levels = c("Richness at lowest strata",
+                                                  "Change in richness with increasing strata")))) + 
+  scale_color_viridis_d("Taxa") + theme_bw() + theme(legend.position = "none"); col_2_est
+
+
+col_2_est_avg <- ggplot(taxa_link_rich_avg, aes(x = rev(taxa_order), y = estimate, col = taxa_order)) + 
   ylab("Estimate") + xlab(" ") + coord_flip() + 
   geom_hline(yintercept = 0, col = "grey80", size = 1, linetype = 1) + geom_point(size = 1.5) + 
   geom_linerange(aes(ymin = estimate - ((estimate - conf.low)/1.96)*1.28, 
                      ymax = estimate + ((conf.high - estimate)/1.96)*1.28), size = 1.1) +
   geom_linerange(aes(ymin = conf.low, 
                      ymax = conf.high)) +
-  facet_wrap(~facet) + 
-  scale_color_viridis_d("Taxa") + theme_bw() + theme(legend.position = "none")
-
-
-col_2_est_avg <- ggplot(taxa_link_rich_avg, aes(x = reorder(taxa, estimate), y = estimate, col = taxa)) + 
-  ylab("Estimate") + xlab(" ") + coord_flip() + ylim(-6, 6) +
-  geom_hline(yintercept = 0, col = "grey80", size = 1, linetype = 1) + geom_point(size = 1.5) + 
-  geom_linerange(aes(ymin = estimate - ((estimate - conf.low)/1.96)*1.28, 
-                     ymax = estimate + ((conf.high - estimate)/1.96)*1.28), size = 1.1) +
-  geom_linerange(aes(ymin = conf.low, 
-                     ymax = conf.high)) +
-  facet_grid(cols = vars(facet)) + 
+  scale_x_discrete(labels = rev(c("Birds","Bats","             Small mammals","Amphibians"))) +
+  facet_grid(cols = vars(factor(facet, levels = c("Richness at lowest strata",
+                                                  "Change in richness with increasing strata")))) + 
   scale_color_viridis_d("Taxa") + theme_bw() + 
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom"); col_2_est_avg
 
 ggarrange(col_2_est, col_2_est_avg, ncol = 1, nrow = 2, heights = c(4,1), widths = c(4,1))
-ggsave("analysis/figures/predictions_richness_parameters_estimates_taxa_2_panel.jpeg", width = 6, height = 10, units = "in", dpi = 300)
+ggsave("analysis/figures/predictions_richness_parameters_estimates_taxa_2_panel.jpeg", width = 8, height = 10, units = "in", dpi = 300)
 
 
 ################################
