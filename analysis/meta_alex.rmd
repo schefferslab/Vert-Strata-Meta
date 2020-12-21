@@ -402,7 +402,7 @@ ggsave("analysis/figures/abundence_strata_full.jpeg", width = 18, height = 12, u
 ```{r}
 ## Two panel figure
 col_2_abund_est <- ggplot(taxa_link_abund_order, aes(x = rev(order), y = estimate, col = taxa_order)) + 
-  ylab(" ") + xlab(" ") + coord_flip() + 
+  ylab(" ") + xlab(" ") + coord_flip() + ylim(-7.5,7.5) +
   geom_hline(yintercept = 0, col = "grey80", size = 1, linetype = 1) + geom_point(size = 1.5) + 
   geom_linerange(aes(ymin = estimate - ((estimate - conf.low)/1.96)*1.28, 
                      ymax = estimate + ((conf.high - estimate)/1.96)*1.28), size = 1.1) +
@@ -413,20 +413,23 @@ col_2_abund_est <- ggplot(taxa_link_abund_order, aes(x = rev(order), y = estimat
   facet_grid(cols = vars(factor(facet, levels = c(abund_intercept, abund_slope)))) + 
   scale_color_viridis_d("Taxa") + theme_bw() + theme(legend.position = "none"); col_2_abund_est
 
+est_avg_col <- viridis::viridis(4)
+est_avg_col_order <- c(est_avg_col[2],est_avg_col[2],est_avg_col[3:4])
 
-col_2_abund_est_avg <- ggplot(taxa_link_abund_avg, aes(x = rev(taxa_order), y = estimate, col = taxa_order)) + 
-  ylab("Estimate") + xlab(" ") + coord_flip() + 
+col_2_abund_est_avg <- ggplot(taxa_link_abund_avg, aes(x = rev(order), y = estimate, col = taxa_order)) + 
+  ylab("Estimate") + xlab(" ") + coord_flip() + ylim(-7.5,7.5) +
   geom_hline(yintercept = 0, col = "grey80", size = 1, linetype = 1) + geom_point(size = 1.5) + 
   geom_linerange(aes(ymin = estimate - ((estimate - conf.low)/1.96)*1.28, 
                      ymax = estimate + ((conf.high - estimate)/1.96)*1.28), size = 1.1) +
   geom_linerange(aes(ymin = conf.low, 
                      ymax = conf.high)) +
-  scale_x_discrete(labels = rev(c("Bats","Birds","             Small mammals","Amphibians"))) +
+  scale_x_continuous(breaks = c(3,4,2,1),
+                     labels = c("Birds", "Bats", "Small mammals", "Amphibians")) +
   facet_grid(cols = vars(factor(facet, levels = c(abund_intercept, abund_slope)))) + 
-  scale_color_viridis_d("Taxa") + theme_bw() + 
+  scale_color_manual(values = est_avg_col_order) + theme_bw() + 
   theme(legend.position = "bottom"); col_2_abund_est_avg
 
 ggarrange(col_2_abund_est, col_2_abund_est_avg, ncol = 1, nrow = 2, heights = c(4,1), widths = c(4,1))
-ggsave("analysis/figures/predictions_abundence_parameters_estimates_taxa_2_panel.jpeg", width = 8, height = 10, units = "in", dpi = 300)
+ggsave("analysis/figures/predictions_abundence_parameters_estimates_taxa_2_panel.jpeg", width = 8, height = 12, units = "in", dpi = 72)
 ```
 
