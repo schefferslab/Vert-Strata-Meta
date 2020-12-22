@@ -876,7 +876,7 @@ col_2_slope_rich_avg <- ggplot(taxa_link_slope_rich_avg, aes(x = rev(reorder(tax
                      ymax = CI_95_upper)) +
   geom_linerange(aes(ymin = estimate - 0.1,
                      ymax = estimate + 0.1), size = 2) +
-  geom_text(aes(x = taxa_order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
+  geom_text(aes(x = rev(taxa_order), y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
   scale_x_discrete(labels = rev(c("              Small Mammals", "Amphibians", "Birds", "Bats"))) +
   scale_color_viridis_d("Taxa") + theme_bw() + 
   theme(legend.position = "none", axis.text.x.top = element_text(size = 2)); col_2_slope_rich_avg
@@ -890,13 +890,13 @@ col_2_slope_abund_avg <- ggplot(taxa_link_slope_abund_avg, aes(x = rev(reorder(t
                      ymax = CI_95_upper)) +
   geom_linerange(aes(ymin = estimate - 0.1,
                      ymax = estimate + 0.1), size = 2) +
-  geom_text(aes(x = taxa_order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
+  geom_text(aes(x = rev(taxa_order), y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
   scale_x_discrete(labels = c("Bats", "Birds", "              Small Mammals", "Amphibians")) +
   scale_color_viridis_d("Taxa") + theme_bw() + 
   theme(legend.position = "right", axis.text.x.top = element_text(size = 2)); col_2_slope_abund_avg
 
 col_2_slope_avg <- ggarrange(col_2_slope_rich_avg, col_2_slope_abund_avg, widths = c(1,1.5)); col_2_slope_avg
-ggarrange(col_2_slope_est, col_2_slope_avg, nrow = 2, heights = c(4,1))
-ggsave("analysis/figures/predictions_bio_parameters_link_taxa_4_panel_dodge.jpeg", width = 12, height = 12, units = "in", dpi = 300)
+ggarrange(col_2_slope_est, col_2_slope_avg, nrow = 2, heights = c(6,1))
+ggsave("analysis/figures/predictions_bio_parameters_link_taxa_4_panel_dodge.jpeg", width = 12, height = 10, units = "in", dpi = 300)
 ```
 
