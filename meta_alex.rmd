@@ -2,7 +2,9 @@
 title: "Modeling biodiversity metrics"
 author: "Alex Baecher & Ed Basham"
 date: "12/18/2020"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r load packages, message=FALSE, warning=FALSE}
@@ -24,7 +26,6 @@ output: html_document
 
     )
   )
-  
 }
 ```
 
