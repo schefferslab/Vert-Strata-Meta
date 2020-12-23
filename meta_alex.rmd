@@ -19,7 +19,9 @@ output: html_document
     "sjPlot",
     "ggpubr",
     "scales",
-    "visreg"
+    "visreg",
+    "bbmle"
+
     )
   )
   
@@ -117,7 +119,7 @@ rich <- dat %>%
 
 ################################
 ######### Richness GLMs ########  
-```{r}
+```{r message=FALSE, warning=FALSE}
 mods_rich <- list()
 # strata only models 
 mods_rich[[1]]  <- glmmTMB(scaled_met ~ 1 +                                                (strata|link), family = beta_family(link = "logit"), data = rich)
@@ -175,6 +177,8 @@ for(i in 1:length(mods_rich)){
 rich_modnames <- unlist(rich_mod_names)
 
 rich_aictab <- aictab(cand.set = mods_rich, modnames = unlist(rich_mod_names))
+
+bbmle::AICtab(mods_rich, mnames = unlist(rich_mod_names))
 ```
 
 
@@ -241,7 +245,7 @@ for(i in 1:nrow(rich_beta_intercept)){
                                                        se = rich_beta_intercept_se[i,],
                                                        nobs = nrow(rich))
   rich_modavg_beta_intercept_matrix$Mod.avg.est[i] <- rich_modavg_beta_intercept_list[[i]]$Mod.avg.est
-  rich_modavg_beta_intercept_matrix$Uncond.SE [i] <- rich_modavg_beta_intercept_list[[i]]$Uncond.SE
+  rich_modavg_beta_intercept_matrix$Uncond.SE[i] <- rich_modavg_beta_intercept_list[[i]]$Uncond.SE
   rich_modavg_beta_intercept_matrix$Lower.CL[i] <- rich_modavg_beta_intercept_list[[i]]$Lower.CL
   rich_modavg_beta_intercept_matrix$Upper.CL[i] <- rich_modavg_beta_intercept_list[[i]]$Upper.CL
   
@@ -363,7 +367,7 @@ taxa_link_rich_avg_slope <- taxa_link_rich_avg %>%
 ################################
 ####### Plot predictions #######  
 ```{r}
-{ggplot(rich, aes(y = predictions_fit, x = strata,
+ggplot(rich, aes(y = predictions_fit, x = strata,
                   ymin = predictions_95CI_lower, 
                   ymax = predictions_95CI_upper,
                   fill = taxa_order, group = link)) + 
@@ -373,10 +377,10 @@ taxa_link_rich_avg_slope <- taxa_link_rich_avg %>%
     scale_fill_viridis_d("Taxa") +
     facet_grid(rows = vars(taxa), cols = vars(continent)) +
     theme_bw() + theme(legend.position = "bottom")
-ggsave("analysis/figures/richness_strata_full_continent.jpeg", width = 8, height = 6, units = "in", dpi = 300)}
+ggsave("analysis/figures/richness_strata_full_continent.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
 
-{ggplot(rich, aes(y = predictions_fit, x = strata,
+ggplot(rich, aes(y = predictions_fit, x = strata,
                   ymin = predictions_95CI_lower, 
                   ymax = predictions_95CI_upper,
                   fill = taxa_order)) + 
@@ -386,7 +390,7 @@ ggsave("analysis/figures/richness_strata_full_continent.jpeg", width = 8, height
     facet_wrap(~link + taxa) + theme_bw() + 
     scale_fill_viridis_d("Taxa") + theme_bw() +
     theme(legend.position = c(0.3,0.06), legend.box = "horizontal") 
-ggsave("analysis/figures/richness_strata_full.jpeg", width = 18, height = 12, units = "in", dpi = 300)}
+ggsave("analysis/figures/richness_strata_full.jpeg", width = 18, height = 12, units = "in", dpi = 300)
 ```
 
 ```{r}
@@ -480,7 +484,9 @@ for(i in 1:length(mods_abund)){
 
 abund_modnames <- unlist(abund_mod_names)
 
-(abund_aictab <- aictab(cand.set = mods_abund, modnames = unlist(abund_mod_names)))
+abund_aictab <- aictab(cand.set = mods_abund, modnames = unlist(abund_mod_names))
+
+bbmle::AICtab(mods_abund, mnames = unlist(abund_mod_names))
 ```
 
 
@@ -671,7 +677,7 @@ taxa_link_abund_avg_slope <- taxa_link_abund_avg %>%
 ################################
 ####### Plot predictions #######  
 ```{r}
-{ggplot(abund, aes(y = predictions_fit, x = strata,
+ggplot(abund, aes(y = predictions_fit, x = strata,
                  ymin = predictions_95CI_lower, 
                  ymax = predictions_95CI_upper,
                  fill = taxa_order, group = link)) + 
@@ -681,9 +687,9 @@ taxa_link_abund_avg_slope <- taxa_link_abund_avg %>%
   scale_fill_viridis_d("Taxa") +
   facet_grid(rows = vars(taxa), cols = vars(continent)) + theme_bw() + 
   theme(legend.position = "bottom");
-ggsave("analysis/figures/abundance_strata_full_continent.jpeg", width = 8, height = 6, units = "in", dpi = 300)}
+ggsave("analysis/figures/abundance_strata_full_continent.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
-{ggplot(abund, aes(y = predictions_fit, x = strata,
+ggplot(abund, aes(y = predictions_fit, x = strata,
                      ymin = predictions_95CI_lower, 
                      ymax = predictions_95CI_upper,
                      fill = taxa_order)) + 
@@ -693,7 +699,7 @@ ggsave("analysis/figures/abundance_strata_full_continent.jpeg", width = 8, heigh
   facet_wrap(~link + taxa) + theme_bw() + 
   scale_fill_viridis_d("Taxa") + theme_bw() +
   theme(legend.position = c(0.54,0.05), legend.box = "horizontal");
-ggsave("analysis/figures/abundance_strata_full.jpeg", width = 18, height = 12, units = "in", dpi = 300)}
+ggsave("analysis/figures/abundance_strata_full.jpeg", width = 18, height = 12, units = "in", dpi = 300)
 ```
 
 ```{r}
