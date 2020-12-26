@@ -6,6 +6,7 @@
 ## ....Load packages -------------
 library(tidyverse)
 library(readxl)
+library(data.table)
 
 ## ....Load in data ---------------
 
@@ -69,6 +70,19 @@ data_joined <- data_joined %>%
 
 
 ## ....Filter to just previously corrected, or use values corrected on Google Sheet --------
+
+ints <- data_joined[data_joined$correction_performed_on_data_in_table %like% "intervals" & data_joined$strata_width != 1, ]
+ints$seq = seq(1:nrow(ints))
+
+dups = ints$strata_width
+idx <- rep(1:nrow(ints), dups)
+
+# Use that index to genderate your new data frame of repeated rows
+dupdf <- ints[idx,]
+
+#each row is a duplicate and there are duplicates equal to the strata width - thus, the minimum and maxiumum height need to change to relect each 1 m interval
+
+
 
 ## If biodiver metric corrected == N but subsequent correction is not NA, 
 ## use subsequent correcion as corrected abundance
