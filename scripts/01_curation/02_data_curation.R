@@ -199,7 +199,7 @@ ggplot(filter(data_joined, biodiversity_metric == "abundance"),
   geom_histogram() +
   facet_wrap(~biodiversity_metric)
 
-ggplot(data_joined, aes(mean_strata_height, corrected_biodiversity_metric_value)) +
+ggplot(data_joined, aes(mean_strata_height_p, corrected_biodiversity_metric_value)) +
   geom_point() +
   facet_wrap(~biodiversity_metric)
 
