@@ -163,12 +163,15 @@ triple_groups$investigated_percent = (triple_groups$n.investigated / triple_grou
 #reproduction, shelter,species_interactions, sex, morphology, age, seasonality, diurnality, coexistence, guilds)
 
 
-specifics = triple_groups %>% filter(factors %in% c("food", "structure","climate", "morphology", "shelter", "species_interactions", "sex","age",  "seasonality", "diurnality"))
+specifics = triple_groups %>% filter(factors %in% c("food", "structure","climate", "morphology", "shelter", "species_interactions", "sex","age",  "seasonality", "diurnality")
+                                     #,taxa != "Amphibians"
+                                     )
 
 specifics_tall <- specifics %>% gather(key = Level, value = Value, theorised_percent:investigated_percent)
 
 #create a list which sums the values and orders them to get a nice list of which factors should go in which order - this will still work if you choose different factors above
-list_in_order = aggregate(specifics_tall$Value, by=list(specifics_tall$factors), FUN=sum)
+list_not_in_order = aggregate(specifics_tall$Value, by=list(specifics_tall$factors), FUN=sum)
+list_in_order = list_not_in_order[order(-list_not_in_order$x),]
 
 specifics_tall <- within(specifics_tall, 
                    factors <- factor(factors, levels=list_in_order$Group.1))
@@ -176,7 +179,7 @@ specifics_tall <- within(specifics_tall,
 ggplot(specifics_tall, aes(x = factors, y = Value, fill = Level)) + 
   geom_col(position = "identity") +
   facet_wrap(~taxa, ncol = 1) +
-  ylab("Percent of Papers (Within Taxa)") + xlab("Stratification Factors") +
+  ylab("Percent of Papers") + xlab("Stratification Factors") +
   scale_fill_discrete(name = "Level", labels = c("Investigated", "Theorised"), guide = guide_legend(reverse=TRUE)) +
   theme(legend.position = "bottom", legend.title = element_blank(),
         panel.background = element_blank(),
