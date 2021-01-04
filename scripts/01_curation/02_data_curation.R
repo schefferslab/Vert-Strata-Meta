@@ -89,7 +89,7 @@ data = dupdf%>%
            mutate(new_max_strata_height = max_strata_height - n() + row_number()) %>% # Subtract number of rows in the group, add the row number
   ungroup() %>%
   mutate(min_strata_height = new_min_strata_height, max_strata_height = new_max_strata_height) %>%
-  select(-new_min_strata_height, -new_max_strata_height, -seq)
+  dplyr::select(-new_min_strata_height, -new_max_strata_height, -seq)
 
 data_joined = rbind(data_joined, data)
 data_joined$mean_strata_height = (data_joined$min_strata_height + data_joined$max_strata_height) /2
