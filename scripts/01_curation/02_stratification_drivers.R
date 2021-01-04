@@ -127,6 +127,7 @@ all_factors_taxa = merge(all_factors, studies, by = "study_id")
 
 # here we are just only looking at which ones theorised - so select only the Y for theorised
 grouping = all_factors_taxa %>% filter(theorised == "Y") %>% count(factor, taxa, sort = TRUE)
+# here we are just looking at the ones which are investigated so we remove the NAs and the X's 
 grouping_investigated = all_factors_taxa %>% filter(!is.na(investigated) , investigated != "X" ) %>% count(factor, taxa, sort = TRUE)      ####  this could be chaned to YX or YY for specifics as to if they did or didnt find a relationship
 
 grouping_totals = all_factors_taxa %>% count(factor, taxa, sort = TRUE)
@@ -141,10 +142,13 @@ grouping_totals$link = paste(grouping_totals$factor, grouping_totals$taxa)
 double_groups = merge(grouping, grouping_totals, by = "link", all = TRUE)
 double_groups = merge(double_groups, grouping_investigated, by = "link", all = TRUE)
 
+# selecting the right variables and renaming where necessary
 triple_groups = double_groups %>% dplyr::select(factor.y, taxa.y, n.theorised, n.investigated, n) %>%
-  rename(factor = factor.y, taxa = taxa.y, n.total = n)
+  rename(factors = factor.y, taxa = taxa.y, n.total = n)
+#turn the NA's into 0's (they are true 0's)
 triple_groups[is.na(triple_groups)] <- 0
 
+#calculating the n's as percentages of the total studies for that taxa
 triple_groups$theorised_percent = (triple_groups$n.theorised / triple_groups$n.total) * 100
 triple_groups$investigated_percent = (triple_groups$n.investigated / triple_groups$n.total) * 100
 
@@ -155,24 +159,30 @@ triple_groups$investigated_percent = (triple_groups$n.investigated / triple_grou
 
 ###   good place to select only the factors you want
 
-rbind(climate, light, food, structure,microhabitat, competition, predation,
-      reproduction, shelter,species_interactions, sex, morphology, age, seasonality, diurnality, coexistence, guilds)
+# climate, light, food, structure,microhabitat, competition, predation,
+#reproduction, shelter,species_interactions, sex, morphology, age, seasonality, diurnality, coexistence, guilds)
 
 
-specifics = triple_groups %>% filter(factor %in% c("climate", "food", "structure", "shelter", "sex","age", "morphology", "species_interactions", "seasonality", "diurnality"))
+specifics = triple_groups %>% filter(factors %in% c("food", "structure","climate", "morphology", "shelter", "species_interactions", "sex","age",  "seasonality", "diurnality"))
 
 specifics_tall <- specifics %>% gather(key = Level, value = Value, theorised_percent:investigated_percent)
-DFtall
 
+#create a list which sums the values and orders them to get a nice list of which factors should go in which order - this will still work if you choose different factors above
+list_in_order = aggregate(specifics_tall$Value, by=list(specifics_tall$factors), FUN=sum)
 
-ggplot(specifics_tall, aes(x = factor, y = Value, fill = Level)) + 
+specifics_tall <- within(specifics_tall, 
+                   factors <- factor(factors, levels=list_in_order$Group.1))
+
+ggplot(specifics_tall, aes(x = factors, y = Value, fill = Level)) + 
   geom_col(position = "identity") +
   facet_wrap(~taxa, ncol = 1) +
-  theme(legend.position = "bottom",
+  ylab("Percent of Papers (Within Taxa)") + xlab("Stratification Factors") +
+  scale_fill_discrete(name = "Level", labels = c("Investigated", "Theorised"), guide = guide_legend(reverse=TRUE)) +
+  theme(legend.position = "bottom", legend.title = element_blank(),
         panel.background = element_blank(),
         axis.text.x = element_text(angle = 90))
 
-ggsave("analysis/figures/drivers.jpeg", width = 3, height = 10, units = "in", dpi = 300)
+ggsave("analysis/figures/drivers.jpeg", width = 3.5, height = 10, units = "in", dpi = 300)
 
 ## 3. Write out files ------------
 
