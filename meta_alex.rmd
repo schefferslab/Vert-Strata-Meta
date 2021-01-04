@@ -10,25 +10,23 @@ output:
 # Preparing workspace
 ## Calling libraries
 ```{r load packages, message=FALSE, warning=FALSE}
-{source("scripts/01_curation/00_package_loading.R"); load_packages(
-  c(
-    "lme4",
-    "AICcmodavg",
-    "glmmTMB",
-    "TMB",
-    "tidyverse",
-    "readr",
-    "scales",
-    "formula.tools",
-    "sjPlot",
-    "ggpubr",
-    "scales",
-    "visreg",
-    "bbmle"
+source("scripts/01_curation/00_package_loading.R")
 
-    )
-  )
-}
+load_packages(
+  c("lme4", 
+    "AICcmodavg", 
+    "glmmTMB", 
+    "TMB", 
+    "tidyverse", 
+    "readr", 
+    "scales", 
+    "formula.tools", 
+    "sjPlot", 
+    "ggpubr", 
+    "scales", 
+    "visreg", 
+    "bbmle")
+  ) 
 ```
 
 ## Loading data
@@ -121,6 +119,7 @@ rich <- dat %>%
 ## Richness GLMs
 ```{r message=FALSE, warning=FALSE}
 mods_rich <- list()
+
 # strata only models 
 mods_rich[[1]]  <- glmmTMB(scaled_met ~ 1 +                                                (strata|link), family = beta_family(link = "logit"), data = rich)
 mods_rich[[2]]  <- glmmTMB(scaled_met ~ strata +                                           (strata|link), family = beta_family(link = "logit"), data = rich)

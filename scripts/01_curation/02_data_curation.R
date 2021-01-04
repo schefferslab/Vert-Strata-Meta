@@ -83,13 +83,13 @@ dupdf <- ints[idx,]
 #each row is a duplicate and there are duplicates equal to the strata width - thus, the minimum and maxiumum height need to change to relect each 1 m interval
 
 data = dupdf%>%
-  group_by(link, min_strata_height) %>%
-  mutate(new_min_strata_height = ifelse(row_number()==1, min_strata_height, # If first row in group, keep min_strata_height as the same
+  dplyr::group_by(link, min_strata_height) %>%
+  dplyr::mutate(new_min_strata_height = ifelse(row_number()==1, min_strata_height, # If first row in group, keep min_strata_height as the same
                                         min_strata_height + row_number() - 1))  %>% # otherwise add the row_number to the min_height
            mutate(new_max_strata_height = max_strata_height - n() + row_number()) %>% # Subtract number of rows in the group, add the row number
-  ungroup() %>%
-  mutate(min_strata_height = new_min_strata_height, max_strata_height = new_max_strata_height) %>%
-  select(-new_min_strata_height, -new_max_strata_height, -seq)
+  dplyr::ungroup() %>%
+  dplyr::mutate(min_strata_height = new_min_strata_height, max_strata_height = new_max_strata_height) %>%
+  dplyr::select(-new_min_strata_height, -new_max_strata_height, -seq)
 
 data_joined = rbind(data_joined, data)
 data_joined$mean_strata_height = (data_joined$min_strata_height + data_joined$max_strata_height) /2
