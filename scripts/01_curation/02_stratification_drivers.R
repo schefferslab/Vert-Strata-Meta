@@ -167,12 +167,12 @@ DFtall
 
 ggplot(specifics_tall, aes(x = factor, y = Value, fill = Level)) + 
   geom_col(position = "identity") +
-  facet_wrap(~taxa) +
+  facet_wrap(~taxa, ncol = 1) +
   theme(legend.position = "bottom",
         panel.background = element_blank(),
         axis.text.x = element_text(angle = 90))
 
-ggsave("analysis/figures/drivers.jpeg", width = 10, height = 10, units = "in", dpi = 300)
+ggsave("analysis/figures/drivers.jpeg", width = 3, height = 10, units = "in", dpi = 300)
 
 ## 3. Write out files ------------
 
