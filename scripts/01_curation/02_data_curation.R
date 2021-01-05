@@ -32,17 +32,17 @@ if (!"min_strata_height" %in% colnames(plots)) {
   
 ## B. Join data --------------
 
-sites$link = paste(sites$study_id, "_", sites$sites) 
-plots$link = paste(plots$study_id, "_", plots$linking_id)
+sites$link <- paste(sites$study_id, "_", sites$sites) 
+plots$link <- paste(plots$study_id, "_", plots$linking_id)
 
 
-data_joined = merge(sites, plots, by = "link")
-data_joined$study_id =  data_joined$study_id.x
+site_plot_merge <- merge(sites, plots, by = "link")
+site_plot_merge$study_id <- site_plot_merge$study_id.x
 
 
 ## C. Filter down data according to study bounds ------------
 
-data_joined <- data_joined %>% 
+site_plot_filter <- site_plot_merge %>% 
   # Has a data quality flag
   filter(!is.na(spatial_rank), !is.na(data_quality),
          # Is in the tropics or sub-tropics
@@ -56,7 +56,7 @@ data_joined <- data_joined %>%
 ## D. Corrections to biodiversity metric values --------------
 ## ....Gather abundance data into 1-m bins -----------
 
-data_joined <- data_joined %>% 
+site_plot_binned <- site_plot_filter %>% 
   mutate(min_strata_height = as.double(min_strata_height), 
          max_strata_height = as.double(max_strata_height)) %>% 
   mutate(strata_width = max_strata_height - min_strata_height) %>% 
@@ -71,10 +71,10 @@ data_joined <- data_joined %>%
 
 ## ....Filter to just previously corrected, or use values corrected on Google Sheet --------
 
-ints <- data_joined[data_joined$correction_performed_on_data_in_table %like% "intervals" & data_joined$strata_width != 1, ]
-ints$seq = seq(1:nrow(ints))
+ints <- site_plot_binned[site_plot_binned$correction_performed_on_data_in_table %like% "intervals" & site_plot_binned$strata_width != 1, ]
+ints$seq <- seq(1:nrow(ints))
 
-dups = ints$strata_width
+dups <- ints$strata_width
 idx <- rep(1:nrow(ints), dups)
 
 # Use that index to genderate your new data frame of repeated rows
@@ -82,28 +82,23 @@ dupdf <- ints[idx,]
 
 #each row is a duplicate and there are duplicates equal to the strata width - thus, the minimum and maxiumum height need to change to relect each 1 m interval
 
-data = dupdf%>%
+data <- dupdf %>%
   dplyr::group_by(link, min_strata_height) %>%
   dplyr::mutate(new_min_strata_height = ifelse(row_number()==1, min_strata_height, # If first row in group, keep min_strata_height as the same
                                         min_strata_height + row_number() - 1))  %>% # otherwise add the row_number to the min_height
            mutate(new_max_strata_height = max_strata_height - n() + row_number()) %>% # Subtract number of rows in the group, add the row number
-<<<<<<< HEAD
-  ungroup() %>%
-  mutate(min_strata_height = new_min_strata_height, max_strata_height = new_max_strata_height) %>%
-=======
   dplyr::ungroup() %>%
   dplyr::mutate(min_strata_height = new_min_strata_height, max_strata_height = new_max_strata_height) %>%
->>>>>>> e1761d837b69af65250a496a7af1928e4b1f284f
   dplyr::select(-new_min_strata_height, -new_max_strata_height, -seq)
 
-data_joined = rbind(data_joined, data)
-data_joined$mean_strata_height = (data_joined$min_strata_height + data_joined$max_strata_height) /2
+site_plot_data_join <- rbind(site_plot_binned, data)
+site_plot_data_join$mean_strata_height <- (site_plot_data_join$min_strata_height + site_plot_data_join$max_strata_height) /2
 
 
 ## If biodiver metric corrected == N but subsequent correction is not NA, 
 ## use subsequent correcion as corrected abundance
 
-data_joined <- data_joined %>% 
+site_plot_joined <- site_plot_data_join %>% 
   mutate(corrected_biodiversity_metric_value = 
            # If metric was correcteed by study authors...
            ifelse(biodiversity_metric_corrected == "Y" | 
@@ -119,26 +114,26 @@ data_joined <- data_joined %>%
                          # Otherwise, set corrected_biodiversity_metric_value to NA
                          NA)))
 # Now keep just rows with corrected values
-data_joined <- data_joined %>% 
+site_plot_corrected <- site_plot_joined %>% 
   filter(complete.cases(corrected_biodiversity_metric_value))
 
 ## ....Calculate biodiversity as proportion of max biodiversity ---------
 
-site_max_richness <- data_joined %>% 
+site_max_richness <- site_plot_corrected %>% 
   filter(biodiversity_metric == "richness") %>% 
   group_by(study_id, sites) %>% 
-  summarize(max_richness = max(corrected_biodiversity_metric_value, na.rm = TRUE))
+  dplyr::summarise(max_richness = max(corrected_biodiversity_metric_value, na.rm = TRUE))
   
-site_max_abundance = data_joined %>% 
+site_max_abundance <- site_plot_corrected %>% 
   filter(biodiversity_metric == "abundance") %>% 
   group_by(study_id, sites) %>% 
-  summarize(max_abundance = max(corrected_biodiversity_metric_value, na.rm = TRUE))
+  dplyr::summarise(max_abundance = max(corrected_biodiversity_metric_value, na.rm = TRUE))
 
-data_joined <- data_joined %>% 
+rich_abund_join <- site_plot_corrected %>% 
   left_join(site_max_richness) %>% 
   left_join(site_max_abundance) %>% 
   mutate(corrected_biodiversity_metric_value = 
-           # If it's a richness metric, and therefore we identied the strata with
+           # If it's a richness metric, and therefore we identified the strata with
            # highest richness...
            ifelse(biodiversity_metric == "richness" & complete.cases(max_richness),
                   # make corrected biodiverse value a proportion of this max richness
@@ -159,15 +154,18 @@ data_joined <- data_joined %>%
 
 ## ....Adjust canopy and strata height metrics -------------
 
-data_joined <- data_joined %>% 
-  # If highest max_strata_height value is greater than canopy_height value, 
+data_joined <- rich_abund_join %>%
+  # If highest max_strata_height value is greater than canopy_height value,
   # then replace canopy_height value with max_strata_height
-  mutate(canopy_height = ifelse(max_strata_height > canopy_height, 
-                                max_strata_height, canopy_height)) %>% 
+  mutate(canopy_height = ifelse(max_strata_height > canopy_height,
+                                max_strata_height, canopy_height)) %>%
   # Convert heights to proportions of max forest height
-  mutate(min_strata_height = as.double(min_strata_height) / canopy_height) %>% 
-  mutate(max_strata_height = as.double(max_strata_height) / canopy_height) %>% 
+  mutate(min_strata_height = as.double(min_strata_height) / canopy_height) %>%
+  mutate(max_strata_height = as.double(max_strata_height) / canopy_height) %>%
   mutate(mean_strata_height_p = as.double(mean_strata_height) / canopy_height)
+
+max(data_joined$mean_strata_height_p); min(data_joined$mean_strata_height_p)
+plot(density(data_joined$mean_strata_height_p))
 
 ## 3. QA/QC -------------
 
@@ -184,10 +182,10 @@ if (nrow(foo <- filter(data_joined, canopy_height > 70)) > 0) {
 
 ## ....E. Unjoin for writing out ---------------
 
-plots <- data_joined %>% 
+plots <- data_joined %>%
   dplyr::select(colnames(plots))
 
-sites <- data_joined %>% 
+sites <- data_joined %>%
   dplyr::select(colnames(sites))
 
 ## 3. Quick viz ---------------
@@ -199,7 +197,7 @@ ggplot(data_joined, aes(corrected_biodiversity_metric_value)) +
   geom_histogram() +
   facet_wrap(~biodiversity_metric)
 
-ggplot(filter(data_joined, biodiversity_metric == "abundance"), 
+ggplot(filter(data_joined, biodiversity_metric == "abundance"),
        aes(corrected_biodiversity_metric_value)) +
   geom_histogram() +
   facet_wrap(~biodiversity_metric)
