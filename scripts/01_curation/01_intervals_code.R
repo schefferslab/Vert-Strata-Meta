@@ -13,8 +13,8 @@ lentijo_df_rich <- lentijo_df %>%
   dplyr::mutate(range_min = round(range_min, 0),
                 range_max = round(range_max, 0)) %>%
   dplyr::mutate(range = ifelse(range_max - range_min > 1, range_max - range_min, 1)) %>%
-  dplyr::mutate(in_bin_0 = ifelse(range_min < 0.1, 1, 0),
-                in_bin_1 = ifelse(range_min <= 1 & range_max > 1, 1, 0),
+  dplyr::mutate(in_bin_0 = ifelse(range_min == 0, 1, 0),
+                in_bin_1 = ifelse(range_min <= 1 & range_max > 0, 1, 0),
                 in_bin_2 = ifelse(range_min <= 2 & range_max > 1, 1, 0),
                 in_bin_3 = ifelse(range_min <= 3 & range_max > 2, 1, 0),
                 in_bin_4 = ifelse(range_min <= 4 & range_max > 3, 1, 0),
@@ -58,8 +58,8 @@ lentijo_df_abund <- lentijo_df %>%
                 range_max = round(range_max, 0)) %>%
   dplyr::mutate(range = ifelse(range_max - range_min > 1, range_max - range_min, 1)) %>%
   dplyr::mutate(n_per_strata = n / range) %>%
-  dplyr::mutate(in_bin_0 = ifelse(range_min < 0.1, n_per_strata, 0),
-                in_bin_1 = ifelse(range_min <= 1 & range_max > 1, n_per_strata, 0),
+  dplyr::mutate(in_bin_0 = ifelse(range_min == 0, n_per_strata, 0),
+                in_bin_1 = ifelse(range_min <= 1 & range_max > 0, n_per_strata, 0),
                 in_bin_2 = ifelse(range_min <= 2 & range_max > 1, n_per_strata, 0),
                 in_bin_3 = ifelse(range_min <= 3 & range_max > 2, n_per_strata, 0),
                 in_bin_4 = ifelse(range_min <= 4 & range_max > 3, n_per_strata, 0),
@@ -106,8 +106,8 @@ latta_df_rich <- latta_df %>%
   dplyr::mutate(range_min = round(range_min, 0),
                 range_max = round(range_max, 0)) %>%
   dplyr::mutate(range = ifelse(range_max - range_min > 1, range_max - range_min, 1)) %>%
-  dplyr::mutate(in_bin_0 = ifelse(range_min < 0.1, 1, 0),
-                in_bin_1 = ifelse(range_min <= 1 & range_max > 1, 1, 0),
+  dplyr::mutate(in_bin_0 = ifelse(range_min == 0, 1, 0),
+                in_bin_1 = ifelse(range_min <= 1 & range_max > 0, 1, 0),
                 in_bin_2 = ifelse(range_min <= 2 & range_max > 1, 1, 0),
                 in_bin_3 = ifelse(range_min <= 3 & range_max > 2, 1, 0),
                 in_bin_4 = ifelse(range_min <= 4 & range_max > 3, 1, 0),
@@ -136,8 +136,8 @@ latta_df_abund <- latta_df %>%
                 range_max = round(range_max, 0)) %>%
   dplyr::mutate(range = ifelse(range_max - range_min > 1, range_max - range_min, 1)) %>%
   dplyr::mutate(n_per_strata = n / range) %>%
-  dplyr::mutate(in_bin_0 = ifelse(range_min < 0.1, n_per_strata, 0),
-                in_bin_1 = ifelse(range_min <= 1 & range_max > 1, n_per_strata, 0),
+  dplyr::mutate(in_bin_0 = ifelse(range_min == 0, n_per_strata, 0),
+                in_bin_1 = ifelse(range_min <= 1 & range_max > 0, n_per_strata, 0),
                 in_bin_2 = ifelse(range_min <= 2 & range_max > 1, n_per_strata, 0),
                 in_bin_3 = ifelse(range_min <= 3 & range_max > 2, n_per_strata, 0),
                 in_bin_4 = ifelse(range_min <= 4 & range_max > 3, n_per_strata, 0),
@@ -172,8 +172,8 @@ walther_df_rich <- walther_df %>%
   dplyr::mutate(range_min = round(range_min, 0),
                 range_max = round(range_max, 0)) %>%
   dplyr::mutate(range = ifelse(range_max - range_min > 1, range_max - range_min, 1)) %>%
-  dplyr::mutate(in_bin_0 = ifelse(range_min < 0.1, 1, 0),
-                in_bin_1 = ifelse(range_min <= 1 & range_max > 1, 1, 0),
+  dplyr::mutate(in_bin_0 = ifelse(range_min == 0, 1, 0),
+                in_bin_1 = ifelse(range_min <= 1 & range_max > 0, 1, 0),
                 in_bin_2 = ifelse(range_min <= 2 & range_max > 1, 1, 0),
                 in_bin_3 = ifelse(range_min <= 3 & range_max > 2, 1, 0),
                 in_bin_4 = ifelse(range_min <= 4 & range_max > 3, 1, 0),
@@ -217,8 +217,8 @@ walther_df_abund <- walther_df %>%
                 range_max = round(range_max, 0)) %>%
   dplyr::mutate(range = ifelse(range_max - range_min > 1, range_max - range_min, 1)) %>%
   dplyr::mutate(n_per_strata = n / range) %>%
-  dplyr::mutate(in_bin_0 = ifelse(range_min < 0.1, n_per_strata, 0),
-                in_bin_1 = ifelse(range_min <= 1 & range_max > 1, n_per_strata, 0),
+  dplyr::mutate(in_bin_0 = ifelse(range_min == 0, n_per_strata, 0),
+                in_bin_1 = ifelse(range_min <= 1 & range_max > 0, n_per_strata, 0),
                 in_bin_2 = ifelse(range_min <= 2 & range_max > 1, n_per_strata, 0),
                 in_bin_3 = ifelse(range_min <= 3 & range_max > 2, n_per_strata, 0),
                 in_bin_4 = ifelse(range_min <= 4 & range_max > 3, n_per_strata, 0),
@@ -264,8 +264,8 @@ buchanan_df_rich <- buchanan_df %>%
   dplyr::mutate(range_min = round(range_min, 0),
                 range_max = round(range_max, 0)) %>%
   dplyr::mutate(range = ifelse(range_max - range_min > 1, range_max - range_min, 1)) %>%
-  dplyr::mutate(in_bin_0 = ifelse(range_min < 0.1, 1, 0),
-                in_bin_1 = ifelse(range_min <= 1 & range_max > 1, 1, 0),
+  dplyr::mutate(in_bin_0 = ifelse(range_min == 0, 1, 0),
+                in_bin_1 = ifelse(range_min <= 1 & range_max > 0, 1, 0),
                 in_bin_2 = ifelse(range_min <= 2 & range_max > 1, 1, 0),
                 in_bin_3 = ifelse(range_min <= 3 & range_max > 2, 1, 0),
                 in_bin_4 = ifelse(range_min <= 4 & range_max > 3, 1, 0),
@@ -294,8 +294,8 @@ buchanan_df_abund <- buchanan_df %>%
                 range_max = round(range_max, 0)) %>%
   dplyr::mutate(range = ifelse(range_max - range_min > 1, range_max - range_min, 1)) %>%
   dplyr::mutate(n_per_strata = n / range) %>%
-  dplyr::mutate(in_bin_0 = ifelse(range_min < 0.1, n_per_strata, 0),
-                in_bin_1 = ifelse(range_min <= 1 & range_max > 1, n_per_strata, 0),
+  dplyr::mutate(in_bin_0 = ifelse(range_min == 0, n_per_strata, 0),
+                in_bin_1 = ifelse(range_min <= 1 & range_max > 0, n_per_strata, 0),
                 in_bin_2 = ifelse(range_min <= 2 & range_max > 1, n_per_strata, 0),
                 in_bin_3 = ifelse(range_min <= 3 & range_max > 2, n_per_strata, 0),
                 in_bin_4 = ifelse(range_min <= 4 & range_max > 3, n_per_strata, 0),
@@ -318,4 +318,103 @@ buchanan_df_abund <- buchanan_df %>%
 
 buchanan_vert_abund <- as.data.frame(colSums(buchanan_df_abund[,7:ncol(buchanan_df_abund)]))
 
-     
+    
+
+
+# Scheffers 2013      900 m site
+scheffers1_df <- read_csv("data/stripped_data/original/scheffers_1_2013.csv")
+
+## Richness
+scheffers1_df_rich <- scheffers1_df %>% 
+  dplyr::mutate(range = ifelse(range_max - range_min > 1, range_max - range_min, 1)) %>%
+  dplyr::mutate(in_bin_0 = ifelse(range_min == 0, 1, 0),
+                in_bin_1 = ifelse(range_min <= 1 & range_max > 0, 1, 0),
+                in_bin_2 = ifelse(range_min <= 2 & range_max > 1, 1, 0),
+                in_bin_3 = ifelse(range_min <= 3 & range_max > 2, 1, 0),
+                in_bin_4 = ifelse(range_min <= 4 & range_max > 3, 1, 0),
+                in_bin_5 = ifelse(range_min <= 5 & range_max > 4, 1, 0),
+                in_bin_6 = ifelse(range_min <= 6 & range_max > 5, 1, 0),
+                in_bin_7 = ifelse(range_min <= 7 & range_max > 6, 1, 0),
+                in_bin_8 = ifelse(range_min <= 8 & range_max > 7, 1, 0),
+                in_bin_9 = ifelse(range_min <= 9 & range_max > 8, 1, 0),
+                in_bin_10 = ifelse(range_min <= 10 & range_max > 9, 1, 0),
+                in_bin_11 = ifelse(range_min <= 11 & range_max > 10, 1, 0),
+                in_bin_12 = ifelse(range_min <= 12 & range_max > 11, 1, 0),
+                in_bin_13 = ifelse(range_min <= 13 & range_max > 12, 1, 0),
+                in_bin_14 = ifelse(range_min <= 14 & range_max > 13, 1, 0),
+                in_bin_15 = ifelse(range_min <= 15 & range_max > 14, 1, 0),
+                in_bin_16 = ifelse(range_min <= 16 & range_max > 15, 1, 0),
+                in_bin_17 = ifelse(range_min <= 17 & range_max > 16, 1, 0),
+                in_bin_18 = ifelse(range_min <= 18 & range_max > 17, 1, 0),
+                in_bin_19 = ifelse(range_min <= 19 & range_max > 18, 1, 0),
+                in_bin_20 = ifelse(range_min <= 20 & range_max > 19, 1, 0))
+
+scheffers1_df_vert_rich <- as.data.frame(colSums(scheffers1_df_rich[,6:ncol(scheffers1_df_rich)]))
+
+
+#
+#
+
+# Scheffers 2013      1300 m site
+scheffers2_df <- read_csv("data/stripped_data/original/scheffers_2_2013.csv") 
+
+## Richness
+scheffers2_df_rich <- scheffers2_df %>% 
+  dplyr::mutate(range = ifelse(range_max - range_min > 1, range_max - range_min, 1)) %>%
+  dplyr::mutate(in_bin_0 = ifelse(range_min == 0, 1, 0),
+                in_bin_1 = ifelse(range_min <= 1 & range_max > 0, 1, 0),
+                in_bin_2 = ifelse(range_min <= 2 & range_max > 1, 1, 0),
+                in_bin_3 = ifelse(range_min <= 3 & range_max > 2, 1, 0),
+                in_bin_4 = ifelse(range_min <= 4 & range_max > 3, 1, 0),
+                in_bin_5 = ifelse(range_min <= 5 & range_max > 4, 1, 0),
+                in_bin_6 = ifelse(range_min <= 6 & range_max > 5, 1, 0),
+                in_bin_7 = ifelse(range_min <= 7 & range_max > 6, 1, 0),
+                in_bin_8 = ifelse(range_min <= 8 & range_max > 7, 1, 0),
+                in_bin_9 = ifelse(range_min <= 9 & range_max > 8, 1, 0),
+                in_bin_10 = ifelse(range_min <= 10 & range_max > 9, 1, 0),
+                in_bin_11 = ifelse(range_min <= 11 & range_max > 10, 1, 0),
+                in_bin_12 = ifelse(range_min <= 12 & range_max > 11, 1, 0),
+                in_bin_13 = ifelse(range_min <= 13 & range_max > 12, 1, 0),
+                in_bin_14 = ifelse(range_min <= 14 & range_max > 13, 1, 0),
+                in_bin_15 = ifelse(range_min <= 15 & range_max > 14, 1, 0),
+                in_bin_16 = ifelse(range_min <= 16 & range_max > 15, 1, 0),
+                in_bin_17 = ifelse(range_min <= 17 & range_max > 16, 1, 0),
+                in_bin_18 = ifelse(range_min <= 18 & range_max > 17, 1, 0),
+                in_bin_19 = ifelse(range_min <= 19 & range_max > 18, 1, 0),
+                in_bin_20 = ifelse(range_min <= 20 & range_max > 19, 1, 0))
+
+scheffers2_df_vert_rich <- as.data.frame(colSums(scheffers2_df_rich[,6:ncol(scheffers2_df_rich)]))
+
+
+#
+#
+
+# Scheffers 2013      1700 m site
+scheffers3_df <- read_csv("data/stripped_data/original/scheffers_3_2013.csv")
+
+## Richness
+scheffers3_df_rich <- scheffers3_df %>% 
+  dplyr::mutate(range = ifelse(range_max - range_min > 1, range_max - range_min, 1)) %>%
+  dplyr::mutate(in_bin_0 = ifelse(range_min == 0, 1, 0),
+                in_bin_1 = ifelse(range_min <= 1 & range_max > 0, 1, 0),
+                in_bin_2 = ifelse(range_min <= 2 & range_max > 1, 1, 0),
+                in_bin_3 = ifelse(range_min <= 3 & range_max > 2, 1, 0),
+                in_bin_4 = ifelse(range_min <= 4 & range_max > 3, 1, 0),
+                in_bin_5 = ifelse(range_min <= 5 & range_max > 4, 1, 0),
+                in_bin_6 = ifelse(range_min <= 6 & range_max > 5, 1, 0),
+                in_bin_7 = ifelse(range_min <= 7 & range_max > 6, 1, 0),
+                in_bin_8 = ifelse(range_min <= 8 & range_max > 7, 1, 0),
+                in_bin_9 = ifelse(range_min <= 9 & range_max > 8, 1, 0),
+                in_bin_10 = ifelse(range_min <= 10 & range_max > 9, 1, 0),
+                in_bin_11 = ifelse(range_min <= 11 & range_max > 10, 1, 0),
+                in_bin_12 = ifelse(range_min <= 12 & range_max > 11, 1, 0),
+                in_bin_13 = ifelse(range_min <= 13 & range_max > 12, 1, 0),
+                in_bin_14 = ifelse(range_min <= 14 & range_max > 13, 1, 0),
+                in_bin_15 = ifelse(range_min <= 15 & range_max > 14, 1, 0),
+                in_bin_16 = ifelse(range_min <= 16 & range_max > 15, 1, 0),
+                in_bin_17 = ifelse(range_min <= 17 & range_max > 16, 1, 0),
+                in_bin_18 = ifelse(range_min <= 18 & range_max > 17, 1, 0),
+                in_bin_19 = ifelse(range_min <= 19 & range_max > 18, 1, 0),
+                in_bin_20 = ifelse(range_min <= 20 & range_max > 19, 1, 0))
+
+scheffers3_df_vert_rich <- as.data.frame(colSums(scheffers3_df_rich[,6:ncol(scheffers3_df_rich)]))
