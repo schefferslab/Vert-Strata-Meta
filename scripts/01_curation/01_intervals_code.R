@@ -171,7 +171,6 @@ max(walther_df$range_max)
 walther_df_rich <- walther_df %>% 
   dplyr::mutate(range_min = round(range_min, 0),
                 range_max = round(range_max, 0)) %>%
-  dplyr::mutate(range = ifelse(range_max - range_min > 1, range_max - range_min, 1)) %>%
   dplyr::mutate(in_bin_0 = ifelse(range_min < 0.1, 1, 0),
                 in_bin_1 = ifelse(range_min <= 1 & range_max > 1, 1, 0),
                 in_bin_2 = ifelse(range_min <= 2 & range_max > 1, 1, 0),
@@ -209,7 +208,9 @@ walther_df_rich <- walther_df %>%
                 in_bin_34 = ifelse(range_min <= 34 & range_max > 33, 1, 0),
                 in_bin_35 = ifelse(range_min <= 35 & range_max > 34, 1, 0))
 
-walther_vert_rich <- as.data.frame(colSums(walther_df_rich[,7:ncol(walther_df_rich)]))
+walther_vert_rich <- as.data.frame(colSums(
+  dplyr::select(walther_df_rich, starts_with("in_bin"))
+))
 
 ## Abundance 
 walther_df_abund <- walther_df %>% 
