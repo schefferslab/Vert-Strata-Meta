@@ -256,4 +256,65 @@ walther_df_abund <- walther_df %>%
 walther_vert_abund <- as.data.frame(colSums(walther_df_abund[,7:ncol(walther_df_abund)]))
 
 # Buchanan 2000
-Buchanan_df = read.csv("data/stripped_data/original/Buchanan-Smith_2000.csv")
+buchanan_df <- read_csv("data/stripped_data/original/Buchanan-Smith_2000.csv")
+
+## Richness
+buchanan_df_rich <- buchanan_df %>% 
+  dplyr::mutate(range_min = round(range_min, 0),
+                range_max = round(range_max, 0)) %>%
+  dplyr::mutate(range = ifelse(range_max - range_min > 1, range_max - range_min, 1)) %>%
+  dplyr::mutate(in_bin_0 = ifelse(range_min < 0.1, 1, 0),
+                in_bin_1 = ifelse(range_min <= 1 & range_max > 1, 1, 0),
+                in_bin_2 = ifelse(range_min <= 2 & range_max > 1, 1, 0),
+                in_bin_3 = ifelse(range_min <= 3 & range_max > 2, 1, 0),
+                in_bin_4 = ifelse(range_min <= 4 & range_max > 3, 1, 0),
+                in_bin_5 = ifelse(range_min <= 5 & range_max > 4, 1, 0),
+                in_bin_6 = ifelse(range_min <= 6 & range_max > 5, 1, 0),
+                in_bin_7 = ifelse(range_min <= 7 & range_max > 6, 1, 0),
+                in_bin_8 = ifelse(range_min <= 8 & range_max > 7, 1, 0),
+                in_bin_9 = ifelse(range_min <= 9 & range_max > 8, 1, 0),
+                in_bin_10 = ifelse(range_min <= 10 & range_max > 9, 1, 0),
+                in_bin_11 = ifelse(range_min <= 11 & range_max > 10, 1, 0),
+                in_bin_12 = ifelse(range_min <= 12 & range_max > 11, 1, 0),
+                in_bin_13 = ifelse(range_min <= 13 & range_max > 12, 1, 0),
+                in_bin_14 = ifelse(range_min <= 14 & range_max > 13, 1, 0),
+                in_bin_15 = ifelse(range_min <= 15 & range_max > 14, 1, 0),
+                in_bin_16 = ifelse(range_min <= 16 & range_max > 15, 1, 0),
+                in_bin_17 = ifelse(range_min <= 17 & range_max > 16, 1, 0),
+                in_bin_18 = ifelse(range_min <= 18 & range_max > 17, 1, 0),
+                in_bin_19 = ifelse(range_min <= 19 & range_max > 18, 1, 0),
+                in_bin_20 = ifelse(range_min <= 20 & range_max > 19, 1, 0))
+
+buchanan_vert_rich <- as.data.frame(colSums(buchanan_df_rich[,7:ncol(buchanan_df_rich)]))
+
+## Abundance 
+buchanan_df_abund <- buchanan_df %>% 
+  dplyr::mutate(range_min = round(range_min, 0),
+                range_max = round(range_max, 0)) %>%
+  dplyr::mutate(range = ifelse(range_max - range_min > 1, range_max - range_min, 1)) %>%
+  dplyr::mutate(n_per_strata = n / range) %>%
+  dplyr::mutate(in_bin_0 = ifelse(range_min < 0.1, n_per_strata, 0),
+                in_bin_1 = ifelse(range_min <= 1 & range_max > 1, n_per_strata, 0),
+                in_bin_2 = ifelse(range_min <= 2 & range_max > 1, n_per_strata, 0),
+                in_bin_3 = ifelse(range_min <= 3 & range_max > 2, n_per_strata, 0),
+                in_bin_4 = ifelse(range_min <= 4 & range_max > 3, n_per_strata, 0),
+                in_bin_5 = ifelse(range_min <= 5 & range_max > 4, n_per_strata, 0),
+                in_bin_6 = ifelse(range_min <= 6 & range_max > 5, n_per_strata, 0),
+                in_bin_7 = ifelse(range_min <= 7 & range_max > 6, n_per_strata, 0),
+                in_bin_8 = ifelse(range_min <= 8 & range_max > 7, n_per_strata, 0),
+                in_bin_9 = ifelse(range_min <= 9 & range_max > 8, n_per_strata, 0),
+                in_bin_10 = ifelse(range_min <= 10 & range_max > 9, n_per_strata, 0),
+                in_bin_11 = ifelse(range_min <= 11 & range_max > 10, n_per_strata, 0),
+                in_bin_12 = ifelse(range_min <= 12 & range_max > 11, n_per_strata, 0),
+                in_bin_13 = ifelse(range_min <= 13 & range_max > 12, n_per_strata, 0),
+                in_bin_14 = ifelse(range_min <= 14 & range_max > 13, n_per_strata, 0),
+                in_bin_15 = ifelse(range_min <= 15 & range_max > 14, n_per_strata, 0),
+                in_bin_16 = ifelse(range_min <= 16 & range_max > 15, n_per_strata, 0),
+                in_bin_17 = ifelse(range_min <= 17 & range_max > 16, n_per_strata, 0),
+                in_bin_18 = ifelse(range_min <= 18 & range_max > 17, n_per_strata, 0),
+                in_bin_19 = ifelse(range_min <= 19 & range_max > 18, n_per_strata, 0),
+                in_bin_20 = ifelse(range_min <= 20 & range_max > 19, n_per_strata, 0))
+
+buchanan_vert_abund <- as.data.frame(colSums(buchanan_df_abund[,7:ncol(buchanan_df_abund)]))
+
+     
