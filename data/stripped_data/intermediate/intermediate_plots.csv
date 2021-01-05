@@ -272,8 +272,8 @@ linking_id,study_id,binomial_test_data,biodiversity_metric_value,biodiversity_me
 2,Karr_1971,NA,41,richness,observed,NA,NA,NA,NA,N,well sampled,NA,NA,NA,NA,0,4,2,low,NA,NA,NA,NA,NA,NA,NA,NA,324.0,hours of observation,NA,NA,1.0,forest site,NA
 2,Karr_1971,NA,24,richness,observed,NA,NA,NA,NA,N,well sampled,NA,NA,NA,NA,4,15,9.5,medium,NA,NA,NA,NA,NA,NA,NA,NA,324.0,hours of observation,NA,NA,1.0,forest site,NA
 2,Karr_1971,NA,25,richness,observed,NA,NA,NA,NA,N,well sampled,NA,NA,NA,NA,15,35,25,high,NA,NA,NA,NA,NA,NA,NA,NA,324.0,hours of observation,NA,NA,1.0,forest site,NA
-1,Kuznetsov_2008,NA,11,richness,observed,NA,NA,NA,NA,N,very similar survey effort,NA,NA,NA,NA,0,0,0,ground,NA,NA,NA,NA,NA,NA,NA,NA,2100.0,trap days,NA,NA,1.0,1500m transect (60 trap stations),NA
-1,Kuznetsov_2008,NA,7,richness,observed,NA,NA,NA,NA,N,very similar survey effort,NA,NA,NA,NA,2,12,7,canopy,NA,NA,NA,NA,NA,NA,NA,NA,1950.0,trap days,NA,NA,1.0,1500m transect (60 trap stations),NA
+1,Kuznetsov_2008,NA,11,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,0,0,0,ground,NA,NA,NA,NA,NA,NA,NA,NA,2100.0,trap days,NA,NA,1.0,1500m transect (60 trap stations),NA
+1,Kuznetsov_2008,NA,7,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,2,12,7,canopy,NA,NA,NA,NA,NA,NA,NA,NA,1950.0,trap days,NA,NA,1.0,1500m transect (60 trap stations),NA
 1,Kuznetsov_2008,NA,18.45,abundance,individuals per 100 trap days,NA,NA,NA,NA,Y,per effort,NA,NA,NA,NA,0,0,0,ground,NA,NA,NA,NA,NA,NA,NA,NA,2100.0,trap days,NA,NA,1.0,1500m transect (60 trap stations),NA
 1,Kuznetsov_2008,NA,15.45,abundance,individuals per 100 trap days,NA,NA,NA,NA,Y,per effort,NA,NA,NA,NA,2,12,7,canopy,NA,NA,NA,NA,NA,NA,NA,NA,1950.0,trap days,NA,NA,1.0,1500m transect (60 trap stations),NA
 2,Kuznetsov_2008,NA,9,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,0,0,0,ground,NA,NA,NA,NA,NA,NA,NA,NA,800.0,trap days,NA,NA,1.0,800m transect (40 trap stations),NA
@@ -947,3 +947,9 @@ Searches were therefore made extensively and, as far as possible, at random thro
 1,Francis_1994,NA,3.2,abundance,captures/net night,NA,NA,NA,NA,Y,per effort,NA,NA,NA,NA,11,30,20.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,45.0,net nights,NA,NA,14.0,sampling points - 2 forest sites,NA
 1,Cademartori_2008,NA,47,abundance,proxy trap success (%),NA,NA,NA,NA,Y,per effort,NA,NA,NA,NA,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,330.0,trap nights,NA,NA,21.0,sampling points - 1 forest site,NA
 1,Cademartori_2008,NA,1.86,abundance,proxy trap success (%),NA,NA,NA,NA,Y,per effort,NA,NA,NA,NA,6,13,9.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,660.0,trap nights,NA,NA,21.0,sampling points - 1 forest site,NA
+1,Paste_2018,NA,28,abundance,raw,NA,NA,NA,NA,Y,equal effort,NA,NA,NA,NA,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,5880,trap nights,NA,NA,49.0,sampling points (along 6km transect) - 1 forest site,NA
+1,Paste_2018,NA,72,abundance,raw,NA,NA,NA,NA,Y,equal effort,NA,NA,NA,NA,1.8,2,1.9,NA,NA,NA,NA,NA,NA,NA,NA,NA,5880,trap nights,NA,NA,49.0,sampling points (along 6km transect) - 1 forest site,NA
+1,Paste_2018,NA,2,abundance,raw,NA,NA,NA,NA,Y,equal effort,NA,NA,NA,NA,10,15,12.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,5880,trap nights,NA,NA,49.0,sampling points (along 6km transect) - 1 forest site,NA
+1,Paste_2018,NA,8,richness,observed,NA,NA,NA,NA,Y,equal effort,NA,NA,NA,NA,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,5880,trap nights,NA,NA,49.0,sampling points (along 6km transect) - 1 forest site,NA
+1,Paste_2018,NA,4,richness,observed,NA,NA,NA,NA,Y,equal effort,NA,NA,NA,NA,1.8,2,1.9,NA,NA,NA,NA,NA,NA,NA,NA,NA,5880,trap nights,NA,NA,49.0,sampling points (along 6km transect) - 1 forest site,NA
+1,Paste_2018,NA,2,richness,observed,NA,NA,NA,NA,Y,equal effort,NA,NA,NA,NA,10,15,12.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,5880,trap nights,NA,NA,49.0,sampling points (along 6km transect) - 1 forest site,NA
