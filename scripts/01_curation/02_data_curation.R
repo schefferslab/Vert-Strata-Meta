@@ -1,9 +1,10 @@
 ## David Klinges
-## This script is a first draft of QA/QC of vert strat meta data at all levels
+## This script is a 89th draft of QA/QC of vert strat meta data at all levels
 
 ## 1. Workspace prep ---------------------
 
 ## ....Load packages -------------
+
 library(tidyverse)
 library(readxl)
 library(data.table)
@@ -154,18 +155,22 @@ rich_abund_join <- site_plot_corrected %>%
 
 ## ....Adjust canopy and strata height metrics -------------
 
-data_joined <- rich_abund_join %>%
-  # If highest max_strata_height value is greater than canopy_height value,
+data_joined_raw <- rich_abund_join %>%
+  # If highest max_strata_height value is greater than canopy_height value,     < we got rid of this
   # then replace canopy_height value with max_strata_height
-  mutate(canopy_height = ifelse(max_strata_height > canopy_height,
-                                max_strata_height, canopy_height)) %>%
+  # mutate(canopy_height = ifelse(max_strata_height > canopy_height,
+  #                               max_strata_height, canopy_height)) %>%
   # Convert heights to proportions of max forest height
   mutate(min_strata_height = as.double(min_strata_height) / canopy_height) %>%
   mutate(max_strata_height = as.double(max_strata_height) / canopy_height) %>%
   mutate(mean_strata_height_p = as.double(mean_strata_height) / canopy_height)
 
-max(data_joined$mean_strata_height_p); min(data_joined$mean_strata_height_p)
-plot(density(data_joined$mean_strata_height_p))
+data_joined_raw %>% 
+  filter(mean_strata_height_p > 1) %>%
+  view()
+
+data_joined <- data_joined_raw %>%
+  filter(!mean_strata_height_p > 1)
 
 ## 3. QA/QC -------------
 
@@ -213,3 +218,4 @@ write_csv(plots, "data/stripped_data/final/final_plots.csv")
 write_csv(sites, "data/stripped_data/final/final_sites.csv")
 
 write_csv(data_joined, "data/stripped_data/final/data_joined.csv")
+
