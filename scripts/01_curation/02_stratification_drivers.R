@@ -180,10 +180,12 @@ ggplot(specifics_tall, aes(x = factors, y = Value, fill = Level)) +
   geom_col(position = "identity") +
   facet_wrap(~taxa, ncol = 1) +
   ylab("Percent of Papers") + xlab("Stratification Factors") +
-  scale_fill_discrete(name = "Level", labels = c("Investigated", "Theorised"), guide = guide_legend(reverse=TRUE)) +
+  scale_fill_discrete(name = "Level", labels = c("Investigated", "Referenced"), guide = guide_legend(reverse=TRUE)) +
+  ######  scale x discrete labels will need to be changed if the plot changes is updated!    or it will show the wrong labels because it is overriting thrm
+  scale_x_discrete(labels=c("Habitat Structure", "Food / Foraging", "Climate", "Seasonality", "Species Interactions", "Morphology", "Nesting / Roosting", "Age", "Diurnality", "Sex")) +
   theme(legend.position = "bottom", legend.title = element_blank(),
         panel.background = element_blank(),
-        axis.text.x = element_text(angle = 90))
+        axis.text.x = element_text(angle = 45, hjust = 1))
 
 ggsave("analysis/figures/drivers.jpeg", width = 3.5, height = 10, units = "in", dpi = 300)
 
