@@ -11,10 +11,10 @@
 library(dplyr)
 
 
-#data = read.csv("Analysis/Data/meta_dave/lentijo_2005.csv")
-#data = read.csv("Analysis/Data/meta_dave/latta_1998.csv")
-#data = read.csv("Analysis/Data/meta_dave/walther_2002.csv")
-data = read.csv("Analysis/Data/meta_dave/Buchanan-Smith_2000.csv")
+#data = read.csv("data/stripped_data/original/lentijo_2005.csv")
+#data = read.csv("data/stripped_data/original/latta_1998.csv")
+#data = read.csv("data/stripped_data/original/walther_2002.csv")
+data = read.csv("data/stripped_data/original/Buchanan-Smith_2000.csv")
 
 #<less than
 #>more than
