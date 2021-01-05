@@ -220,7 +220,7 @@ linking_id,study_id,binomial_test_data,biodiversity_metric_value,biodiversity_me
 2,Hannibal_2010,NA,8,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,2,3,2.5,understory,NA,NA,NA,NA,NA,NA,NA,NA,600.0,trap nights,NA,NA,3.0,transects = each with 10 sampling points,NA
 2,Hannibal_2010,NA,1,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,8,10,9,canopy,NA,NA,NA,NA,NA,NA,NA,NA,600.0,trap nights,NA,NA,3.0,transects = each with 10 sampling points,NA
 1,Hayes_2000,NA,33.8,abundance,proxy -  median passes (per night),10.1,NA,NA,confidence intervals,Y,per effort,NA,NA,NA,NA,0,5,2.5,ground,NA,NA,NA,NA,NA,NA,NA,NA,9.0,nights,NA,NA,1.0,canopy crane,confidence interval not specified
-1,Hayes_2000,NA,46.5,abundance,proxy -  median passes (per night),14,NA,NA,confidence intervals,Y,per effort,NA,NA,NA,NA,17,25,21,lower canopy,NA,NA,NA,NA,NA,NA,NA,NA,9.0,nights,NA,NA,1.0,canopy crane,confidence interval not specified
+1,Hayes_2000,NA,46.5,abundance,proxy -  median passes (per night),14.0,NA,NA,confidence intervals,Y,per effort,NA,NA,NA,NA,17,25,21,lower canopy,NA,NA,NA,NA,NA,NA,NA,NA,9.0,nights,NA,NA,1.0,canopy crane,confidence interval not specified
 1,Hayes_2000,NA,22.6,abundance,proxy -  median passes (per night),6.2,NA,NA,confidence intervals,Y,per effort,NA,NA,NA,NA,35,40,37.5,upper canopy,NA,NA,NA,NA,NA,NA,NA,NA,9.0,nights,NA,NA,1.0,canopy crane,confidence interval not specified
 1,Hayes_2000,NA,33.8,abundance,proxy -  median passes (per night),14.3,NA,NA,confidence intervals,Y,per effort,NA,NA,NA,NA,75,75,75,above canopy,NA,NA,NA,NA,NA,NA,NA,NA,9.0,nights,NA,NA,1.0,canopy crane,confidence interval not specified
 1,Hecker_1999,Y,NA,abundance,proxy - activity,NA,NA,NA,NA,Y,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,N,F,5.61,0.015,DF = 2,NA,NA,33.0,nights,NA,NA,3.0,forest sites,"however, levels of activity differed with height of the detector (F = 5.61; d.f = 2, 83; P =0.015). Tukey's tests showed that there was less activity in the canopy than in the sub- canopy (P = 0.04) or shrub level (P = 0.02), but activity did not differ between the shrub and subcanopy level (P = 0.90)."
@@ -300,8 +300,8 @@ linking_id,study_id,binomial_test_data,biodiversity_metric_value,biodiversity_me
 1,Malcolm_1991,NA,9,richness,observed,NA,NA,NA,NA,N,NA,NA,NA,NA,NA,12,16,14,understory,NA,NA,NA,NA,NA,NA,NA,NA,17.0,traplines,NA,NA,3.0,forest sites,NA
 1,Malcolm_1991,NA,7.47,abundance,individuals per trapline,NA,NA,NA,NA,Y,similar survey effort,NA,NA,NA,NA,0,0,0,ground,NA,NA,NA,NA,NA,NA,NA,NA,22.0,traplines,NA,NA,3.0,forest sites,NA
 1,Malcolm_1991,NA,5.09,abundance,individuals per trapline,NA,NA,NA,NA,Y,similar survey effort,NA,NA,NA,NA,12,16,14,understory,NA,NA,NA,NA,NA,NA,NA,NA,17.0,traplines,NA,NA,3.0,forest sites,NA
-1,Marques_2015,NA,12,richness,estimated,4,NA,NA,95% confidence intervals,Y,NA,NA,NA,NA,NA,2,2,2,ground,NA,NA,NA,NA,NA,NA,NA,NA,4175.0,minutes of sampling (across 20 days),NA,NA,3.0,sampling points (1 forest site),NA
-1,Marques_2015,NA,22,richness,estimated,4,NA,NA,95% confidence intervals,Y,NA,NA,NA,NA,NA,17,17,17,subcanopy,NA,NA,NA,NA,NA,NA,NA,NA,4506.0,minutes of sampling (across 20 days),NA,NA,3.0,sampling points (1 forest site),NA
+1,Marques_2015,NA,12,richness,estimated,4.0,NA,NA,95% confidence intervals,Y,NA,NA,NA,NA,NA,2,2,2,ground,NA,NA,NA,NA,NA,NA,NA,NA,4175.0,minutes of sampling (across 20 days),NA,NA,3.0,sampling points (1 forest site),NA
+1,Marques_2015,NA,22,richness,estimated,4.0,NA,NA,95% confidence intervals,Y,NA,NA,NA,NA,NA,17,17,17,subcanopy,NA,NA,NA,NA,NA,NA,NA,NA,4506.0,minutes of sampling (across 20 days),NA,NA,3.0,sampling points (1 forest site),NA
 1,Marques_2015,NA,25,richness,estimated,2.5,NA,NA,95% confidence intervals,Y,NA,NA,NA,NA,NA,24,24,24,canopy,NA,NA,NA,NA,NA,NA,NA,NA,4649.0,minutes of sampling (across 20 days),NA,NA,3.0,sampling points (1 forest site),NA
 1,Marques_2015,NA,242,abundance,proxy (bat passes),NA,NA,NA,NA,N,NA,5.796407186,per 100 minutes,NA,NA,2,2,2,ground,NA,NA,NA,NA,NA,NA,NA,NA,4175.0,minutes of sampling (across 20 days),NA,NA,3.0,sampling points (1 forest site),NA
 1,Marques_2015,NA,767,abundance,proxy (bat passes),NA,NA,NA,NA,N,NA,17.02174878,per 100 minutes,NA,NA,17,17,17,subcanopy,NA,NA,NA,NA,NA,NA,NA,NA,4506.0,minutes of sampling (across 20 days),NA,NA,3.0,sampling points (1 forest site),NA
@@ -472,7 +472,7 @@ Searches were therefore made extensively and, as far as possible, at random thro
 1,Lentijo_2005,NA,27,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,needs 1m intervals,NA,NA,6,9,7.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,each transect was sampled once per month for 6 months
 1,Lentijo_2005,NA,35,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,needs 1m intervals,NA,NA,9,12,10.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,each transect was sampled once per month for 6 months
 1,Lentijo_2005,NA,39,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,needs 1m intervals,NA,NA,12,20,16,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,each transect was sampled once per month for 6 months
-1,Malcolm_2000,NA,25.2,abundance,per transect,2,NA,NA,standard error,Y,per effort,NA,NA,NA,NA,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,2520.0,station nights,NA,NA,24.0,transects (280 m long) in  3 forest types,combination of logged and unlogged sites put together
+1,Malcolm_2000,NA,25.2,abundance,per transect,2.0,NA,NA,standard error,Y,per effort,NA,NA,NA,NA,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,2520.0,station nights,NA,NA,24.0,transects (280 m long) in  3 forest types,combination of logged and unlogged sites put together
 1,Malcolm_2000,NA,14.3,abundance,per transect,1.1,NA,NA,standard error,Y,per effort,NA,NA,NA,NA,1.5,1.5,1.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,2520.0,station nights,NA,NA,24.0,transects (280 m long) in  3 forest types,combination of logged and unlogged sites put together
 1,Malcolm_2000,NA,10.9,abundance,per transect,1.3,NA,NA,standard error,Y,per effort,NA,NA,NA,NA,10,10,10,NA,NA,NA,NA,NA,NA,NA,NA,NA,2520.0,station nights,NA,NA,24.0,transects (280 m long) in  3 forest types,combination of logged and unlogged sites put together
 1,Malcolm_2000,NA,5.6,richness,per transect,0.33,NA,NA,standard error,Y,per effort,NA,NA,NA,NA,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,2520.0,station nights,NA,NA,24.0,transects (280 m long) in  3 forest types,combination of logged and unlogged sites put together
@@ -564,7 +564,7 @@ Searches were therefore made extensively and, as far as possible, at random thro
 2,Vieira_2003,NA,5,richness,observed,NA,NA,NA,NA,N,NA,NA,NA,NA,NA,6,15,10.5,canopy,NA,NA,NA,NA,NA,NA,NA,NA,638.0,trap nights,NA,NA,1.0,trapping grids (each with 12 traplines with 8 stations each),NA
 1,Silva_2020b,NA,197,abundance,raw,NA,NA,NA,NA,N,NA,1.42505787,per 100 m2 net hours,NA,NA,0,3,1.5,understorey,NA,NA,NA,NA,NA,NA,NA,NA,13824.0,m2 net hours,NA,NA,4.0,plots (1km square),NA
 1,Silva_2020b,NA,54,abundance,raw,NA,NA,NA,NA,N,NA,0.625,per 100 m2 net hours,NA,NA,3,12,7.5,subcanopy,NA,NA,NA,NA,NA,NA,NA,NA,8640.0,m2 net hours,NA,NA,4.0,plots (1km square),NA
-1,Silva_2020b,NA,15,richness,estimated (for 45 individuals - the lowest of the two strata),0,15,15,95% CI,Y,estimated,NA,NA,NA,NA,0,3,1.5,understorey,NA,NA,NA,NA,NA,NA,NA,NA,13824.0,m2 net hours,NA,NA,4.0,plots (1km square),NA
+1,Silva_2020b,NA,15,richness,estimated (for 45 individuals - the lowest of the two strata),0.0,15,15,95% CI,Y,estimated,NA,NA,NA,NA,0,3,1.5,understorey,NA,NA,NA,NA,NA,NA,NA,NA,13824.0,m2 net hours,NA,NA,4.0,plots (1km square),NA
 1,Silva_2020b,NA,14,richness,estimated (for 45 individuals - the lowest of the two strata),1.5,12.5,15.5,95% CI,Y,estimated,NA,NA,NA,NA,3,12,7.5,subcanopy,NA,NA,NA,NA,NA,NA,NA,NA,8640.0,m2 net hours,NA,NA,4.0,plots (1km square),NA
 1,Pearson_1971,N,11,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,0,1,0.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
 1,Pearson_1971,N,22.1,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,1,2,1.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
@@ -584,74 +584,210 @@ Searches were therefore made extensively and, as far as possible, at random thro
 1,Pearson_1971,N,15.5,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,15,16,15.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
 1,Pearson_1971,N,16.3,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,16,17,16.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
 1,Pearson_1971,N,17.6,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,17,18,17.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,19.1,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,18,19,18.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,20.7,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,19,20,19.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,22.3,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,20,21,20.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,23.8,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,21,22,21.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,24.6,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,22,23,22.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,25.4,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,23,24,23.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,25.9,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,24,25,24.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,26.1,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,25,26,25.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,26.2,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,26,27,26.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,26.2,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,27,28,27.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,25.8,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,28,29,28.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,25.3,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,29,30,29.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,23.8,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,30,31,30.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,22.6,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,31,32,31.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,21.5,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,32,33,32.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,20.2,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,33,34,33.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,19.4,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,34,35,34.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,18.2,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,35,36,35.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,17.2,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,36,37,36.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,16.3,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,37,38,37.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,15.4,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,38,39,38.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Pearson_1971,N,14.6,abundance,individual density,NA,NA,NA,NA,Y,equal survey effort,NA,NA,NA,NA,39,40,39.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
-1,Lentijo_2005,N,23,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,0,1,0.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
-1,Lentijo_2005,N,22,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,1,2,1.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
-1,Lentijo_2005,N,28,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,2,3,2.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
-1,Lentijo_2005,N,26,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,3,4,3.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
-1,Lentijo_2005,N,26,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,4,5,4.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
-1,Lentijo_2005,N,28,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,5,6,5.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
-1,Lentijo_2005,N,29,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,6,7,6.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
-1,Lentijo_2005,N,28,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,7,8,7.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
-1,Lentijo_2005,N,32,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,8,9,8.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
-1,Lentijo_2005,N,30,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,9,10,9.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
-1,Lentijo_2005,N,32,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,10,11,10.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
-1,Lentijo_2005,N,31,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,11,12,11.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
-1,Lentijo_2005,N,33,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,12,13,12.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
-1,Lentijo_2005,N,27,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,13,14,13.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Pearson_1971,N,19.1,abundance,individual density,NA,NA,24,NA,Y,equal survey effort,NA,NA,NA,NA,18,19,18.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,20.7,abundance,individual density,NA,NA,23,NA,Y,equal survey effort,NA,NA,NA,NA,19,20,19.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,22.3,abundance,individual density,NA,NA,28,NA,Y,equal survey effort,NA,NA,NA,NA,20,21,20.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,23.8,abundance,individual density,NA,NA,26,NA,Y,equal survey effort,NA,NA,NA,NA,21,22,21.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,24.6,abundance,individual density,NA,NA,27,NA,Y,equal survey effort,NA,NA,NA,NA,22,23,22.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,25.4,abundance,individual density,NA,NA,28,NA,Y,equal survey effort,NA,NA,NA,NA,23,24,23.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,25.9,abundance,individual density,NA,NA,29,NA,Y,equal survey effort,NA,NA,NA,NA,24,25,24.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,26.1,abundance,individual density,NA,NA,28,NA,Y,equal survey effort,NA,NA,NA,NA,25,26,25.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,26.2,abundance,individual density,NA,NA,35,NA,Y,equal survey effort,NA,NA,NA,NA,26,27,26.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,26.2,abundance,individual density,NA,NA,30,NA,Y,equal survey effort,NA,NA,NA,NA,27,28,27.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,25.8,abundance,individual density,NA,NA,33,NA,Y,equal survey effort,NA,NA,NA,NA,28,29,28.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,25.3,abundance,individual density,NA,NA,30,NA,Y,equal survey effort,NA,NA,NA,NA,29,30,29.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,23.8,abundance,individual density,NA,NA,32,NA,Y,equal survey effort,NA,NA,NA,NA,30,31,30.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,22.6,abundance,individual density,NA,NA,26,NA,Y,equal survey effort,NA,NA,NA,NA,31,32,31.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,21.5,abundance,individual density,NA,NA,25,NA,Y,equal survey effort,NA,NA,NA,NA,32,33,32.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,20.2,abundance,individual density,NA,NA,22,NA,Y,equal survey effort,NA,NA,NA,NA,33,34,33.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,19.4,abundance,individual density,NA,NA,24,NA,Y,equal survey effort,NA,NA,NA,NA,34,35,34.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,18.2,abundance,individual density,NA,NA,22,NA,Y,equal survey effort,NA,NA,NA,NA,35,36,35.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,17.2,abundance,individual density,NA,NA,21,NA,Y,equal survey effort,NA,NA,NA,NA,36,37,36.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,16.3,abundance,individual density,NA,NA,19,NA,Y,equal survey effort,NA,NA,NA,NA,37,38,37.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,15.4,abundance,individual density,NA,NA,18,NA,Y,equal survey effort,NA,NA,NA,NA,38,39,38.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Pearson_1971,N,14.6,abundance,individual density,NA,NA,16,NA,Y,equal survey effort,NA,NA,NA,NA,39,40,39.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,35.0,surveys (8 hours),NA,NA,1.0,forest site (9ha),NA
+1,Lentijo_2005,N,24,richness,observed,NA,NA,15,NA,N,equal survey effort,NA,NA,NA,NA,0,1,0.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,23,richness,observed,NA,NA,12,NA,N,equal survey effort,NA,NA,NA,NA,1,2,1.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,28,richness,observed,NA,NA,8,NA,N,equal survey effort,NA,NA,NA,NA,2,3,2.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,26,richness,observed,NA,NA,7,NA,N,equal survey effort,NA,NA,NA,NA,3,4,3.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,27,richness,observed,NA,NA,6,NA,N,equal survey effort,NA,NA,NA,NA,4,5,4.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,28,richness,observed,NA,NA,4,NA,N,equal survey effort,NA,NA,NA,NA,5,6,5.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,29,richness,observed,NA,NA,3,NA,N,equal survey effort,NA,NA,NA,NA,6,7,6.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,28,richness,observed,NA,NA,3,NA,N,equal survey effort,NA,NA,NA,NA,7,8,7.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,35,richness,observed,NA,NA,2,NA,N,equal survey effort,NA,NA,NA,NA,8,9,8.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,30,richness,observed,NA,NA,1,NA,N,equal survey effort,NA,NA,NA,NA,9,10,9.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,33,richness,observed,NA,NA,1,NA,N,equal survey effort,NA,NA,NA,NA,10,11,10.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,30,richness,observed,NA,NA,1,NA,N,equal survey effort,NA,NA,NA,NA,11,12,11.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,32,richness,observed,NA,NA,0,NA,N,equal survey effort,NA,NA,NA,NA,12,13,12.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,26,richness,observed,NA,NA,0,NA,N,equal survey effort,NA,NA,NA,NA,13,14,13.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
 1,Lentijo_2005,N,25,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,14,15,14.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
 1,Lentijo_2005,N,22,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,15,16,15.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
 1,Lentijo_2005,N,24,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,16,17,16.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
 1,Lentijo_2005,N,22,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,17,18,17.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
 1,Lentijo_2005,N,21,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,18,19,18.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
-1,Lentijo_2005,N,20,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,19,20,19.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,19,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,19,20,19.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,18,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,20,21,20.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,16,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,21,22,21.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,15,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,22,23,22.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,12,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,23,24,23.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,8,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,24,25,24.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,7,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,25,26,25.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,6,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,26,27,26.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,4,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,27,28,27.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,3,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,28,29,28.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,3,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,29,30,29.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,2,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,30,31,30.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,1,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,31,32,31.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,1,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,32,33,32.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,1,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,33,34,33.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,0,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,34,35,34.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,0,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,35,36,35.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,9.78195303,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,0,1,0.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,5.26913251,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,1,2,1.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,8.70188105,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,2,3,2.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,6.00188105,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,3,4,3.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,6.31767053,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,4,5,4.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,6.81767053,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,5,6,5.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,7.81767053,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,6,7,6.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,6.81767053,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,7,8,7.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,13.70869617,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,8,9,8.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,7.45869617,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,9,10,9.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,9.70869617,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,10,11,10.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,7.50869617,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,11,12,11.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,11.07668373,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,12,13,12.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,6.16001707,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,13,14,13.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,5.82668373,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,14,15,14.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,4.7433504,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,15,16,15.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,6.7433504,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,16,17,16.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,4.7433504,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,17,18,17.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,5.03746805,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,18,19,18.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,3.87080138,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,19,20,19.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,3.76553822,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,20,21,20.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,3.31553822,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,21,22,21.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,3.7973196,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,22,23,22.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,2.43368324,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,23,24,23.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,1.01354594,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,24,25,24.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,0.88854594,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,25,26,25.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,0.73469978,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,26,27,26.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,0.3500844,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,27,28,27.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,0.19623824,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,28,29,28.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,0.19623824,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,29,30,29.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,0.12727273,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,30,31,30.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,0.06060606,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,31,32,31.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,0.06060606,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,32,33,32.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,0.06060606,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,33,34,33.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,0,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,34,35,34.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
+1,Lentijo_2005,N,0,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,35,36,35.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,42.0,surveys (1 hour),NA,NA,7.0,transects (100 m) - 1 forest site,NA
 1,Latta_1998,N,13,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,0,1,0.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
-1,Latta_1998,N,16,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,1,2,1.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,18,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,1,2,1.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
 1,Latta_1998,N,20,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,2,3,2.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
 1,Latta_1998,N,22,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,3,4,3.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
 1,Latta_1998,N,22,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,4,5,4.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
 1,Latta_1998,N,23,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,5,6,5.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
-1,Latta_1998,N,23,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,6,7,6.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
-1,Latta_1998,N,23,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,7,8,7.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
-1,Latta_1998,N,23,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,8,9,8.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
-1,Latta_1998,N,22,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,9,10,9.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
-1,Latta_1998,N,20,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,10,11,10.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
-1,Latta_1998,N,19,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,11,12,11.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
-1,Latta_1998,N,18,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,12,13,12.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
-1,Latta_1998,N,18,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,13,14,13.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
-1,Latta_1998,N,11,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,14,15,14.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
-1,Latta_1998,N,9,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,15,16,15.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
-1,Walther_2002,N,29,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,0,3,1.5,NA,0.5,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
-1,Walther_2002,N,33,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,3,6,4.5,NA,1.5,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
-1,Walther_2002,N,27,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,6,9,7.5,NA,2.5,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
-1,Walther_2002,N,36,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,12,15,13.5,NA,3.5,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
-1,Walther_2002,N,39,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,15,18,16.5,NA,4.5,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
-1,Walther_2002,N,47,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,18,21,19.5,NA,5.5,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
-1,Walther_2002,N,49,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,21,24,22.5,NA,6.5,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
-1,Walther_2002,N,62,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,24,27,25.5,NA,7.5,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
-1,Walther_2002,N,65,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,27,30,28.5,NA,8.5,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
-1,Walther_2002,N,61,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,30,33,31.5,NA,9.5,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Latta_1998,N,23,richness,observed,in_bin_0,3,NA,NA,N,equal survey effort,NA,NA,NA,NA,6,7,6.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,23,richness,observed,in_bin_1,6,NA,NA,N,equal survey effort,NA,NA,NA,NA,7,8,7.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,22,richness,observed,in_bin_2,12,NA,NA,N,equal survey effort,NA,NA,NA,NA,8,9,8.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,21,richness,observed,in_bin_3,12,NA,NA,N,equal survey effort,NA,NA,NA,NA,9,10,9.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,20,richness,observed,in_bin_4,9,NA,NA,N,equal survey effort,NA,NA,NA,NA,10,11,10.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,18,richness,observed,in_bin_5,8,NA,NA,N,equal survey effort,NA,NA,NA,NA,11,12,11.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,18,richness,observed,in_bin_6,10,NA,NA,N,equal survey effort,NA,NA,NA,NA,12,13,12.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,17,richness,observed,in_bin_7,8,NA,NA,N,equal survey effort,NA,NA,NA,NA,13,14,13.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,11,richness,observed,in_bin_8,11,NA,NA,N,equal survey effort,NA,NA,NA,NA,14,15,14.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,7,richness,observed,in_bin_9,12,NA,NA,N,equal survey effort,NA,NA,NA,NA,15,16,15.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,6,richness,observed,in_bin_10,15,NA,NA,N,equal survey effort,NA,NA,NA,NA,16,17,16.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,3,richness,observed,in_bin_11,15,NA,NA,N,equal survey effort,NA,NA,NA,NA,17,18,17.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,1,richness,observed,in_bin_12,16,NA,NA,N,equal survey effort,NA,NA,NA,NA,18,19,18.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,1,richness,observed,in_bin_13,15,NA,NA,N,equal survey effort,NA,NA,NA,NA,19,20,19.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,0,richness,observed,in_bin_14,16,NA,NA,N,equal survey effort,NA,NA,NA,NA,20,21,20.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,59.010226,abundance,raw,in_bin_15,17,NA,NA,N,equal survey effort,NA,NA,NA,NA,0,1,0.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,80.532448,abundance,raw,in_bin_16,15,NA,NA,N,equal survey effort,NA,NA,NA,NA,1,2,1.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,86.805175,abundance,raw,in_bin_17,14,NA,NA,N,equal survey effort,NA,NA,NA,NA,2,3,2.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,99.294186,abundance,raw,in_bin_18,15,NA,NA,N,equal survey effort,NA,NA,NA,NA,3,4,3.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,99.294186,abundance,raw,in_bin_19,15,NA,NA,N,equal survey effort,NA,NA,NA,NA,4,5,4.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,102.722758,abundance,raw,in_bin_20,17,NA,NA,N,equal survey effort,NA,NA,NA,NA,5,6,5.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,102.722758,abundance,raw,in_bin_21,16,NA,NA,N,equal survey effort,NA,NA,NA,NA,6,7,6.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,102.722758,abundance,raw,in_bin_22,17,NA,NA,N,equal survey effort,NA,NA,NA,NA,7,8,7.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,99.865615,abundance,raw,in_bin_23,18,NA,NA,N,equal survey effort,NA,NA,NA,NA,8,9,8.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,93.240615,abundance,raw,in_bin_24,21,NA,NA,N,equal survey effort,NA,NA,NA,NA,9,10,9.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,86.351726,abundance,raw,in_bin_25,25,NA,NA,N,equal survey effort,NA,NA,NA,NA,10,11,10.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,71.79617,abundance,raw,in_bin_26,27,NA,NA,N,equal survey effort,NA,NA,NA,NA,11,12,11.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,71.79617,abundance,raw,in_bin_27,29,NA,NA,N,equal survey effort,NA,NA,NA,NA,12,13,12.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,70.129504,abundance,raw,in_bin_28,35,NA,NA,N,equal survey effort,NA,NA,NA,NA,13,14,13.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,51.741392,abundance,raw,in_bin_29,36,NA,NA,N,equal survey effort,NA,NA,NA,NA,14,15,14.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,31.384249,abundance,raw,in_bin_30,31,NA,NA,N,equal survey effort,NA,NA,NA,NA,15,16,15.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,28.384249,abundance,raw,in_bin_31,28,NA,NA,N,equal survey effort,NA,NA,NA,NA,16,17,16.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,13.071429,abundance,raw,in_bin_32,22,NA,NA,N,equal survey effort,NA,NA,NA,NA,17,18,17.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,3.428571,abundance,raw,in_bin_33,12,NA,NA,N,equal survey effort,NA,NA,NA,NA,18,19,18.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,3.428571,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,19,20,19.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Latta_1998,N,0,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,20,21,20.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,12.0,surveys (12 hours each),NA,NA,12.0,locations split between 2 forest sites,NA
+1,Walther_2002,N,3,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,0,1,0.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,6,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,1,2,1.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,12,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,2,3,2.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,12,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,3,4,3.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,9,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,4,5,4.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,8,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,5,6,5.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,10,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,6,7,6.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,8,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,7,8,7.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,11,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,8,9,8.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,12,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,9,10,9.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,15,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,10,11,10.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,15,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,11,12,11.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,16,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,12,13,12.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,15,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,13,14,13.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,16,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,14,15,14.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,17,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,15,16,15.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,15,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,16,17,16.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,14,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,17,18,17.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,15,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,18,19,18.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,15,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,19,20,19.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,17,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,20,21,20.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,16,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,21,22,21.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,17,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,22,23,22.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,18,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,23,24,23.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,21,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,24,25,24.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,25,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,25,26,25.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,27,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,26,27,26.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,29,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,27,28,27.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,35,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,28,29,28.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,36,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,29,30,29.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,31,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,30,31,30.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,28,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,31,32,31.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,22,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,32,33,32.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,12,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,33,34,33.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,10.208333,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,0,1,0.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,16.970238,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,1,2,1.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,41.758117,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,2,3,2.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,33.424784,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,3,4,3.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,12.424784,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,4,5,4.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,11.09145,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,5,6,5.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,10.693038,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,6,7,6.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,9.726371,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,7,8,7.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,56.154942,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,8,9,8.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,56.138276,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,9,10,9.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,62.092821,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,10,11,10.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,21.412266,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,11,12,11.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,23.190043,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,12,13,12.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,19.990043,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,13,14,13.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,33.535498,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,14,15,14.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,33.847998,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,15,16,15.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,30.641649,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,16,17,16.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,26.031259,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,17,18,17.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,30.031259,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,18,19,18.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,18.628662,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,19,20,19.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,22.864773,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,20,21,20.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,23.134614,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,21,22,21.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,31.193561,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,22,23,22.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,31.860227,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,23,24,23.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,51.210227,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,24,25,24.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,65.410227,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,25,26,25.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,92.010227,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,26,27,26.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,93.950703,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,27,28,27.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,217.284037,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,28,29,28.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,337.644426,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,29,30,29.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,222.397601,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,30,31,30.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,106.243056,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,31,32,31.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,121.458333,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,32,33,32.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
+1,Walther_2002,N,67.625,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,33,34,33.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,75.0,days of surveying (12 hours each),NA,NA,1.0,forest site (single crane),NA
 1,Basham_2019,N,29,richness,estimated,NA,NA,NA,NA,Y,estimated,NA,NA,NA,NA,0,1,0.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,140.0,surveys,NA,NA,70.0,trees (1 forest site),NA
 1,Basham_2019,N,15,richness,estimated,NA,NA,NA,NA,Y,estimated,NA,NA,NA,NA,1,4,2.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,140.0,surveys,NA,NA,70.0,trees (1 forest site),NA
 1,Basham_2019,N,19,richness,estimated,NA,NA,NA,NA,Y,estimated,NA,NA,NA,NA,4,30,17,NA,NA,NA,NA,NA,NA,NA,NA,NA,140.0,surveys,NA,NA,70.0,trees (1 forest site),NA
@@ -899,32 +1035,48 @@ Searches were therefore made extensively and, as far as possible, at random thro
 1,Warner_2002,NA,28,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,15,19,17,NA,NA,NA,NA,NA,NA,NA,NA,NA,120.0,transect surveys (8 hours),NA,NA,3.0,transects (3km long) - 1 forest site,NA
 1,Warner_2002,NA,15,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,20,24,22,NA,NA,NA,NA,NA,NA,NA,NA,NA,120.0,transect surveys (8 hours),NA,NA,3.0,transects (3km long) - 1 forest site,NA
 1,Warner_2002,NA,5,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,25,29,27,NA,NA,NA,NA,NA,NA,NA,NA,NA,120.0,transect surveys (8 hours),NA,NA,3.0,transects (3km long) - 1 forest site,NA
-1,Buchanan-Smith_2000,NA,1,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,6,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,0,1,0.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,6,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,1,2,1.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,8,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,2,3,2.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,8,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,3,4,3.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,10,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,4,5,4.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,10,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,5,6,5.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,10,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,6,7,6.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,10,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,7,8,7.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,11,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,8,9,8.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,10,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,9,10,9.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,10,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,10,11,10.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,10,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,11,12,11.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,11,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,12,13,12.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,9,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,13,14,13.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,9,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,14,15,14.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,9,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,15,16,15.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,9,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,16,17,16.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,9,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,17,18,17.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,6,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,18,19,18.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,6,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,19,20,19.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,6,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,20,21,20.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,6,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,21,22,21.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,6,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,22,23,22.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,1e-4,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,23,24,23.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
-1,Buchanan-Smith_2000,NA,1e-4,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,24,25,24.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,0,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,0,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,0,1,0.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,0,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,1,2,1.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,2,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,2,3,2.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,2,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,3,4,3.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,1,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,4,5,4.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,2,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,5,6,5.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,2,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,6,7,6.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,1,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,7,8,7.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,2,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,8,9,8.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,1,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,9,10,9.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,3,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,10,11,10.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,3,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,11,12,11.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,3,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,12,13,12.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,4,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,13,14,13.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,3,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,14,15,14.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,1,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,15,16,15.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,0,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,16,17,16.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,0,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,17,18,17.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,0,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,18,19,18.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,0,richness,observed,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,19,20,19.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,0,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,0,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,0,1,0.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,0,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,1,2,1.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,174.666667,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,2,3,2.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,174.666667,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,3,4,3.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,9.666667,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,4,5,4.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,41.666667,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,5,6,5.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,941,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,6,7,6.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,32,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,7,8,7.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,282,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,8,9,8.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,280,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,9,10,9.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,693.75,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,10,11,10.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,693.75,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,11,12,11.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,56.75,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,12,13,12.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,61.75,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,13,14,13.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,56.75,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,14,15,14.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,11,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,15,16,15.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,0,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,16,17,16.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,0,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,17,18,17.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,0,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,18,19,18.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
+1,Buchanan-Smith_2000,NA,0,abundance,raw,NA,NA,NA,NA,N,equal survey effort,NA,NA,NA,NA,19,20,19.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,Unknown,equal,NA,NA,7.0,forest sites,NA
 1,Whitworth_2019,NA,21.7,richness,mean estimated (of 9 sites),NA,NA,NA,NA,Y,estimated,NA,NA,NA,NA,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,11253.0,effort days,NA,NA,80.0,camera stations (5 forest sites),NA
 1,Whitworth_2019,NA,17.75,richness,mean estimated (of 9 sites),NA,NA,NA,NA,Y,estimated,NA,NA,NA,NA,3.5,30,16.75,NA,NA,NA,NA,NA,NA,NA,NA,NA,20364.0,effort days,NA,NA,168.0,camera stations (5 forest sites),NA
 1,Hodgkison_2004,NA,0.077,abundance,captures per 100 MNH,NA,NA,NA,NA,Y,per effort,NA,NA,NA,NA,0,10,5,NA,NA,NA,NA,NA,NA,NA,NA,NA,29232.0,m2 net hours,NA,NA,24.0,trees (1 forest site),NA
@@ -946,6 +1098,13 @@ Searches were therefore made extensively and, as far as possible, at random thro
 1,Francis_1994,NA,0.074,abundance,captures/net night,NA,NA,NA,NA,Y,per effort,NA,NA,NA,NA,0,3,1.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,1039.0,net nights,NA,NA,14.0,sampling points - 2 forest sites,NA
 1,Francis_1994,NA,3.2,abundance,captures/net night,NA,NA,NA,NA,Y,per effort,NA,NA,NA,NA,11,30,20.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,45.0,net nights,NA,NA,14.0,sampling points - 2 forest sites,NA
 1,Cademartori_2008,NA,47,abundance,proxy trap success (%),NA,NA,NA,NA,Y,per effort,NA,NA,NA,NA,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,330.0,trap nights,NA,NA,21.0,sampling points - 1 forest site,NA
+1,Cademartori_2008,NA,1.86,abundance,proxy trap success (%),NA,NA,NA,NA,Y,per effort,NA,NA,NA,NA,6,13,9.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,660.0,trap nights,NA,NA,21.0,sampling points - 1 forest site,NA
+1,Paste_2018,NA,28,abundance,raw,NA,NA,NA,NA,Y,equal effort,NA,NA,NA,NA,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,5880,trap nights,NA,NA,49.0,sampling points (along 6km transect) - 1 forest site,NA
+1,Paste_2018,NA,72,abundance,raw,NA,NA,NA,NA,Y,equal effort,NA,NA,NA,NA,1.8,2,1.9,NA,NA,NA,NA,NA,NA,NA,NA,NA,5880,trap nights,NA,NA,49.0,sampling points (along 6km transect) - 1 forest site,NA
+1,Paste_2018,NA,2,abundance,raw,NA,NA,NA,NA,Y,equal effort,NA,NA,NA,NA,10,15,12.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,5880,trap nights,NA,NA,49.0,sampling points (along 6km transect) - 1 forest site,NA
+1,Paste_2018,NA,8,richness,observed,NA,NA,NA,NA,Y,equal effort,NA,NA,NA,NA,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,5880,trap nights,NA,NA,49.0,sampling points (along 6km transect) - 1 forest site,NA
+1,Paste_2018,NA,4,richness,observed,NA,NA,NA,NA,Y,equal effort,NA,NA,NA,NA,1.8,2,1.9,NA,NA,NA,NA,NA,NA,NA,NA,NA,5880,trap nights,NA,NA,49.0,sampling points (along 6km transect) - 1 forest site,NA
+1,Paste_2018,NA,2,richness,observed,NA,NA,NA,NA,Y,equal effort,NA,NA,NA,NA,10,15,12.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,5880,trap nights,NA,NA,49.0,sampling points (along 6km transect) - 1 forest site,NA
 1,Cademartori_2008,NA,1.86,abundance,proxy trap success (%),NA,NA,NA,NA,Y,per effort,NA,NA,NA,NA,6,13,9.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,660.0,trap nights,NA,NA,21.0,sampling points - 1 forest site,NA
 1,Paste_2018,NA,28,abundance,raw,NA,NA,NA,NA,Y,equal effort,NA,NA,NA,NA,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,5880,trap nights,NA,NA,49.0,sampling points (along 6km transect) - 1 forest site,NA
 1,Paste_2018,NA,72,abundance,raw,NA,NA,NA,NA,Y,equal effort,NA,NA,NA,NA,1.8,2,1.9,NA,NA,NA,NA,NA,NA,NA,NA,NA,5880,trap nights,NA,NA,49.0,sampling points (along 6km transect) - 1 forest site,NA

@@ -165,6 +165,7 @@ walther_df <- read_csv("data/stripped_data/original/walther_2002.csv") %>%
   mutate(range_min = range_min*33,
          range_max = range_max*33, 
          mean_height = mean_height*33)
+max(walther_df$range_max)
 
 ## Richness
 walther_df_rich <- walther_df %>% 

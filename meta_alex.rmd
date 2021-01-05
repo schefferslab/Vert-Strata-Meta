@@ -219,23 +219,23 @@ rich_beta_strata_se <- rich_beta_intercept
 for(i in 1:length(mods_rich)){
   ### 1) Intercept
   rich_beta_intercept[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[1:50,] %>%
-    select(estimate) %>%
+    dplyr::select(estimate) %>%
     as.matrix()
   ### 2) Intercept uncertainty
   rich_beta_intercept_se[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[1:50,] %>%
-    select(estimate, conf.low) %>%
-    mutate(se = (estimate - conf.low)/1.96) %>%
-    select(se) %>% 
+    dplyr::select(estimate, conf.low) %>%
+    dplyr::mutate(se = (estimate - conf.low)/1.96) %>%
+    dplyr::select(se) %>% 
     as.matrix()
   ### 3) Slope
   rich_beta_strata[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[51:100,] %>%
-    select(estimate) %>%
+    dplyr::select(estimate) %>%
     as.matrix()
   ### 4) Slope uncertainty
   rich_beta_strata_se[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[51:100,] %>%
-    select(estimate, conf.low) %>%
-    mutate(se = (estimate - conf.low)/1.96) %>%
-    select(se) %>% 
+    dplyr::select(estimate, conf.low) %>%
+    dplyr::mutate(se = (estimate - conf.low)/1.96) %>%
+    dplyr::select(se) %>% 
     as.matrix()
 }
 ```
@@ -547,7 +547,7 @@ for(i in 1:length(mods_abund)){
     as.matrix()
 
   abund_beta_strata[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[(length_abund + 1):nrow(model_estimates_abund),] %>%
-    select(estimate) %>%
+    dplyr::select(estimate) %>%
     as.matrix()
 
   abund_beta_strata_se[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[(length_abund + 1):nrow(model_estimates_abund),] %>%
@@ -628,13 +628,13 @@ abund_modavg_preds_matrix <- tibble(
 
 for(i in 1:nrow(abund_pred_fit)){
   abund_modavg_preds_list[[i]] <- modavgCustom(logL = abund_aictab$LL, 
-                                  K = abund_aictab$K, 
-                                  modnames = abund_modnames, 
-                                  estimate = abund_pred_fit[i,], 
-                                  se = abund_pred_se[i,],
-                                  nobs = nrow(abund_pred_fit))
+                                               K = abund_aictab$K, 
+                                               modnames = abund_modnames, 
+                                               estimate = abund_pred_fit[i,], 
+                                               se = abund_pred_se[i,],
+                                               nobs = nrow(abund_pred_fit))
   abund_modavg_preds_matrix$Mod.avg.est[i] <- abund_modavg_preds_list[[i]]$Mod.avg.est
-  abund_modavg_preds_matrix$Uncond.SE [i] <- abund_modavg_preds_list[[i]]$Uncond.SE
+  abund_modavg_preds_matrix$Uncond.SE[i] <- abund_modavg_preds_list[[i]]$Uncond.SE
   abund_modavg_preds_matrix$Lower.CL[i] <- abund_modavg_preds_list[[i]]$Lower.CL
   abund_modavg_preds_matrix$Upper.CL[i] <- abund_modavg_preds_list[[i]]$Upper.CL
 }

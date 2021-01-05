@@ -59,6 +59,8 @@ sites <- sites %>%
   mutate(treatment = dplyr::recode(treatment, "Old-regrowth" = "Old regrowth"))
 # Extract out sites without canopy heights
 
+sites_view <- sites %>% dplyr::select(study_id, canopy_height)
+
 sites <- sites %>% 
   # filter(is.na(canopy_height)| canopy_height == "Unknown") %>% 
   mutate(longitude = as.double(longitude),
