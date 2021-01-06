@@ -204,10 +204,11 @@ model_estimates_rich <- sjPlot::get_model_data(top_rich_mod, type = "re", se = T
 
 ### Getting model estimates from each richness model using `sjPlot::get_model_data`
 ```{r Modeling species richness: getting model averaged estimates}
-# Creating matrices for model predictions; 4 matrices, each with 50 rows (for each study) and 34 cols (for each model)
+# Creating matrices for model predictions; 4 matrices, each with 53 rows (for each study) and 34 cols (for each model)
 ## 4 matrices:
-### 1) Intercept
-rich_beta_intercept <- matrix(NA, nrow = 50, ncol = length(mods_rich))
+rich_length <- nrow(sjPlot::get_model_data(mods_rich[[1]], type = "re", se = T, transform = NULL))
+
+rich_beta_intercept <- matrix(NA, nrow = terms_length/2, ncol = length(mods_rich))
 ### 2) Intercept uncertainty
 rich_beta_intercept_se <- rich_beta_intercept
 ### 3) Slope
@@ -218,21 +219,21 @@ rich_beta_strata_se <- rich_beta_intercept
 ## Extracting model estimates with `sjPlot::get_model_data`
 for(i in 1:length(mods_rich)){
   ### 1) Intercept
-  rich_beta_intercept[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[1:50,] %>%
+  rich_beta_intercept[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[1:(rich_length/2),] %>%
     dplyr::select(estimate) %>%
     as.matrix()
   ### 2) Intercept uncertainty
-  rich_beta_intercept_se[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[1:50,] %>%
+  rich_beta_intercept_se[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[1:(rich_length/2),] %>%
     dplyr::select(estimate, conf.low) %>%
     dplyr::mutate(se = (estimate - conf.low)/1.96) %>%
     dplyr::select(se) %>% 
     as.matrix()
   ### 3) Slope
-  rich_beta_strata[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[51:100,] %>%
+  rich_beta_strata[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[((rich_length/2)+1):(rich_length),] %>%
     dplyr::select(estimate) %>%
     as.matrix()
   ### 4) Slope uncertainty
-  rich_beta_strata_se[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[51:100,] %>%
+  rich_beta_strata_se[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[((rich_length/2)+1):(rich_length),] %>%
     dplyr::select(estimate, conf.low) %>%
     dplyr::mutate(se = (estimate - conf.low)/1.96) %>%
     dplyr::select(se) %>% 
@@ -530,27 +531,29 @@ length_abund <- nrow(model_estimates_abund[model_estimates_abund$facet == "link 
 
 ### Getting model estimates from all models 
 ```{r Getting abundance model esimates from all models}
-abund_beta_intercept <- matrix(NA, nrow = length_abund, ncol = length(mods_abund))
+rich_term_length <- nrow(sjPlot::get_model_data(mods_abund[[1]], type = "re", se = T, transform = NULL))
+
+abund_beta_intercept <- matrix(NA, nrow = rich_term_length/2, ncol = length(mods_abund))
 abund_beta_intercept_se <- abund_beta_intercept
 abund_beta_strata <- abund_beta_intercept
 abund_beta_strata_se <- abund_beta_intercept
 
 for(i in 1:length(mods_abund)){
-  abund_beta_intercept[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[1:length_abund,] %>%
+  abund_beta_intercept[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[1:(rich_term_length/2),] %>%
     dplyr::select(estimate) %>%
     as.matrix()
   
-  abund_beta_intercept_se[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[1:length_abund,] %>%
+  abund_beta_intercept_se[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[1:(rich_term_length/2),] %>%
     dplyr::select(estimate, conf.low) %>%
     dplyr::mutate(se = (estimate - conf.low)/1.96) %>%
     dplyr::select(se) %>% 
     as.matrix()
 
-  abund_beta_strata[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[(length_abund + 1):nrow(model_estimates_abund),] %>%
+  abund_beta_strata[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[((rich_term_length/2) + 1):rich_term_length,] %>%
     dplyr::select(estimate) %>%
     as.matrix()
 
-  abund_beta_strata_se[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[(length_abund + 1):nrow(model_estimates_abund),] %>%
+  abund_beta_strata_se[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[((rich_term_length/2) + 1):rich_term_length,] %>%
     dplyr::select(estimate, conf.low) %>%
     dplyr::mutate(se = (estimate - conf.low)/1.96) %>%
     dplyr::select(se) %>% 
