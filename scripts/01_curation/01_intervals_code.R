@@ -418,3 +418,37 @@ scheffers3_df_rich <- scheffers3_df %>%
                 in_bin_20 = ifelse(range_min <= 20 & range_max > 19, 1, 0))
 
 scheffers3_df_vert_rich <- as.data.frame(colSums(scheffers3_df_rich[,6:ncol(scheffers3_df_rich)]))
+
+
+
+# Scheffers 2013      1700 m site
+heymann_df <- read_csv("data/stripped_data/original/Heymann_2002.csv")
+
+## abundance
+heymann_df_abund <- heymann_df %>% 
+  dplyr::mutate(range = ifelse(range_max - range_min > 1, range_max - range_min, 1)) %>%
+  dplyr::mutate(n_per_strata = n / range) %>%
+  dplyr::mutate(range = ifelse(range_max - range_min > 1, range_max - range_min, 1)) %>%
+  dplyr::mutate(in_bin_0 = ifelse(range_min == 0, n_per_strata, 0),
+                in_bin_1 = ifelse(range_min <= 1 & range_max > 0, n_per_strata, 0),
+                in_bin_2 = ifelse(range_min <= 2 & range_max > 1, n_per_strata, 0),
+                in_bin_3 = ifelse(range_min <= 3 & range_max > 2, n_per_strata, 0),
+                in_bin_4 = ifelse(range_min <= 4 & range_max > 3, n_per_strata, 0),
+                in_bin_5 = ifelse(range_min <= 5 & range_max > 4, n_per_strata, 0),
+                in_bin_6 = ifelse(range_min <= 6 & range_max > 5, n_per_strata, 0),
+                in_bin_7 = ifelse(range_min <= 7 & range_max > 6, n_per_strata, 0),
+                in_bin_8 = ifelse(range_min <= 8 & range_max > 7, n_per_strata, 0),
+                in_bin_9 = ifelse(range_min <= 9 & range_max > 8, n_per_strata, 0),
+                in_bin_10 = ifelse(range_min <= 10 & range_max > 9, n_per_strata, 0),
+                in_bin_11 = ifelse(range_min <= 11 & range_max > 10, n_per_strata, 0),
+                in_bin_12 = ifelse(range_min <= 12 & range_max > 11, n_per_strata, 0),
+                in_bin_13 = ifelse(range_min <= 13 & range_max > 12, n_per_strata, 0),
+                in_bin_14 = ifelse(range_min <= 14 & range_max > 13, n_per_strata, 0),
+                in_bin_15 = ifelse(range_min <= 15 & range_max > 14, n_per_strata, 0),
+                in_bin_16 = ifelse(range_min <= 16 & range_max > 15, n_per_strata, 0),
+                in_bin_17 = ifelse(range_min <= 17 & range_max > 16, n_per_strata, 0),
+                in_bin_18 = ifelse(range_min <= 18 & range_max > 17, n_per_strata, 0),
+                in_bin_19 = ifelse(range_min <= 19 & range_max > 18, n_per_strata, 0),
+                in_bin_20 = ifelse(range_min <= 20 & range_max > 19, n_per_strata, 0))
+
+heymann_df_vert_abund <- as.data.frame(colSums(heymann_df_abund[,6:ncol(heymann_df_abund)]))
