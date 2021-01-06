@@ -452,3 +452,5 @@ heymann_df_abund <- heymann_df %>%
                 in_bin_20 = ifelse(range_min <= 20 & range_max > 19, n_per_strata, 0))
 
 heymann_df_vert_abund <- as.data.frame(colSums(heymann_df_abund[,6:ncol(heymann_df_abund)]))
+=======
+     
