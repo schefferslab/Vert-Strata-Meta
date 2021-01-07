@@ -237,8 +237,8 @@ locations = dat[, c("latitude", "longitude", "taxa", "continent", "link", "metho
 locations = unique(locations)
 
 continent_taxa = locations %>%
-  group_by(continent, taxa, drop = FALSE) %>%
-  summarize()
+  group_by(continent, taxa) %>%
+  tally()
 
 
 ggplot(data = world) +
