@@ -67,7 +67,13 @@ site_plot_binned <- site_plot_filter %>%
                                               correction_performed_on_data_in_table %in% 
                                               c("needs 1m intervals", "needs 1m height intervals"),
                                             biodiversity_metric_value / strata_width, 
-                                            biodiversity_metric_value))
+                                            biodiversity_metric_value)) %>% 
+  # Add weight according to whether, and by how much, the stratum was broken up
+  # into bins
+  mutate(bin_weight = ifelse(biodiversity_metric == "abundance" & 
+                                      correction_performed_on_data_in_table %in% 
+                                      c("needs 1m intervals", "needs 1m height intervals"),
+                                    1 / strata_width, 1))
 
 
 ## ....Filter to just previously corrected, or use values corrected on Google Sheet --------
