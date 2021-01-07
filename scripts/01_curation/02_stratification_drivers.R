@@ -233,10 +233,9 @@ library("sf")
 library("ggplot2")
 library("rnaturalearth")
 library("rnaturalearthdata")
-
-#### load in the world dataset 'the basic map'
 theme_set(theme_bw())
 
+#### load in the world dataset 'the basic map'
 world <- ne_countries(scale = "medium", returnclass = "sf")
 
 # select out each individual study location - along with useful columns for plotting later
@@ -294,11 +293,90 @@ ggsave("analysis/figures/world_map.jpeg", width = 11, height = 5, units = "in", 
 
 
 ###
-###    plot basic plots of elevation distributions and counts of method types
-####
+###    plot basic plots of elevation distributions 
+###
+
+theme_set(theme_bw())
+
+ggplot(locations, aes(x = taxa, y = elevation, fill = taxa)) +
+  geom_boxplot(show.legend = FALSE) +
+  geom_jitter(width = 0.1, show.legend = FALSE) +
+  xlab("Taxa") + 
+  ylab("Elevation (m)")+
+  theme(axis.title.x = element_text(vjust= -4, size =  rel(1.5)),
+        axis.title.y = element_text(vjust = 5, size =  rel(1.5)),
+        plot.title = element_text(size = 14, face = "bold"),
+        panel.background = element_blank(),
+        panel.grid = element_blank(),
+        axis.title = element_text(face="bold"),
+        axis.text.x=element_text(colour="black", vjust = 1, size = 11),
+        axis.text.y=element_text(colour="black", size = 11),
+        axis.line = element_line(size=0.5, colour = "black"), 
+        plot.margin = margin(1,1,1,1, "cm"))
+
+ggsave("analysis/figures/elevation_taxa.jpeg", width = 7, height = 6.5, units = "in", dpi = 350)
 
 
-ggplot(locations, aes(x = taxa, y = elevation)) +
-  geom_boxplot()
+###
+###    plot basic plots of richness and abundance counts  
+###
+
+locations_split = dat[, c("latitude", "longitude", "taxa", "continent","country", "link", "method", "elevation", "biodiversity_metric")]
+locations_split = unique(locations_split)
+
+# count how many studies occured across different taxa and continents
+continent_taxa_metric = as.data.frame(locations_split) %>%
+  group_by(taxa, biodiversity_metric) %>%
+  tally()
+
+ggplot(continent_taxa_metric, aes(x = taxa, y = n, fill = biodiversity_metric))+
+  geom_col(position = "dodge") +
+  xlab("Taxa") + 
+  ylab("Number of Studies")+
+  scale_y_continuous(limits = c(0,30))+
+  scale_fill_discrete(name = "", labels = c("Abundance", "Richness"))+
+  theme(legend.position = "top", axis.title.x = element_text(vjust= -4, size =  rel(1.5)),
+        axis.title.y = element_text(vjust = 5, size =  rel(1.5)),
+        plot.title = element_text(size = 14, face = "bold"),
+        panel.background = element_blank(),
+        panel.grid = element_blank(),
+        axis.title = element_text(face="bold"),
+        axis.text.x=element_text(colour="black", vjust = 1, size = 11),
+        axis.text.y=element_text(colour="black", size = 11),
+        axis.line = element_line(size=0.5, colour = "black"), 
+        plot.margin = margin(1,1,1,1, "cm"))
+
+ggsave("analysis/figures/studies_metrics.jpeg", width = 7, height = 6.5, units = "in", dpi = 350)
+
+
+
+###
+###    plot basic plots of methods
+###
+
+# count how many studies occured across different taxa and continents
+method_breakdown = as.data.frame(locations) %>%
+  group_by(method) %>%
+  tally()
+
+ggplot(method_breakdown, aes(x = reorder(method,-n), y = n, fill = method))+
+  geom_col(position = "dodge", show.legend = FALSE) +
+  xlab("Method of Data Collection") + 
+  ylab("Number of Studies")+
+  scale_y_continuous(limits = c(0,40))+
+  #scale_fill_discrete(name = "", labels = c("Abundance", "Richness"))+
+  theme(legend.position = "top", axis.title.x = element_text(vjust= -4, size =  rel(1.5)),
+        axis.title.y = element_text(vjust = 5, size =  rel(1.5)),
+        plot.title = element_text(size = 14, face = "bold"),
+        panel.background = element_blank(),
+        panel.grid = element_blank(),
+        axis.title = element_text(face="bold"),
+        axis.text.x=element_text(colour="black", vjust = 1, hjust = 1, size = 11, angle = 45),
+        axis.text.y=element_text(colour="black", size = 11),
+        axis.line = element_line(size=0.5, colour = "black"), 
+        plot.margin = margin(1,1,1,1, "cm"))
+
+ggsave("analysis/figures/studies_methods.jpeg", width = 11, height = 7.5, units = "in", dpi = 350)
+
 
 
