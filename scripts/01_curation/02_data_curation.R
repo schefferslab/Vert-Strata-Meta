@@ -49,7 +49,7 @@ site_plot_filter <- site_plot_merge %>%
          # Is in the tropics or sub-tropics
          latitude >= -30 & latitude <= 30, 
          # Only undisturbed forest
-         treatment %in% c("Unlogged", "Old regrowth", "Unlogged and secondary", "Unlogged (with some degraded forest)", "100 ha fragments",
+         treatment %in% c("Unlogged", "Old regrowth", "Unlogged and secondary", "Unlogged (with some degraded forest)", "100 ha fragments", "Multiple regrowth stages",
                           "10 ha fragments", "1 ha fragments", "Fragment"),
          # Birds or mammals
          taxa %in% c("Birds", "Small mammals", "Bats", "Amphibians", "Primates", "All mammals"))
@@ -166,8 +166,8 @@ data_joined_raw <- rich_abund_join %>%
   mutate(mean_strata_height_p = as.double(mean_strata_height) / canopy_height)
 
 data_joined_raw %>% 
-  filter(mean_strata_height_p > 1) %>%
-  view()
+  filter(mean_strata_height_p > 1)
+  #view()
 
 data_joined <- data_joined_raw %>%
   filter(!mean_strata_height_p > 1)

@@ -98,10 +98,10 @@ all_factors = rbind(climate, light, food, structure,microhabitat, competition, p
 
 dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
   dplyr::filter(taxa != "All mammals") %>%
-  dplyr::filter(taxa != "Primates") %>%
+  #dplyr::filter(taxa != "Primates") %>%
   dplyr::mutate(weight = spatial_rank + temporal_bredth_rank + temporal_resolution_rank,
                 taxa = as.factor(taxa),
-                taxa_order = factor(taxa, levels = c("Birds","Bats","Small mammals","Amphibians")),
+                taxa_order = factor(taxa, levels = c("Birds","Bats","Small mammals","Amphibians", "Primates")),
                 elevation = as.numeric(elevation),
                 scaled_met = as.numeric(rescale(corrected_biodiversity_metric_value, to = c(0.00001, 0.99999))),
                 link = as.factor(link), 
@@ -164,7 +164,7 @@ triple_groups$investigated_percent = (triple_groups$n.investigated / triple_grou
 
 
 specifics = triple_groups %>% filter(factors %in% c("food", "structure","climate", "morphology", "shelter", "species_interactions", "sex","age",  "seasonality", "diurnality")
-                                     #,taxa != "Amphibians"
+                                     #,taxa != "Amphibians", taxa !="Primates"
                                      )
 
 specifics_tall <- specifics %>% gather(key = Level, value = Value, theorised_percent:investigated_percent)
@@ -182,14 +182,81 @@ ggplot(specifics_tall, aes(x = factors, y = Value, fill = Level)) +
   ylab("Percent of Papers") + xlab("Stratification Factors") +
   scale_fill_discrete(name = "Level", labels = c("Investigated", "Referenced"), guide = guide_legend(reverse=TRUE)) +
   ######  scale x discrete labels will need to be changed if the plot changes is updated!    or it will show the wrong labels because it is overriting thrm
-  scale_x_discrete(labels=c("Habitat Structure", "Food / Foraging", "Climate", "Seasonality", "Species Interactions", "Morphology", "Nesting / Roosting", "Age", "Diurnality", "Sex")) +
+  scale_x_discrete(labels=c("Habitat Structure", "Food / Foraging", "Morphology", "Climate", "Species Interactions", "Nesting / Roosting",  "Seasonality", "Diurnality",   "Age",  "Sex")) +
   theme(legend.position = "bottom", legend.title = element_blank(),
         panel.background = element_blank(),
         axis.text.x = element_text(angle = 45, hjust = 1))
 
-ggsave("analysis/figures/drivers.jpeg", width = 3.5, height = 10, units = "in", dpi = 300)
+ggsave("analysis/figures/drivers_all_taxa.jpeg", width = 3.5, height = 10, units = "in", dpi = 300)
+
+
+
+#
+#
+#
+#     without primates or amphibians
+
+specifics_select = triple_groups %>% filter(factors %in% c("food", "structure","climate", "morphology", "shelter", "species_interactions", "sex","age",  "seasonality", "diurnality")
+                                     ,taxa != "Amphibians", taxa !="Primates"
+)
+
+specifics_tall_select <- specifics_select %>% gather(key = Level, value = Value, theorised_percent:investigated_percent)
+
+#create a list which sums the values and orders them to get a nice list of which factors should go in which order - this will still work if you choose different factors above
+list_not_in_order_select = aggregate(specifics_tall_select$Value, by=list(specifics_tall_select$factors), FUN=sum)
+list_in_order_select = list_not_in_order_select[order(-list_not_in_order_select$x),]
+
+specifics_tall_select <- within(specifics_tall_select, 
+                         factors <- factor(factors, levels=list_in_order_select$Group.1))
+
+ggplot(specifics_tall_select, aes(x = factors, y = Value, fill = Level)) + 
+  geom_col(position = "identity") +
+  facet_wrap(~taxa, ncol = 1) +
+  ylab("Percent of Papers") + xlab("Stratification Factors") +
+  scale_fill_discrete(name = "Level", labels = c("Investigated", "Referenced"), guide = guide_legend(reverse=TRUE)) +
+  ######  scale x discrete labels will need to be changed if the plot changes is updated!    or it will show the wrong labels because it is overriting thrm
+  scale_x_discrete(labels=c("Habitat Structure", "Food / Foraging","Morphology", "Species Interactions", "Nesting / Roosting", "Seasonality", "Diurnality",  "Climate",   "Age", "Sex")) +
+  theme(legend.position = "bottom", legend.title = element_blank(),
+        panel.background = element_blank(),
+        axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggsave("analysis/figures/drivers_3_taxa.jpeg", width = 3.5, height = 10, units = "in", dpi = 300)
 
 ## 3. Write out files ------------
+
+library("sf")
+library("ggplot2")
+library("rnaturalearth")
+library("rnaturalearthdata")
+
+theme_set(theme_bw())
+
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+locations = dat[, c("latitude", "longitude", "taxa", "continent", "link", "method")]
+locations = unique(locations)
+
+continent_taxa = locations %>%
+  group_by(continent, taxa, drop = FALSE) %>%
+  summarize()
+
+
+ggplot(data = world) +
+  geom_sf(fill = "grey96")+
+  geom_point(data = locations, aes(x = longitude, y = latitude, fill = taxa), size = 2,stroke = 1, shape = 21)+
+  geom_hline(yintercept = 30) +
+  geom_hline(yintercept = -30) +
+  xlab("") + 
+  ylab("")+
+  guides(fill=guide_legend(title=""))+
+  theme(legend.position = "top", legend.text = element_text(size = 13)) # , face = "bold"
+
+
+#put n numbers of locations and taxa
+
+
+
+ggsave("analysis/figures/world_map.jpeg", width = 11, height = 6.8, units = "in", dpi = 300)
 
 
 #write_csv(drivers, "data/stripped_data/final/drivers.csv")
