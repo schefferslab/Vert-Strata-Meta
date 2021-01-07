@@ -112,7 +112,7 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
                 season = as.factor(season), 
                 forest_type = as.factor(forest_type),  
                 mean_strata_height_p = as.numeric(mean_strata_height_p)) %>%
-  dplyr::select(link, study_id.x, method, taxa, continent, biodiversity_metric, taxa_order,
+  dplyr::select(link, study_id.x, method, taxa, continent,country, biodiversity_metric, taxa_order,
                 treatment, season, forest_type, elevation, canopy_height, latitude, longitude, 
                 scaled_met, strata = mean_strata_height_p) 
 
@@ -162,6 +162,8 @@ triple_groups$investigated_percent = (triple_groups$n.investigated / triple_grou
 # climate, light, food, structure,microhabitat, competition, predation,
 #reproduction, shelter,species_interactions, sex, morphology, age, seasonality, diurnality, coexistence, guilds)
 
+##   justify inclusions 
+##
 
 specifics = triple_groups %>% filter(factors %in% c("food", "structure","climate", "morphology", "shelter", "species_interactions", "sex","age",  "seasonality", "diurnality")
                                      #,taxa != "Amphibians", taxa !="Primates"
@@ -222,41 +224,81 @@ ggplot(specifics_tall_select, aes(x = factors, y = Value, fill = Level)) +
 
 ggsave("analysis/figures/drivers_3_taxa.jpeg", width = 3.5, height = 10, units = "in", dpi = 300)
 
-## 3. Write out files ------------
+## 3. Draw a world map
+###
+
+# load in packages
 
 library("sf")
 library("ggplot2")
 library("rnaturalearth")
 library("rnaturalearthdata")
 
+#### load in the world dataset 'the basic map'
 theme_set(theme_bw())
 
 world <- ne_countries(scale = "medium", returnclass = "sf")
 
-locations = dat[, c("latitude", "longitude", "taxa", "continent", "link", "method")]
+# select out each individual study location - along with useful columns for plotting later
+
+locations = dat[, c("latitude", "longitude", "taxa", "continent","country", "link", "method", "elevation")]
 locations = unique(locations)
 
-continent_taxa = locations %>%
+# count how many studies occured across different taxa and continents
+continent_taxa = as.data.frame(locations) %>%
   group_by(continent, taxa) %>%
   tally()
 
+# primates were not recorded in africa and asia so these rows need to get added and then re- ordered
+continent_add = continent_taxa[c(4,13),]
+continent_mix = rbind(continent_taxa, continent_add)
+continent_mix[14:15,2] =  "Primates" ; continent_mix[14:15,3] =  0
+continent_mix = continent_mix[
+  with(continent_mix, order(continent, taxa)),
+  ]
 
+### here adding a new list of coordinates for the plotting of labels on the map - which match the continent and taxa of the first data
+continent_mix$longitude = c(rep(-15, 5), rep(-115, 5), rep(140, 5))
+continent_mix$latitude =  c(   0,-6,-12,-18,-24,   6, 0, -6, -12,-18,     24,18,12,6,0)
+continent_mix$inset = paste("n = ", continent_mix$n)
+
+### select the lists of countries in each continent
+africa = c(unique(subset(locations, continent == "Africa")$country))
+asia =   c(unique(subset(locations, continent == "Asia and Oceania")$country))
+neo =    c(unique(subset(locations, continent == "Americas")$country))
+
+chop_africa <- ne_countries(scale = "medium", returnclass = "sf", country = africa)
+chop_asia <- ne_countries(scale = "medium", returnclass = "sf", country = asia)
+chop_neo <- ne_countries(scale = "medium", returnclass = "sf", country = neo)
+
+### plot the whole damned thing
 ggplot(data = world) +
-  geom_sf(fill = "grey96")+
-  geom_point(data = locations, aes(x = longitude, y = latitude, fill = taxa), size = 2,stroke = 1, shape = 21)+
+  geom_sf(fill = "grey94")+
+  geom_sf(data = chop_africa, fill = "orangered1") + 
+  geom_sf(data = chop_asia, fill = "deepskyblue1") + 
+  geom_sf(data = chop_neo, fill = "yellowgreen") + 
+  geom_point(data = locations, aes(x = longitude, y = latitude, fill = taxa), size = 2, shape = 21)+
+  geom_point(data = continent_mix, aes(x = longitude, y = latitude, fill = taxa), size = 2, shape = 23, show.legend = FALSE)+
+  geom_text(data = continent_mix,  aes(x = longitude, y = latitude, label = inset, fontface = "bold"), nudge_x = 5, hjust = "left") +
   geom_hline(yintercept = 30) +
   geom_hline(yintercept = -30) +
+  coord_sf(ylim= c(60, -60), xlim= c(165, -140) ) +  # 
   xlab("") + 
   ylab("")+
   guides(fill=guide_legend(title=""))+
-  theme(legend.position = "top", legend.text = element_text(size = 13)) # , face = "bold"
+  theme(legend.position = "top", legend.text = element_text(size = 13, face = "bold"), 
+        panel.grid.major = element_line(linetype = "dashed"))
+
+ggsave("analysis/figures/world_map.jpeg", width = 11, height = 5, units = "in", dpi = 350)
 
 
-#put n numbers of locations and taxa
+
+###
+###    plot basic plots of elevation distributions and counts of method types
+####
 
 
+ggplot(locations, aes(x = taxa, y = elevation)) +
+  geom_boxplot()
 
-ggsave("analysis/figures/world_map.jpeg", width = 11, height = 6.8, units = "in", dpi = 300)
 
-
-#write_csv(drivers, "data/stripped_data/final/drivers.csv")
