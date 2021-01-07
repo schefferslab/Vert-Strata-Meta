@@ -376,7 +376,7 @@ ggplot(method_breakdown, aes(x = reorder(method,-n), y = n, fill = method))+
         axis.line = element_line(size=0.5, colour = "black"), 
         plot.margin = margin(1,1,1,1, "cm"))
 
-ggsave("analysis/figures/studies_methods.jpeg", width = 11, height = 7.5, units = "in", dpi = 350)
+ggsave("analysis/figures/studies_methods.jpeg", width = 5.5, height = 7.5, units = "in", dpi = 350)
 
 
 
