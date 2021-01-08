@@ -11,6 +11,7 @@ library(ggpubr)
 library(scales)
 library(visreg)
 
+
 dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
   dplyr::mutate(weight = spatial_rank + temporal_bredth_rank + temporal_resolution_rank,
                 taxa = as.factor(taxa),
