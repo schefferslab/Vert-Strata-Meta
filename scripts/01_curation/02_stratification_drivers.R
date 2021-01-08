@@ -467,5 +467,5 @@ ggplot(years_grouped, aes(x = decade, y = n, fill = factor(taxa, levels= c( "Pri
         legend.text=element_text(colour="black",size = 11, face = "bold"),
         plot.margin = margin(1,1,1,1, "cm"))
 
-ggsave("analysis/figures/studies_decades.jpeg", width = 5.5, height = 7.5, units = "in", dpi = 350)
+ggsave("analysis/figures/studies_decades.jpeg", width = 7, height = 7.5, units = "in", dpi = 350)
 
