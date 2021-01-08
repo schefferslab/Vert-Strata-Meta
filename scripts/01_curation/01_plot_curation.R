@@ -26,9 +26,9 @@ colnames(plots) <- gsub(" ", "_", colnames(plots))
 colnames(plots) <- gsub("/", "_", colnames(plots))
 
 plots <- plots %>% 
-  dplyr::mutate(min_strata_height = as.double(min_strata_height),
+  mutate(min_strata_height = as.double(min_strata_height),
          max_strata_height = as.double(max_strata_height)) %>% 
-  dplyr::mutate(mean_strata_height = (min_strata_height + max_strata_height) / 2)
+  mutate(mean_strata_height = (min_strata_height + max_strata_height) / 2)
 
 ## 3. Write out data --------------
 

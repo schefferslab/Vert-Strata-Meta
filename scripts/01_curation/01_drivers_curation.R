@@ -1,6 +1,5 @@
 ## David Klinges
-## This script curates site data, notably:
-## - estimating canopy height from Simard et al 2011 imagery when can height not provided
+## This script curates drivers data - i.e. splitting up the categories and joining into a new dataframe for plotting
 
 
 ## 1. Workspace prep ------------
@@ -63,14 +62,14 @@ sites <- sites %>%
   # filter(is.na(canopy_height)| canopy_height == "Unknown") %>% 
   mutate(longitude = as.double(longitude),
          latitude = as.double(latitude)) %>% 
-
+  
   mutate(canopy_height = as.double(canopy_height)) %>% 
-## Fill in NA canopy heights with Simard et al 2011 estimates
-# no_heights <- no_heights %>% 
+  ## Fill in NA canopy heights with Simard et al 2011 estimates
+  # no_heights <- no_heights %>% 
   mutate(canopy_height = ifelse(is.na(canopy_height), raster::extract(global_canopy_height, 
-                                           data.frame(x = longitude, y = latitude), 
-                                           method = 'simple'),
-                                  canopy_height))
+                                                                      data.frame(x = longitude, y = latitude), 
+                                                                      method = 'simple'),
+                                canopy_height))
 
 ## 3. Write out files ------------
 
