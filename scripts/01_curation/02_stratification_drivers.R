@@ -308,30 +308,28 @@ ggplot(data = world) +
 ggsave("analysis/figures/world_map.jpeg", width = 11, height = 5, units = "in", dpi = 350)
 
 
-
 ###
 ###    plot basic plots of elevation distributions 
 ###
 
 theme_set(theme_bw())
 
-ggplot(locations, aes(x = taxa, y = elevation, fill = taxa)) +
+elevs = ggplot(locations, aes(x = taxa, y = elevation, fill = taxa)) +
   geom_boxplot(show.legend = FALSE) +
   geom_jitter(width = 0.1, show.legend = FALSE) +
   xlab("Taxa") + 
   ylab("Elevation (m)")+
   theme(axis.title.x = element_text(vjust= -4, size =  rel(1.5)),
         axis.title.y = element_text(vjust = 5, size =  rel(1.5)),
-        plot.title = element_text(size = 14, face = "bold"),
         panel.background = element_blank(),
         panel.grid = element_blank(),
-        axis.title = element_text(colour="black", face="bold"),
-        axis.text.x=element_text(colour="black", vjust = 1, size = 11),
+        axis.title = element_text(face="bold"),
+        axis.text.x=element_text(colour="black", vjust = 1, hjust = 1, size = 11, angle = 45),
         axis.text.y=element_text(colour="black", size = 11),
         axis.line = element_line(size=0.5, colour = "black"), 
         plot.margin = margin(1,1,1,1, "cm"))
-
-ggsave("analysis/figures/elevation_taxa.jpeg", width = 7, height = 6.5, units = "in", dpi = 350)
+elevs
+ggsave("analysis/figures/elevation_taxa.jpeg", width = 5, height = 6.5, units = "in", dpi = 350)
 
 
 ###
@@ -346,26 +344,25 @@ continent_taxa_metric = as.data.frame(locations_split) %>%
   group_by(taxa, biodiversity_metric) %>%
   tally()
 
-ggplot(continent_taxa_metric, aes(x = taxa, y = n, fill = biodiversity_metric))+
+t_m = ggplot(continent_taxa_metric, aes(x = taxa, y = n, fill = biodiversity_metric))+
   geom_col(position = "dodge") +
   xlab("Taxa") + 
   ylab("Number of Studies")+
   scale_y_continuous(limits = c(0,30))+
   scale_fill_brewer(palette = "Dark2", name = "", labels = c("Abundance", "Richness"))+
   theme(legend.position = "top", legend.title = element_blank(),
-        strip.background = element_rect(colour="black", fill="white"),
-        panel.background = element_blank(),
-        panel.grid = element_blank(),
-        axis.text.x = element_text(colour="black", angle = 45, hjust = 1, size = 11),
         axis.title.x = element_text(vjust= -4, size =  rel(1.5)),
         axis.title.y = element_text(vjust = 5, size =  rel(1.5)),
+        panel.background = element_blank(),
+        panel.grid = element_blank(),
+        axis.title = element_text(face="bold"),
+        axis.text.x=element_text(colour="black", vjust = 1, hjust = 1, size = 11, angle = 45),
         axis.text.y=element_text(colour="black", size = 11),
-        plot.margin = margin(1,1,1,1, "cm"),
-        legend.text = element_text(colour="black", size = 11, face = "bold"))
-
-
+        axis.line = element_line(size=0.5, colour = "black"), 
+        legend.text=element_text(colour="black",size = 11, face = "bold"),
+        plot.margin = margin(1,1,1,1, "cm"))
+t_m
 ggsave("analysis/figures/studies_metrics.jpeg", width = 5, height = 6.5, units = "in", dpi = 350)
-
 
 
 ###
@@ -377,15 +374,14 @@ method_breakdown = as.data.frame(locations) %>%
   group_by(method) %>%
   tally()
 
-ggplot(method_breakdown, aes(x = reorder(method,-n), y = n, fill = method))+
+meth = ggplot(method_breakdown, aes(x = reorder(method,-n), y = n, fill = method))+
   geom_col(position = "dodge", show.legend = FALSE) +
   xlab("Method of Data Collection") + 
   ylab("Number of Studies")+
   scale_y_continuous(limits = c(0,40))+
   scale_fill_brewer(palette = "Set1")+
-  theme(legend.position = "top", axis.title.x = element_text(vjust= -4, size =  rel(1.5)),
+  theme(axis.title.x = element_text(vjust= -4, size =  rel(1.5)),
         axis.title.y = element_text(vjust = 5, size =  rel(1.5)),
-        plot.title = element_text(size = 14, face = "bold"),
         panel.background = element_blank(),
         panel.grid = element_blank(),
         axis.title = element_text(face="bold"),
@@ -393,8 +389,8 @@ ggplot(method_breakdown, aes(x = reorder(method,-n), y = n, fill = method))+
         axis.text.y=element_text(colour="black", size = 11),
         axis.line = element_line(size=0.5, colour = "black"), 
         plot.margin = margin(1,1,1,1, "cm"))
-
+meth
 ggsave("analysis/figures/studies_methods.jpeg", width = 5.5, height = 7.5, units = "in", dpi = 350)
 
 
-
+#ggarrange(elevs, meth, t_m, ncol= 3)
