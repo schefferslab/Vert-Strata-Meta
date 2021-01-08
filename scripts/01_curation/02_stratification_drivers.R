@@ -182,12 +182,21 @@ ggplot(specifics_tall, aes(x = factors, y = Value, fill = Level)) +
   geom_col(position = "identity") +
   facet_wrap(~taxa, ncol = 1) +
   ylab("Percent of Papers") + xlab("Stratification Factors") +
-  scale_fill_discrete(name = "Level", labels = c("Investigated", "Referenced"), guide = guide_legend(reverse=TRUE)) +
+  scale_fill_brewer(palette = "Set1", labels = c("Investigated", "Referenced"), guide = guide_legend(reverse=TRUE)) +
   ######  scale x discrete labels will need to be changed if the plot changes is updated!    or it will show the wrong labels because it is overriting thrm
   scale_x_discrete(labels=c("Habitat Structure", "Food / Foraging", "Morphology", "Climate", "Species Interactions", "Nesting / Roosting",  "Seasonality", "Diurnality",   "Age",  "Sex")) +
-  theme(legend.position = "bottom", legend.title = element_blank(),
+  theme(legend.position = "top", legend.title = element_blank(),
+        strip.background = element_rect(colour="black",
+                                        fill="white"),
         panel.background = element_blank(),
-        axis.text.x = element_text(angle = 45, hjust = 1))
+        panel.grid = element_blank(),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.title.x = element_text(vjust= -4, size =  rel(1.5)),
+        axis.title.y = element_text(vjust = 5, size =  rel(1.5)),
+        strip.text.x = element_text(size = 11, face = "bold"),
+        axis.text.y=element_text(colour="black", size = 11),
+        legend.text=element_text(colour="black",size = 11, face = "bold"),
+        plot.margin = margin(1,1,1,1, "cm"))
 
 ggsave("analysis/figures/drivers_all_taxa.jpeg", width = 3.5, height = 10, units = "in", dpi = 300)
 
@@ -215,12 +224,20 @@ ggplot(specifics_tall_select, aes(x = factors, y = Value, fill = Level)) +
   geom_col(position = "identity") +
   facet_wrap(~taxa, ncol = 1) +
   ylab("Percent of Papers") + xlab("Stratification Factors") +
-  scale_fill_discrete(name = "Level", labels = c("Investigated", "Referenced"), guide = guide_legend(reverse=TRUE)) +
+  scale_fill_brewer(palette = "Set1", labels = c("Investigated", "Referenced"), guide = guide_legend(reverse=TRUE)) +
   ######  scale x discrete labels will need to be changed if the plot changes is updated!    or it will show the wrong labels because it is overriting thrm
   scale_x_discrete(labels=c("Habitat Structure", "Food / Foraging","Morphology", "Species Interactions", "Nesting / Roosting", "Seasonality", "Diurnality",  "Climate",   "Age", "Sex")) +
-  theme(legend.position = "bottom", legend.title = element_blank(),
+  theme(legend.position = "top", legend.title = element_blank(),
+        strip.background = element_rect(colour="black", fill="white"),
         panel.background = element_blank(),
-        axis.text.x = element_text(angle = 45, hjust = 1))
+        panel.grid = element_blank(),
+        axis.text.x = element_text(colour="black", angle = 45, hjust = 1),
+        axis.title.x = element_text(colour="black", vjust= -4, size =  rel(1.5)),
+        axis.title.y = element_text(colour="black", vjust = 5, size =  rel(1.5)),
+        strip.text.x = element_text(size = 11, face = "bold"),
+        axis.text.y=element_text(colour="black", size = 11),
+        legend.text=element_text(colour="black",size = 11, face = "bold"),
+        plot.margin = margin(1,1,1,1, "cm"))
 
 ggsave("analysis/figures/drivers_3_taxa.jpeg", width = 3.5, height = 10, units = "in", dpi = 300)
 
@@ -308,7 +325,7 @@ ggplot(locations, aes(x = taxa, y = elevation, fill = taxa)) +
         plot.title = element_text(size = 14, face = "bold"),
         panel.background = element_blank(),
         panel.grid = element_blank(),
-        axis.title = element_text(face="bold"),
+        axis.title = element_text(colour="black", face="bold"),
         axis.text.x=element_text(colour="black", vjust = 1, size = 11),
         axis.text.y=element_text(colour="black", size = 11),
         axis.line = element_line(size=0.5, colour = "black"), 
@@ -334,19 +351,20 @@ ggplot(continent_taxa_metric, aes(x = taxa, y = n, fill = biodiversity_metric))+
   xlab("Taxa") + 
   ylab("Number of Studies")+
   scale_y_continuous(limits = c(0,30))+
-  scale_fill_discrete(name = "", labels = c("Abundance", "Richness"))+
-  theme(legend.position = "top", axis.title.x = element_text(vjust= -4, size =  rel(1.5)),
-        axis.title.y = element_text(vjust = 5, size =  rel(1.5)),
-        plot.title = element_text(size = 14, face = "bold"),
+  scale_fill_brewer(palette = "Dark2", name = "", labels = c("Abundance", "Richness"))+
+  theme(legend.position = "top", legend.title = element_blank(),
+        strip.background = element_rect(colour="black", fill="white"),
         panel.background = element_blank(),
         panel.grid = element_blank(),
-        axis.title = element_text(face="bold"),
-        axis.text.x=element_text(colour="black", vjust = 1, size = 11),
+        axis.text.x = element_text(colour="black", angle = 45, hjust = 1, size = 11),
+        axis.title.x = element_text(vjust= -4, size =  rel(1.5)),
+        axis.title.y = element_text(vjust = 5, size =  rel(1.5)),
         axis.text.y=element_text(colour="black", size = 11),
-        axis.line = element_line(size=0.5, colour = "black"), 
-        plot.margin = margin(1,1,1,1, "cm"))
+        plot.margin = margin(1,1,1,1, "cm"),
+        legend.text = element_text(colour="black", size = 11, face = "bold"))
 
-ggsave("analysis/figures/studies_metrics.jpeg", width = 7, height = 6.5, units = "in", dpi = 350)
+
+ggsave("analysis/figures/studies_metrics.jpeg", width = 5, height = 6.5, units = "in", dpi = 350)
 
 
 
@@ -364,7 +382,7 @@ ggplot(method_breakdown, aes(x = reorder(method,-n), y = n, fill = method))+
   xlab("Method of Data Collection") + 
   ylab("Number of Studies")+
   scale_y_continuous(limits = c(0,40))+
-  #scale_fill_discrete(name = "", labels = c("Abundance", "Richness"))+
+  scale_fill_brewer(palette = "Set1")+
   theme(legend.position = "top", axis.title.x = element_text(vjust= -4, size =  rel(1.5)),
         axis.title.y = element_text(vjust = 5, size =  rel(1.5)),
         plot.title = element_text(size = 14, face = "bold"),
