@@ -406,6 +406,7 @@ ggplot(rich, aes(y = predictions_fit, x = strata,
                   ymax = predictions_95CI_upper,
                   fill = taxa_order, group = link)) + 
     ylab("Predicted species richness") + xlab("Mean strata height measure") +
+    ggtitle("                                                               Richness") +
     geom_line(size = 1, alpha = 0.3) +
     geom_ribbon(color = NA, alpha = 0.2) +
     scale_fill_viridis_d("Taxa") +
@@ -717,6 +718,7 @@ ggplot(abund, aes(y = predictions_fit, x = strata,
                  ymax = predictions_95CI_upper,
                  fill = taxa_order, group = link)) + 
   ylab("Predicted species abundance") + xlab("Mean strata height measure") +
+  ggtitle("                                                            Abundance") +
   geom_line(size = 1, alpha = 0.3) +
   geom_ribbon(color = NA, alpha = 0.2) +
   scale_fill_viridis_d("Taxa") +
@@ -798,6 +800,35 @@ taxa_link_slope_abund_avg <- taxa_link_slope_avg %>%
   dplyr::filter(metric == "abundance") %>%
   tibble::rowid_to_column("order")
 taxa_link_slope_abund_avg$order <- rev(taxa_link_slope_abund_avg$order)
+
+# reformatting the links to look more like citations
+taxa_link_slope_rich_plot <- taxa_link_slope_rich %>% 
+  mutate(link_plot = link %>% 
+           str_replace("_"," ") %>% 
+           str_replace(" _ ",": ") %>%
+           str_replace(": 1","") %>%
+           str_replace(": 2"," (2)") %>%
+           str_replace(": 3"," (3)") %>%
+           str_replace(": 4"," (4)") %>%
+           str_replace(": 5"," (5)") %>%
+           str_replace(": 6"," (6)") %>%
+           str_replace(": 7"," (7)") %>%
+           str_replace(": 8"," (8)") %>%
+           str_replace(": 9"," (9)"))
+taxa_link_slope_abund_plot <- taxa_link_slope_abund %>%
+  mutate(link_plot = link %>% 
+           str_replace("_"," ") %>% 
+           str_replace(" _ ",": ") %>%
+           str_replace(": 1","") %>%
+           str_replace(": 2"," (2)") %>%
+           str_replace(": 3"," (3)") %>%
+           str_replace(": 4"," (4)") %>%
+           str_replace(": 5"," (5)") %>%
+           str_replace(": 6"," (6)") %>%
+           str_replace(": 7"," (7)") %>%
+           str_replace(": 8"," (8)") %>%
+           str_replace(": 9"," (9)"))
+
 ```
 
 ### Creating slope estimate figures for both richness and abundance
@@ -809,12 +840,12 @@ col_2_slope_rich_est_cont <- ggplot(taxa_link_slope_rich, aes(x = order, y = est
                      ymin = CI_80_lower), size = 1.1) +
   geom_linerange(aes(ymax = CI_95_upper,
                      ymin = CI_95_lower)) +
-  scale_x_continuous(breaks = taxa_link_slope_rich$order, 
-                     labels = taxa_link_slope_rich$link, expand = c(0.02, 0)) +
-  scale_y_continuous(limits = c(-8,8), breaks = seq(-8, 8, by = 2), expand = c(0.05, 0),
+  scale_x_continuous(breaks = taxa_link_slope_rich_plot$order, 
+                     labels = taxa_link_slope_rich_plot$link_plot, expand = c(0.02, 0)) +
+  scale_y_continuous(limits = c(-8.5, 8.5), breaks = seq(-8, 8, by = 2), expand = c(0.05, 0),
                      sec.axis = sec_axis(~., breaks = c(-4.2,0,4.2), labels = c("Decreasing"," ","Increasing"))) +
   geom_text(aes(x = order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
-  annotate("text", x = seq(52, 50), y = rep(4,3), 
+  annotate("text", x = seq(56, 54), y = rep(4.5,3), 
            label = c("  * = 80% CI excludes 0"," ** = 95% CI excludes 0","*** = 99% CI excludes 0"), size = 3) +
   scale_color_viridis_d("Taxa") + theme_classic() +
   theme(legend.position = "none", axis.text.x.top = element_text(size = 8),
@@ -829,8 +860,8 @@ col_2_slope_abund_est_cont <- ggplot(taxa_link_slope_abund, aes(x = order, y = e
                      ymin = CI_80_lower), size = 1.1) +
   geom_linerange(aes(ymax = CI_95_upper,
                      ymin = CI_95_lower)) +
-  scale_x_continuous(breaks = taxa_link_slope_abund$order, 
-                     labels = taxa_link_slope_abund$link, expand = c(0.02, 0)) +
+  scale_x_continuous(breaks = taxa_link_slope_abund_plot$order, 
+                     labels = taxa_link_slope_abund_plot$link_plot, expand = c(0.02, 0)) +
   scale_y_continuous(limits = c(-12,12), breaks = seq(-12, 12, by = 4), expand = c(0.05, 0),
                      sec.axis = sec_axis(~., breaks = c(-6,0,6), labels = c("Decreasing"," ","Increasing"))) +
   geom_text(aes(x = order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
@@ -841,9 +872,7 @@ col_2_slope_abund_est_cont <- ggplot(taxa_link_slope_abund, aes(x = order, y = e
         axis.line = element_blank(), plot.margin = unit(c(1,1,0,0), "lines")); col_2_slope_abund_est_cont
 
 col_2_slope_est_cont <- ggarrange(col_2_slope_rich_est_cont, col_2_slope_abund_est_cont); col_2_slope_est_cont
-```
 
-```{r Creating taxa averaged slope estimate figures for both richness and abundance}
 col_2_slope_rich_avg_cont <- ggplot(taxa_link_slope_rich_avg, 
                                aes(x = factor(taxa_order, levels = c(
                                 "Small mammals", "Amphibians", "Birds", "Bats"
@@ -855,8 +884,8 @@ col_2_slope_rich_avg_cont <- ggplot(taxa_link_slope_rich_avg,
   geom_linerange(aes(ymax = CI_95_upper,
                      ymin = CI_95_lower)) +
   geom_text(aes(x = taxa_order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
-  scale_x_discrete(labels = rev(c("Bats","Birds","Amphibians", "              Small Mammals"))) +
-  scale_y_continuous(limits = c(-8,8), breaks = seq(-8, 8, by = 2), expand = c(0.05, 0), 
+  scale_x_discrete(labels = rev(c("Bats","Birds","Amphibians", "      Small Mammals"))) +
+  scale_y_continuous(limits = c(-8.5,8.5), breaks = seq(-8, 8, by = 2), expand = c(0.05, 0), 
                      sec.axis = sec_axis(~., breaks = c(-4.2,0,4.2), labels = c("Decreasing"," ","Increasing"))) +
   scale_color_viridis_d("Taxa") + theme_classic() + 
   theme(legend.position = c(.5,-0.1), legend.direction = "horizontal", panel.border = element_rect(colour = "black", fill=NA, size=1), 
@@ -876,7 +905,7 @@ col_2_slope_abund_avg_cont <- ggplot(taxa_link_slope_abund_avg,
   geom_linerange(aes(ymax = CI_95_upper,
                      ymin = CI_95_lower)) +
   geom_text(aes(x = taxa_order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
-  scale_x_discrete(labels = rev(c("Bats", "Birds", "Amphibians", "              Small Mammals"))) +
+  scale_x_discrete(labels = rev(c("Bats", "Birds", "Amphibians", "      Small Mammals"))) +
   scale_y_continuous(limits = c(-12,12), breaks = seq(-12, 12, by = 4), expand = c(0.05, 0), 
                      sec.axis = sec_axis(~., breaks = c(-6,0,6), labels = c("Decreasing"," ","Increasing"))) +  scale_color_viridis_d(" ") + theme_classic() + 
   theme(legend.position = "none", panel.border = element_rect(colour = "black", fill=NA, size=1),
@@ -887,7 +916,7 @@ col_2_slope_abund_avg_cont <- ggplot(taxa_link_slope_abund_avg,
   guides(color=guide_legend(override.aes=list(fill="white", col = "white"))); col_2_slope_abund_avg_cont
 
 col_2_slope_avg_cont <- ggarrange(col_2_slope_rich_avg_cont, col_2_slope_abund_avg_cont, common.legend = T, legend = "bottom"); col_2_slope_avg_cont
-ggarrange(col_2_slope_est_cont, col_2_slope_avg_cont, nrow = 2, heights = c(6,1.5), hjust = -10)
+ggarrange(col_2_slope_est_cont, col_2_slope_avg_cont, nrow = 2, heights = c(6,1.5))
 ggsave("analysis/figures/parm_taxa_4_panel.jpeg", width = 10, height = 10, units = "in", dpi = 300)
 ```
 
