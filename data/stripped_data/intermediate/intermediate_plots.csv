@@ -1238,3 +1238,11 @@ Searches were therefore made extensively and, as far as possible, at random thro
 2,Gonzalez_2020,NA,7,richness,observed,NA,NA,NA,NA,Y,Rarefaction is reaching saturation,NA,NA,NA,NA,1.5,2,1.75,NA,NA,NA,NA,NA,NA,NA,NA,NA,230.0,hours of surveying,NA,NA,1.0,forest site,NA
 2,Gonzalez_2020,NA,9,richness,observed,NA,NA,NA,NA,Y,Rarefaction is reaching saturation,NA,NA,NA,NA,2,6,4,NA,NA,NA,NA,NA,NA,NA,NA,NA,250.0,hours of surveying,NA,NA,1.0,forest site,NA
 2,Gonzalez_2020,NA,9,richness,observed,NA,NA,NA,NA,Y,Rarefaction is reaching saturation,NA,NA,NA,NA,6,15,10.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,120.0,hours of surveying,NA,NA,1.0,forest site,NA
+1,Zubaid_1994,NA,5,richness,observed,NA,NA,NA,NA,N,NA,NA,NA,NA,NA,2.5,2.5,2.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,23760.0,m2 net hours,NA,NA,6.0,subsites (100m intervals between the subcanopy sites) - 1 forest site,NA
+1,Zubaid_1994,NA,6,richness,observed,NA,NA,NA,NA,N,NA,NA,NA,NA,NA,20,20,20,NA,NA,NA,NA,NA,NA,NA,NA,NA,15840.0,m2 net hours,NA,NA,2.0,subsites (800m apart) 1 forest site,NA
+1,Zubaid_1994,NA,0.05,abundance,captures per 100 m2 net hour,NA,NA,NA,NA,Y,per effort,NA,NA,NA,NA,2.5,2.5,2.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,23760.0,m2 net hours,NA,NA,6.0,subsites (100m intervals between the subcanopy sites) - 1 forest site,NA
+1,Zubaid_1994,NA,0.49,abundance,captures per 100 m2 net hour,NA,NA,NA,NA,Y,per effort,NA,NA,NA,NA,20,20,20,NA,NA,NA,NA,NA,NA,NA,NA,NA,15840.0,m2 net hours,NA,NA,2.0,subsites (800m apart) 1 forest site,NA
+1,Ingle_1993,NA,6,richness,observed,NA,NA,NA,NA,N,NA,NA,NA,NA,NA,0,3,1.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,25.0,net nights (12m X 2m net),NA,NA,3.0,subsites  - 1 forest site,NA
+1,Ingle_1993,NA,17,richness,observed,NA,NA,NA,NA,N,NA,NA,NA,NA,NA,10,20,15,NA,NA,NA,NA,NA,NA,NA,NA,NA,87.5,net nights (12m X 2m net),NA,NA,12.0,subsites  - 1 forest site,NA
+1,Ingle_1993,NA,0.44,abundance,captures per 100 m2 net hour,NA,NA,NA,NA,Y,per effort,NA,NA,NA,NA,0,3,1.5,NA,NA,NA,NA,NA,NA,NA,NA,NA,25.0,net nights (12m X 2m net),NA,NA,3.0,subsites  - 1 forest site,NA
+1,Ingle_1993,NA,15,abundance,captures per 100 m2 net hour,NA,NA,NA,NA,Y,per effort,NA,NA,NA,NA,10,20,15,NA,NA,NA,NA,NA,NA,NA,NA,NA,87.5,net nights (12m X 2m net),NA,NA,12.0,subsites  - 1 forest site,NA
