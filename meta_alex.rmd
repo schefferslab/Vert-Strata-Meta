@@ -9,30 +9,43 @@ output:
 # Preparing workspace
 ## Calling libraries
 ```{r load packages}
-# Set session mirror for knitting 
-local({r <- getOption("repos")
-       r["CRAN"] <- "http://cran.r-project.org"
-       options(repos=r)})
+# # Set session mirror for knitting 
+# local({r <- getOption("repos")
+#        r["CRAN"] <- "http://cran.r-project.org"
+#        options(repos=r)})
+# 
+# # my package-loading script
+# URL <- "https://raw.githubusercontent.com/slamander/load_packages/main/prepare_libraries.R"
+# 
+# # take that script, parse it, and load it to our environment
+# eval(parse(text = RCurl::getURL(URL, ssl.verifypeer = F)), envir= .GlobalEnv)
+# 
+# # add packages to be used here
+# packages <-  c("lme4","AICcmodavg","glmmTMB","TMB", 
+#                "tidyverse","readr","scales",
+#                "formula.tools","sjPlot","ggpubr","scales",
+#                "Hmisc","visreg","bbmle")
+# 
+# # run function:
+# prepare_libraries(packages)
 
-# my package-loading script
-URL <- "https://raw.githubusercontent.com/slamander/load_packages/main/prepare_libraries.R"
-
-# take that script, parse it, and load it to our environment
-eval(parse(text = RCurl::getURL(URL, ssl.verifypeer = F)), envir= .GlobalEnv)
-
-# add packages to be used here
-packages <-  c("lme4","AICcmodavg","glmmTMB","TMB", 
-               "tidyverse","readr","googlesheets4","scales",
-               "formula.tools","sjPlot","ggpubr","scales",
-               "Hmisc","visreg","bbmle")
-
-# run function:
-prepare_libraries(packages)
+library(lme4)
+library(AICcmodavg)
+library(glmmTMB)
+library(TMB)
+library(tidyverse)
+library(readr)
+library(scales)
+library(formula.tools)
+library(sjPlot)
+library(ggpubr)
+library(Hmisc)
+library(visreg)
+library(bbmle)
 ```
 
 ## Loading data
 ```{r loading data}
-
 dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
   dplyr::filter(taxa != "All mammals") %>%
   dplyr::filter(taxa != "Primates") %>%
@@ -500,7 +513,8 @@ mods_abund[[36]] <- glmmTMB(scaled_met ~ strata*taxa + elevation +              
 #
 mods_abund[[37]] <- glmmTMB(scaled_met ~ strata*continent + elevation +                     (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
 mods_abund[[38]] <- glmmTMB(scaled_met ~ strata*elevation + method +                        (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
-mods_abund[[39]] <- glmmTMB(scaled_met ~ strata*elevation + continent +                     (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
+mods_abund[[39]] <- glmmTMB(scaled_met ~ strata*elevation + continent +                     (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
+
 ```
 
 ### Extracting model formulas to label aic table 
