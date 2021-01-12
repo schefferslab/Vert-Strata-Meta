@@ -9,43 +9,29 @@ output:
 # Preparing workspace
 ## Calling libraries
 ```{r load packages}
-# # Set session mirror for knitting 
-# local({r <- getOption("repos")
-#        r["CRAN"] <- "http://cran.r-project.org"
-#        options(repos=r)})
-# 
-# # my package-loading script
-# URL <- "https://raw.githubusercontent.com/slamander/load_packages/main/prepare_libraries.R"
-# 
-# # take that script, parse it, and load it to our environment
-# eval(parse(text = RCurl::getURL(URL, ssl.verifypeer = F)), envir= .GlobalEnv)
-# 
-# # add packages to be used here
-# packages <-  c("lme4","AICcmodavg","glmmTMB","TMB", 
-#                "tidyverse","readr","scales",
-#                "formula.tools","sjPlot","ggpubr","scales",
-#                "Hmisc","visreg","bbmle")
-# 
-# # run function:
-# prepare_libraries(packages)
+# Set session mirror for knitting
+local({r <- getOption("repos")
+       r["CRAN"] <- "http://cran.r-project.org"
+       options(repos=r)})
 
-library(lme4)
-library(AICcmodavg)
-library(glmmTMB)
-library(TMB)
-library(tidyverse)
-library(readr)
-library(scales)
-library(formula.tools)
-library(sjPlot)
-library(ggpubr)
-library(Hmisc)
-library(visreg)
-library(bbmle)
+# my package-loading script
+URL <- "https://raw.githubusercontent.com/slamander/load_packages/main/prepare_libraries.R"
+
+# take that script, parse it, and load it to our environment
+eval(parse(text = RCurl::getURL(URL, ssl.verifypeer = F)), envir = .GlobalEnv)
+
+# add packages to be used here
+packages <-  c("lme4","AICcmodavg","glmmTMB","TMB","tidyverse","readr","scales",
+               "formula.tools","sjPlot","ggpubr","scales","Hmisc","visreg","bbmle")
+
+# run function:
+prepare_libraries(packages)
 ```
 
 ## Loading data
 ```{r loading data}
+# weights <- c(bin_weight, spatial_effort_unit, spatial_effort, temporal_effort_unit, metric_effort, temporal_effort_at_each_height, data_quality)
+
 dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
   dplyr::filter(taxa != "All mammals") %>%
   dplyr::filter(taxa != "Primates") %>%
@@ -53,7 +39,7 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
                 taxa = as.factor(taxa),
                 taxa_order = factor(taxa, levels = c("Birds","Bats","Small mammals","Amphibians")),
                 elevation = as.numeric(elevation),
-                scaled_met = as.numeric(rescale(corrected_biodiversity_metric_value, to = c(0.00001, 0.99999))),
+                scaled_met = as.numeric(rescale(corrected_biodiversity_metric_value, to = c(1e-05, 0.99999))),
                 link = as.factor(link), 
                 method = as.factor(method), 
                 treatment = as.factor(treatment),
@@ -65,21 +51,12 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
   dplyr::select(link, study_id.x, method, taxa, bin_weight, continent, biodiversity_metric, taxa_order,
                 treatment, season, forest_type, elevation, canopy_height, latitude, longitude, 
                 scaled_met, strata = mean_strata_height_p, weight) 
-glimpse(dat)
 
 abund <- dat %>%
   dplyr::filter(biodiversity_metric == "abundance")
 
 rich <- dat %>% 
   dplyr::filter(biodiversity_metric == "richness")
-```
-
-## Diagnostic plots 
-```{r Diagnostic plots }
-ggplot(abund, aes(x = method, y = elevation, fill = taxa)) + 
-  geom_boxplot() + geom_jitter() + 
-  facet_wrap(~taxa, scales = "free") 
-ggsave("analysis/figures/method_elevation.jpeg")
 ```
 
 # Modeling species richness

@@ -29,6 +29,7 @@ sites <- sites_gs %>%
   mutate(`Study start date` = sapply(`Study start date`, toString)) %>%
   mutate(`Study end date` = sapply(`Study end date`, toString))
 sites[sites == ""] <- NA
+sites[sites == " "] <- NA
 sites[sites == "NA"] <- NA
 
 ## ....Load in and merge Simard raster --------------

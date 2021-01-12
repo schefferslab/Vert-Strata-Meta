@@ -27,16 +27,12 @@ plots <- plots_gs %>%
   mutate(`Temporal effort at each height` = sapply(`Temporal effort at each height`, toString)) %>%
   mutate(`Spatial effort` = sapply(`Spatial effort`, toString))
 plots[plots == ""] <- NA
-glimpse(plots)
 
 ## 2. Data curation -------------
 ## Rename cols
 colnames(plots) <- tolower(colnames(plots))
 colnames(plots) <- gsub("/", "_", colnames(plots))
 colnames(plots) <- gsub(" ", "_", colnames(plots))
-
-glimpse(plots)
-
 
 plots <- plots %>% 
   dplyr::mutate(min_strata_height = as.double(min_strata_height),
