@@ -71,6 +71,200 @@ rich <- dat %>%
   dplyr::filter(biodiversity_metric == "richness")
 ```
 
+# Taxon-specific mods
+```{r}
+abund_birds <- abund %>%
+  filter(taxa == "Birds")
+
+mods_abund_birds <- list()
+# Intercept
+mods_abund_birds[[1]]  <- glmmTMB(scaled_met ~ 1 + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+# strata only
+mods_abund_birds[[2]]  <- glmmTMB(scaled_met ~ strata + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+mods_abund_birds[[3]]  <- glmmTMB(scaled_met ~ poly(strata, 2) + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+mods_abund_birds[[4]]  <- glmmTMB(scaled_met ~ poly(strata, 3) + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+# strata + method
+mods_abund_birds[[5]]  <- glmmTMB(scaled_met ~ strata + method + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+mods_abund_birds[[6]]  <- glmmTMB(scaled_met ~ poly(strata, 2) + method + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+mods_abund_birds[[7]]  <- glmmTMB(scaled_met ~ poly(strata, 3) + method + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds) 
+# strata + continent
+mods_abund_birds[[8]]  <- glmmTMB(scaled_met ~ strata + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)     
+mods_abund_birds[[9]]  <- glmmTMB(scaled_met ~ poly(strata, 2) + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+mods_abund_birds[[10]] <- glmmTMB(scaled_met ~ poly(strata, 3) + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+# strata + elevation
+mods_abund_birds[[11]] <- glmmTMB(scaled_met ~ strata + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)     
+mods_abund_birds[[12]] <- glmmTMB(scaled_met ~ poly(strata, 2) + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+mods_abund_birds[[13]] <- glmmTMB(scaled_met ~ poly(strata, 3) + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+# strata + continent
+mods_abund_birds[[14]] <- glmmTMB(scaled_met ~ strata + continent + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+mods_abund_birds[[15]] <- glmmTMB(scaled_met ~ poly(strata, 2) + continent + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+mods_abund_birds[[16]] <- glmmTMB(scaled_met ~ poly(strata, 3) + continent + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+# strata + method + elevation
+mods_abund_birds[[14]] <- glmmTMB(scaled_met ~ strata + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+mods_abund_birds[[15]] <- glmmTMB(scaled_met ~ poly(strata, 2) + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+mods_abund_birds[[16]] <- glmmTMB(scaled_met ~ poly(strata, 3) + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+# strata + method + continent
+mods_abund_birds[[17]] <- glmmTMB(scaled_met ~ strata + method + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+mods_abund_birds[[18]] <- glmmTMB(scaled_met ~ poly(strata, 2) + method + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+mods_abund_birds[[19]] <- glmmTMB(scaled_met ~ poly(strata, 3) + method + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+# stata + continent + method
+mods_abund_birds[[20]] <- glmmTMB(scaled_met ~ strata + continent + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+mods_abund_birds[[21]] <- glmmTMB(scaled_met ~ poly(strata, 2) + continent + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+mods_abund_birds[[22]] <- glmmTMB(scaled_met ~ poly(strata, 3) + continent + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_birds)
+
+mods_abund_birds_names <- list()
+for(i in 1:length(mods_abund_birds)){
+  mods_abund_birds_names[[i]] <- as.character(mods_abund_birds[[i]]$call$formula)
+}
+
+abund_birds_aictab <- aictab(cand.set = mods_abund_birds, modnames = unlist(mods_abund_birds_names)); abund_birds_aictab
+```
+
+```{r}
+rich_birds <- rich %>%
+  filter(taxa == "Birds")
+
+mods_rich_birds <- list()
+# Intercept
+mods_rich_birds[[1]]  <- glmmTMB(scaled_met ~ 1 + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+# strata only
+mods_rich_birds[[2]]  <- glmmTMB(scaled_met ~ strata + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+mods_rich_birds[[3]]  <- glmmTMB(scaled_met ~ poly(strata, 2) + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+mods_rich_birds[[4]]  <- glmmTMB(scaled_met ~ poly(strata, 3) + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+# strata + method
+mods_rich_birds[[5]]  <- glmmTMB(scaled_met ~ strata + method + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+mods_rich_birds[[6]]  <- glmmTMB(scaled_met ~ poly(strata, 2) + method + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+mods_rich_birds[[7]]  <- glmmTMB(scaled_met ~ poly(strata, 3) + method + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds) 
+# strata + continent
+mods_rich_birds[[8]]  <- glmmTMB(scaled_met ~ strata + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)     
+mods_rich_birds[[9]]  <- glmmTMB(scaled_met ~ poly(strata, 2) + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+mods_rich_birds[[10]] <- glmmTMB(scaled_met ~ poly(strata, 3) + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+# strata + elevation
+mods_rich_birds[[11]] <- glmmTMB(scaled_met ~ strata + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)     
+mods_rich_birds[[12]] <- glmmTMB(scaled_met ~ poly(strata, 2) + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+mods_rich_birds[[13]] <- glmmTMB(scaled_met ~ poly(strata, 3) + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+# strata + continent
+mods_rich_birds[[14]] <- glmmTMB(scaled_met ~ strata + continent + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+mods_rich_birds[[15]] <- glmmTMB(scaled_met ~ poly(strata, 2) + continent + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+mods_rich_birds[[16]] <- glmmTMB(scaled_met ~ poly(strata, 3) + continent + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+# strata + method + elevation
+mods_rich_birds[[14]] <- glmmTMB(scaled_met ~ strata + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+mods_rich_birds[[15]] <- glmmTMB(scaled_met ~ poly(strata, 2) + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+mods_rich_birds[[16]] <- glmmTMB(scaled_met ~ poly(strata, 3) + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+# strata + method + continent
+mods_rich_birds[[17]] <- glmmTMB(scaled_met ~ strata + method + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+mods_rich_birds[[18]] <- glmmTMB(scaled_met ~ poly(strata, 2) + method + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+mods_rich_birds[[19]] <- glmmTMB(scaled_met ~ poly(strata, 3) + method + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+# stata + continent + method
+mods_rich_birds[[20]] <- glmmTMB(scaled_met ~ strata + continent + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+mods_rich_birds[[21]] <- glmmTMB(scaled_met ~ poly(strata, 2) + continent + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+mods_rich_birds[[22]] <- glmmTMB(scaled_met ~ poly(strata, 3) + continent + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_birds)
+
+mods_rich_birds_names <- list()
+for(i in 1:length(mods_rich_birds)){
+  mods_rich_birds_names[[i]] <- as.character(mods_rich_birds[[i]]$call$formula)
+}
+
+rich_birds_aictab <- aictab(cand.set = mods_rich_birds, modnames = unlist(mods_rich_birds_names)); rich_birds_aictab
+```
+
+```{r}
+abund_bats <- abund %>%
+  filter(taxa == "Bats")
+
+mods_abund_bats <- list()
+# Intercept
+mods_abund_bats[[1]]  <- glmmTMB(scaled_met ~ 1 + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+# strata only
+mods_abund_bats[[2]]  <- glmmTMB(scaled_met ~ strata + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+mods_abund_bats[[3]]  <- glmmTMB(scaled_met ~ poly(strata, 2) + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+mods_abund_bats[[4]]  <- glmmTMB(scaled_met ~ poly(strata, 3) + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+# strata + method
+mods_abund_bats[[5]]  <- glmmTMB(scaled_met ~ strata + method + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+mods_abund_bats[[6]]  <- glmmTMB(scaled_met ~ poly(strata, 2) + method + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+mods_abund_bats[[7]]  <- glmmTMB(scaled_met ~ poly(strata, 3) + method + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats) 
+# strata + continent
+mods_abund_bats[[8]]  <- glmmTMB(scaled_met ~ strata + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)     
+mods_abund_bats[[9]]  <- glmmTMB(scaled_met ~ poly(strata, 2) + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+mods_abund_bats[[10]] <- glmmTMB(scaled_met ~ poly(strata, 3) + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+# strata + elevation
+mods_abund_bats[[11]] <- glmmTMB(scaled_met ~ strata + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)     
+mods_abund_bats[[12]] <- glmmTMB(scaled_met ~ poly(strata, 2) + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+mods_abund_bats[[13]] <- glmmTMB(scaled_met ~ poly(strata, 3) + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+# strata + continent
+mods_abund_bats[[14]] <- glmmTMB(scaled_met ~ strata + continent + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+mods_abund_bats[[15]] <- glmmTMB(scaled_met ~ poly(strata, 2) + continent + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+mods_abund_bats[[16]] <- glmmTMB(scaled_met ~ poly(strata, 3) + continent + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+# strata + method + elevation
+mods_abund_bats[[14]] <- glmmTMB(scaled_met ~ strata + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+mods_abund_bats[[15]] <- glmmTMB(scaled_met ~ poly(strata, 2) + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+mods_abund_bats[[16]] <- glmmTMB(scaled_met ~ poly(strata, 3) + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+# strata + method + continent
+mods_abund_bats[[17]] <- glmmTMB(scaled_met ~ strata + method + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+mods_abund_bats[[18]] <- glmmTMB(scaled_met ~ poly(strata, 2) + method + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+mods_abund_bats[[19]] <- glmmTMB(scaled_met ~ poly(strata, 3) + method + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+# stata + continent + method
+mods_abund_bats[[20]] <- glmmTMB(scaled_met ~ strata + continent + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+mods_abund_bats[[21]] <- glmmTMB(scaled_met ~ poly(strata, 2) + continent + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+mods_abund_bats[[22]] <- glmmTMB(scaled_met ~ poly(strata, 3) + continent + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund_bats)
+
+mods_abund_bats_names <- list()
+for(i in 1:length(mods_abund_bats)){
+  mods_abund_bats_names[[i]] <- as.character(mods_abund_bats[[i]]$call$formula)
+}
+
+abund_bats_aictab <- aictab(cand.set = mods_abund_bats, modnames = unlist(mods_abund_bats_names)); abund_bats_aictab
+```
+
+```{r}
+rich_bats <- rich %>%
+  filter(taxa == "Bats")
+
+mods_rich_bats <- list()
+# Intercept
+mods_rich_bats[[1]]  <- glmmTMB(scaled_met ~ 1 + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+# strata only
+mods_rich_bats[[2]]  <- glmmTMB(scaled_met ~ strata + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+mods_rich_bats[[3]]  <- glmmTMB(scaled_met ~ poly(strata, 2) + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+mods_rich_bats[[4]]  <- glmmTMB(scaled_met ~ poly(strata, 3) + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+# strata + method
+mods_rich_bats[[5]]  <- glmmTMB(scaled_met ~ strata + method + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+mods_rich_bats[[6]]  <- glmmTMB(scaled_met ~ poly(strata, 2) + method + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+mods_rich_bats[[7]]  <- glmmTMB(scaled_met ~ poly(strata, 3) + method + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats) 
+# strata + continent
+mods_rich_bats[[8]]  <- glmmTMB(scaled_met ~ strata + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)     
+mods_rich_bats[[9]]  <- glmmTMB(scaled_met ~ poly(strata, 2) + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+mods_rich_bats[[10]] <- glmmTMB(scaled_met ~ poly(strata, 3) + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+# strata + elevation
+mods_rich_bats[[11]] <- glmmTMB(scaled_met ~ strata + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)     
+mods_rich_bats[[12]] <- glmmTMB(scaled_met ~ poly(strata, 2) + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+mods_rich_bats[[13]] <- glmmTMB(scaled_met ~ poly(strata, 3) + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+# strata + continent
+mods_rich_bats[[14]] <- glmmTMB(scaled_met ~ strata + continent + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+mods_rich_bats[[15]] <- glmmTMB(scaled_met ~ poly(strata, 2) + continent + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+mods_rich_bats[[16]] <- glmmTMB(scaled_met ~ poly(strata, 3) + continent + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+# strata + method + elevation
+mods_rich_bats[[14]] <- glmmTMB(scaled_met ~ strata + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+mods_rich_bats[[15]] <- glmmTMB(scaled_met ~ poly(strata, 2) + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+mods_rich_bats[[16]] <- glmmTMB(scaled_met ~ poly(strata, 3) + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+# strata + method + continent
+mods_rich_bats[[17]] <- glmmTMB(scaled_met ~ strata + method + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+mods_rich_bats[[18]] <- glmmTMB(scaled_met ~ poly(strata, 2) + method + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+mods_rich_bats[[19]] <- glmmTMB(scaled_met ~ poly(strata, 3) + method + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+# stata + continent + method
+mods_rich_bats[[20]] <- glmmTMB(scaled_met ~ strata + continent + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+mods_rich_bats[[21]] <- glmmTMB(scaled_met ~ poly(strata, 2) + continent + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+mods_rich_bats[[22]] <- glmmTMB(scaled_met ~ poly(strata, 3) + continent + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
+
+mods_rich_bats_names <- list()
+for(i in 1:length(mods_rich_bats)){
+  mods_rich_bats_names[[i]] <- as.character(mods_rich_bats[[i]]$call$formula)
+}
+
+rich_bats_aictab <- aictab(cand.set = mods_rich_bats, modnames = unlist(mods_rich_bats_names)); rich_bats_aictab
+```
+
+
 ## Diagnostic plots 
 ```{r Diagnostic plots }
 # ggplot(abund, aes(x = strata, y = scaled_met, color = method))+
@@ -933,4 +1127,3 @@ col_2_slope_avg_cont <- ggarrange(col_2_slope_rich_avg_cont, col_2_slope_abund_a
 ggarrange(col_2_slope_est_cont, col_2_slope_avg_cont, nrow = 2, heights = c(6,1.5))
 ggsave("analysis/figures/parm_taxa_4_panel.jpeg", width = 10, height = 10, units = "in", dpi = 300)
 ```
-
