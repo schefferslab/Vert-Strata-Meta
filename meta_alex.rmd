@@ -118,6 +118,8 @@ for(i in 1:length(mods_abund_birds)){
 }
 
 abund_birds_aictab <- aictab(cand.set = mods_abund_birds, modnames = unlist(mods_abund_birds_names)); abund_birds_aictab
+
+
 ```
 
 ```{r}
@@ -216,112 +218,70 @@ for(i in 1:length(mods_abund_bats)){
 abund_bats_aictab <- aictab(cand.set = mods_abund_bats, modnames = unlist(mods_abund_bats_names)); abund_bats_aictab
 ```
 
-```{r}
-rich_bats <- rich %>%
-  filter(taxa == "Bats")
-
-mods_rich_bats <- list()
-# Intercept
-mods_rich_bats[[1]]  <- glmmTMB(scaled_met ~ 1 + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-# strata only
-mods_rich_bats[[2]]  <- glmmTMB(scaled_met ~ strata + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-mods_rich_bats[[3]]  <- glmmTMB(scaled_met ~ poly(strata, 2) + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-mods_rich_bats[[4]]  <- glmmTMB(scaled_met ~ poly(strata, 3) + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-# strata + method
-mods_rich_bats[[5]]  <- glmmTMB(scaled_met ~ strata + method + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-mods_rich_bats[[6]]  <- glmmTMB(scaled_met ~ poly(strata, 2) + method + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-mods_rich_bats[[7]]  <- glmmTMB(scaled_met ~ poly(strata, 3) + method + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats) 
-# strata + continent
-mods_rich_bats[[8]]  <- glmmTMB(scaled_met ~ strata + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)     
-mods_rich_bats[[9]]  <- glmmTMB(scaled_met ~ poly(strata, 2) + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-mods_rich_bats[[10]] <- glmmTMB(scaled_met ~ poly(strata, 3) + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-# strata + elevation
-mods_rich_bats[[11]] <- glmmTMB(scaled_met ~ strata + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)     
-mods_rich_bats[[12]] <- glmmTMB(scaled_met ~ poly(strata, 2) + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-mods_rich_bats[[13]] <- glmmTMB(scaled_met ~ poly(strata, 3) + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-# strata + continent
-mods_rich_bats[[14]] <- glmmTMB(scaled_met ~ strata + continent + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-mods_rich_bats[[15]] <- glmmTMB(scaled_met ~ poly(strata, 2) + continent + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-mods_rich_bats[[16]] <- glmmTMB(scaled_met ~ poly(strata, 3) + continent + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-# strata + method + elevation
-mods_rich_bats[[14]] <- glmmTMB(scaled_met ~ strata + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-mods_rich_bats[[15]] <- glmmTMB(scaled_met ~ poly(strata, 2) + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-mods_rich_bats[[16]] <- glmmTMB(scaled_met ~ poly(strata, 3) + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-# strata + method + continent
-mods_rich_bats[[17]] <- glmmTMB(scaled_met ~ strata + method + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-mods_rich_bats[[18]] <- glmmTMB(scaled_met ~ poly(strata, 2) + method + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-mods_rich_bats[[19]] <- glmmTMB(scaled_met ~ poly(strata, 3) + method + continent + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-# stata + continent + method
-mods_rich_bats[[20]] <- glmmTMB(scaled_met ~ strata + continent + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-mods_rich_bats[[21]] <- glmmTMB(scaled_met ~ poly(strata, 2) + continent + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-mods_rich_bats[[22]] <- glmmTMB(scaled_met ~ poly(strata, 3) + continent + method + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = rich_bats)
-
-mods_rich_bats_names <- list()
-for(i in 1:length(mods_rich_bats)){
-  mods_rich_bats_names[[i]] <- as.character(mods_rich_bats[[i]]$call$formula)
-}
-
-rich_bats_aictab <- aictab(cand.set = mods_rich_bats, modnames = unlist(mods_rich_bats_names)); rich_bats_aictab
-```
-
-
 ## Diagnostic plots 
 ```{r Diagnostic plots }
-# ggplot(abund, aes(x = strata, y = scaled_met, color = method))+
-#   geom_point() +
-#   geom_smooth(method = "loess")+
-#   facet_wrap(~taxa)
-# 
-# ggplot(rich, aes(x = strata, y = scaled_met, color = method))+
-#   geom_point() +
-#   geom_smooth(method = "loess")+
-#   facet_wrap(~taxa)
-# 
-# ggplot(abund, aes(x = strata, y = scaled_met, color = link))+
-#   geom_point() +
-#   #geom_line()+
-#   geom_smooth(method = "lm", alpha = 0.01) +
-#   facet_wrap(~taxa) +
-#   coord_cartesian(xlim=c(0,1), ylim= c(0,1)) +
-#   theme(legend.position = "none")+
-#   labs(title = "Abundance", x = "Strata Height (proportion of study specific max forest height)", y = "Abundance Metric (proportion of study specific max value)")
-# 
-# ggplot(rich, aes(x = strata, y = scaled_met, color = link))+
-#   geom_point()+
-#   #geom_line()+
-#   geom_smooth(method = "lm", alpha = 0.01)+
-#   facet_wrap(~taxa)+
-#   coord_cartesian(xlim=c(0,1), ylim= c(0,1)) +
-#   theme(legend.position = "none")+
-#   labs(title = "Richness", x = "Strata Height (proportion of study specific max forest height)", y = "Richness Metric (proportion of study specific max value)")
-# 
-# ggplot(abund, aes(x = strata, y = scaled_met, color = continent))+
-#   geom_point()+
-#   geom_smooth(alpha = 0.01)+
-#   facet_wrap(~taxa)+
-#   coord_cartesian(xlim=c(0,1), ylim= c(0,1)) +
-#   labs(title = "Abundance", x = "Strata Height (proportion of study specific max forest height)", y = "Abundance Metric (proportion of study specific max value)")
-# 
-# 
-# ggplot(rich, aes(x = strata, y = scaled_met, color = continent))+
-#   geom_point()+
-#   geom_smooth(method = "lm", alpha = 0.01)+
-#   facet_wrap(~taxa)+
-#   coord_cartesian(xlim=c(0,1), ylim= c(0,1)) +
-#   labs(title = "Richness", x = "Strata Height (proportion of study specific max forest height)", y = "Richness Metric (proportion of study specific max value)")
-# 
-# 
-# ggplot(rich, aes(x = strata, y = scaled_met))+
-#   geom_point()+
-#   geom_smooth(method = "lm")+
-#   coord_cartesian(xlim=c(0,1), ylim= c(0,1)) +
-#   facet_wrap(~taxa)
-# 
-# ggplot(abund, aes(x = strata, y = scaled_met))+
-#   geom_point()+
-#   geom_smooth(method = "lm")+
-#   coord_cartesian(xlim=c(0,1), ylim= c(0,1)) +
-#   facet_wrap(~taxa)
+ggplot(abund, aes(x = method, y = elevation, fill = taxa)) + 
+  geom_boxplot() + geom_jitter() + 
+  facet_wrap(~taxa, scales = "free") 
+ggsave("analysis/figures/method_elevation.jpeg")
+```
+
+```{r}
+ggplot(abund, aes(x = strata, y = scaled_met, color = method))+
+  geom_point() +
+  geom_smooth(method = "loess")+
+  facet_wrap(~taxa)
+
+ggplot(rich, aes(x = strata, y = scaled_met, color = method))+
+  geom_point() +
+  geom_smooth(method = "loess")+
+  facet_wrap(~taxa)
+
+ggplot(abund, aes(x = strata, y = scaled_met, color = link))+
+  geom_point() +
+  #geom_line()+
+  geom_smooth(method = "lm", alpha = 0.01) +
+  facet_wrap(~taxa) +
+  coord_cartesian(xlim=c(0,1), ylim= c(0,1)) +
+  theme(legend.position = "none")+
+  labs(title = "Abundance", x = "Strata Height (proportion of study specific max forest height)", y = "Abundance Metric (proportion of study specific max value)")
+
+ggplot(rich, aes(x = strata, y = scaled_met, color = link))+
+  geom_point()+
+  #geom_line()+
+  geom_smooth(method = "lm", alpha = 0.01)+
+  facet_wrap(~taxa)+
+  coord_cartesian(xlim=c(0,1), ylim= c(0,1)) +
+  theme(legend.position = "none")+
+  labs(title = "Richness", x = "Strata Height (proportion of study specific max forest height)", y = "Richness Metric (proportion of study specific max value)")
+
+ggplot(abund, aes(x = strata, y = scaled_met, color = continent))+
+  geom_point()+
+  geom_smooth(alpha = 0.01)+
+  facet_wrap(~taxa)+
+  coord_cartesian(xlim=c(0,1), ylim= c(0,1)) +
+  labs(title = "Abundance", x = "Strata Height (proportion of study specific max forest height)", y = "Abundance Metric (proportion of study specific max value)")
+
+
+ggplot(rich, aes(x = strata, y = scaled_met, color = continent))+
+  geom_point()+
+  geom_smooth(method = "lm", alpha = 0.01)+
+  facet_wrap(~taxa)+
+  coord_cartesian(xlim=c(0,1), ylim= c(0,1)) +
+  labs(title = "Richness", x = "Strata Height (proportion of study specific max forest height)", y = "Richness Metric (proportion of study specific max value)")
+
+
+ggplot(rich, aes(x = strata, y = scaled_met))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  coord_cartesian(xlim=c(0,1), ylim= c(0,1)) +
+  facet_wrap(~taxa)
+
+ggplot(abund, aes(x = strata, y = scaled_met))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  coord_cartesian(xlim=c(0,1), ylim= c(0,1)) +
+  facet_wrap(~taxa)
 ```
 
 # Modeling species richness
@@ -373,6 +333,13 @@ mods_rich[[31]] <- glmmTMB(scaled_met ~ strata*continent + method +             
 mods_rich[[32]] <- glmmTMB(scaled_met ~ strata*continent + elevation +                     (strata|link), family = beta_family(link = "logit"), data = rich)
 mods_rich[[33]] <- glmmTMB(scaled_met ~ strata*elevation + method +                        (strata|link), family = beta_family(link = "logit"), data = rich)
 mods_rich[[34]] <- glmmTMB(scaled_met ~ strata*elevation + continent +                     (strata|link), family = beta_family(link = "logit"), data = rich)
+
+mods_rich_bats_names <- list()
+for(i in 1:length(mods_rich_bats)){
+  mods_rich_bats_names[[i]] <- as.character(mods_rich_bats[[i]]$call$formula)
+}
+
+rich_bats_aictab <- aictab(cand.set = mods_rich_bats, modnames = unlist(mods_rich_bats_names)); rich_bats_aictab
 ```
 
 ## Creating AIC table
@@ -544,8 +511,8 @@ rich$predictions_95CI_lower[rich$predictions_95CI_lower < 0] <- 0
 rich$predictions_95CI_upper[rich$predictions_95CI_upper > 1] <- 1
 
 taxa_link_rich <- rich %>% 
-  dplyr::group_by(taxa_order,link,continent) %>%
-  dplyr::summarise() %>%
+  dplyr::group_by(taxa_order, link, continent, method) %>%
+  dplyr::summarise(mean_elevation = mean(elevation)) %>%
   dplyr::full_join(modavg_estimates_rich, by = c("link")) %>%
   dplyr::rename(CI_95_lower = Lower.CL,
          CI_95_upper = Upper.CL,
@@ -651,6 +618,28 @@ col_2_rich_est_avg <- ggplot(taxa_link_rich_avg, aes(x = rev(taxa_order), y = es
 ggarrange(col_2_rich_est, col_2_rich_est_avg, ncol = 1, nrow = 2, heights = c(4,1), widths = c(4,1))
 ```
 
+## Plot study coef with elevation
+```{r}
+taxa_link_rich_slope <- taxa_link_rich_order %>%
+  filter(facet == "Change in richness with increasing strata")
+
+ggplot(taxa_link_rich_slope, aes(x = mean_elevation, y = estimate, col = taxa_order)) + 
+  ylab("Coef (Richness ~ Height") + xlab("Elevation") + geom_point(size = 1.5) + 
+  geom_smooth(method = "glm") +
+  facet_wrap(~taxa_order, scales = "free") + 
+  scale_color_viridis_d("Taxa") + theme_bw() + 
+  theme(legend.position = "none")
+ggsave("analysis/figures/coef_richness_height.jpeg")
+
+ggplot(taxa_link_rich_slope, aes(x = method, y = estimate, fill = taxa_order)) + 
+  ylab("Coef (Richness ~ Height") + xlab("Method") + 
+  geom_boxplot() + geom_jitter() +
+  facet_wrap(~taxa_order, scales = "free") + 
+  scale_color_viridis_d("Taxa") + theme_bw() + 
+  theme(legend.position = "none")
+ggsave("analysis/figures/coef_richness_height_method.jpeg")
+```
+
 
 # Modeling abundance
 ## Abundance GLMs
@@ -708,7 +697,6 @@ mods_abund[[36]] <- glmmTMB(scaled_met ~ strata*taxa + elevation +              
 mods_abund[[37]] <- glmmTMB(scaled_met ~ strata*continent + elevation +                     (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
 mods_abund[[38]] <- glmmTMB(scaled_met ~ strata*elevation + method +                        (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
 mods_abund[[39]] <- glmmTMB(scaled_met ~ strata*elevation + continent +                     (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-
 ```
 
 ### Extracting model formulas to label aic table 
@@ -857,8 +845,8 @@ abund$predictions_95CI_lower[abund$predictions_95CI_lower < 0] <- 0
 abund$predictions_95CI_upper[abund$predictions_95CI_upper > 1] <- 1
 
 (taxa_link_abund <- abund %>% 
-  dplyr::group_by(taxa_order,link,continent) %>%
-  dplyr::summarise() %>%
+  dplyr::group_by(taxa_order,link,continent,method) %>%
+  dplyr::summarise(mean_elevation = mean(elevation)) %>%
   dplyr::full_join(modavg_estimates_abund, by = c("link")) %>%
   dplyr::rename(CI_95_lower = Lower.CL,
          CI_95_upper = Upper.CL,
@@ -961,6 +949,28 @@ col_2_abund_est_avg <- ggplot(taxa_link_abund_avg, aes(x = rev(taxa_order), y = 
   theme(legend.position = "bottom"); col_2_abund_est_avg
 
 ggarrange(col_2_abund_est, col_2_abund_est_avg, ncol = 1, nrow = 2, heights = c(4,1), widths = c(4,1))
+```
+
+## Plot study coef with elevation
+```{r}
+taxa_link_abund_slope <- taxa_link_abund_order %>%
+  filter(facet == "Change in abundance with increasing strata")
+
+ggplot(taxa_link_abund_slope, aes(x = mean_elevation, y = estimate, col = taxa_order)) + 
+  ylab("Coef (Abund ~ Height)") + xlab("Elevation") + geom_point() +
+  geom_smooth(method = "glm") +
+  facet_wrap(~taxa_order, scales = "free") + 
+  scale_color_viridis_d("Taxa") + theme_bw() + 
+  theme(legend.position = "none")
+ggsave("analysis/figures/coef_abund_height.jpeg")
+
+ggplot(taxa_link_abund_slope, aes(x = method, y = estimate, fill = taxa_order)) + 
+  ylab("Coef (Abundance ~ Height)") + xlab("Method") + 
+  geom_boxplot() + geom_jitter() +
+  facet_wrap(~taxa_order, scales = "free") + 
+  scale_color_viridis_d("Taxa") + theme_bw() + 
+  theme(legend.position = "none")
+ggsave("analysis/figures/coef_abund_height_method.jpeg")
 ```
 
 ## Plotting slopes of abundance and richness
