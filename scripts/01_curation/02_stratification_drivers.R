@@ -166,7 +166,6 @@ triple_groups$investigated_percent = (triple_groups$n.investigated / triple_grou
 ##
 
 specifics = triple_groups %>% filter(factors %in% c("food", "structure","climate", "morphology", "shelter", "species_interactions", "sex","age",  "seasonality", "diurnality")
-                                     #,taxa != "Amphibians", taxa !="Primates"
                                      )
 
 specifics_tall <- specifics %>% gather(key = Level, value = Value, theorised_percent:investigated_percent)
@@ -198,17 +197,17 @@ ggplot(specifics_tall, aes(x = factors, y = Value, fill = Level)) +
         legend.text=element_text(colour="black",size = 11, face = "bold"),
         plot.margin = margin(1,1,1,1, "cm"))
 
-ggsave("analysis/figures/drivers_all_taxa.jpeg", width = 3.5, height = 10, units = "in", dpi = 300)
+ggsave("analysis/figures/drivers_all_taxa.jpeg", width = 7, height = 10, units = "in", dpi = 300)
 
 
 
 #
 #
 #
-#     without primates or amphibians
+#     without primates 
 
 specifics_select = triple_groups %>% filter(factors %in% c("food", "structure","climate", "morphology", "shelter", "species_interactions", "sex","age",  "seasonality", "diurnality")
-                                     ,taxa != "Amphibians", taxa !="Primates"
+                                     ,taxa !="Primates"
 )
 
 specifics_tall_select <- specifics_select %>% gather(key = Level, value = Value, theorised_percent:investigated_percent)
@@ -226,7 +225,7 @@ ggplot(specifics_tall_select, aes(x = factors, y = Value, fill = Level)) +
   ylab("Percent of Papers") + xlab("Stratification Factors") +
   scale_fill_brewer(palette = "Set1", labels = c("Investigated", "Referenced"), guide = guide_legend(reverse=TRUE)) +
   ######  scale x discrete labels will need to be changed if the plot changes is updated!    or it will show the wrong labels because it is overriting thrm
-  scale_x_discrete(labels=c("Habitat Structure", "Food / Foraging","Species Interactions","Morphology",  "Nesting / Roosting", "Seasonality", "Diurnality",  "Climate",   "Age", "Sex")) +
+  scale_x_discrete(labels=c("Habitat Structure", "Food / Foraging","Climate", "Species Interactions","Morphology", "Seasonality", "Nesting / Roosting",  "Diurnality",     "Age", "Sex")) +
   theme(legend.position = "top", legend.title = element_blank(),
         strip.background = element_rect(colour="black", fill="white"),
         panel.background = element_blank(),
@@ -239,7 +238,7 @@ ggplot(specifics_tall_select, aes(x = factors, y = Value, fill = Level)) +
         legend.text=element_text(colour="black",size = 11, face = "bold"),
         plot.margin = margin(1,1,1,1, "cm"))
 
-ggsave("analysis/figures/drivers_3_taxa.jpeg", width = 3.5, height = 10, units = "in", dpi = 300)
+ggsave("analysis/figures/drivers_3_taxa.jpeg", width = 5, height = 10, units = "in", dpi = 300)
 
 ## 3. Draw a world map
 ###
@@ -314,29 +313,14 @@ ggsave("analysis/figures/world_map.jpeg", width = 11, height = 5, units = "in", 
 
 
 
-french_gui <- ne_countries(scale = "medium", returnclass = "sf", geounit = "french guiana", sovereignty = "France", country = "France", type= "map_units")
-french_gui = french_gui[3,]
-
-#
-fren =    c(unique(subset(locations, country == "French Guiana")$country))
-fren_c <- ne_countries(scale = "medium", returnclass = "sf", country = fren)
-
-### plot the whole damned thing
-ggplot(data = world) +
-  geom_sf(data = french_gui, fill = "yellowgreen") + 
-  xlab("") + 
-  ylab("")+
-  guides(fill=guide_legend(title=""))+
-  theme(legend.position = "top", legend.text = element_text(size = 13, face = "bold"), 
-        panel.grid.major = element_line(linetype = "dashed"))
-
-
-
 ###
 ###    plot basic plots of elevation distributions 
 ###
 
 theme_set(theme_bw())
+
+locations = locations %>%
+  filter(taxa != "Primates")
 
 elevs = ggplot(locations, aes(x = taxa, y = elevation, fill = taxa)) +
   geom_boxplot(show.legend = FALSE) +
@@ -362,6 +346,9 @@ ggsave("analysis/figures/elevation_taxa.jpeg", width = 5, height = 6.5, units = 
 
 locations_split = dat[, c("latitude", "longitude", "taxa", "continent","country", "link", "method", "elevation", "biodiversity_metric")]
 locations_split = unique(locations_split)
+
+locations_split = locations_split %>%
+  filter(taxa != "Primates")
 
 # count how many studies occured across different taxa and continents
 continent_taxa_metric = as.data.frame(locations_split) %>%
@@ -395,6 +382,7 @@ ggsave("analysis/figures/studies_metrics.jpeg", width = 5, height = 6.5, units =
 
 # count how many studies occured across different taxa and continents
 method_breakdown = as.data.frame(locations) %>%
+  filter(taxa != "Primates") %>%
   group_by(method) %>%
   tally()
 
@@ -432,6 +420,7 @@ ggsave("analysis/figures/studies_methods.jpeg", width = 5.5, height = 7.5, units
 
 # count how many studies occured across different taxa and continents
 method_breakdown = as.data.frame(locations) %>%
+  filter(taxa != "Primates") %>%
   group_by(method) %>%
   tally()
 
@@ -469,4 +458,3 @@ ggplot(years_grouped, aes(x = decade, y = n, fill = factor(taxa, levels= c( "Pri
 
 ggsave("analysis/figures/studies_decades.jpeg", width = 7, height = 7.5, units = "in", dpi = 350)
 
-## nice
