@@ -8,30 +8,31 @@ output:
 
 # Preparing workspace
 ## Calling libraries
-```{r load packages}
+```{r load packages, message=TRUE, warning=TRUE}
+# Empty environment
+rm(list = ls())
+
 # Set session mirror for knitting
 local({r <- getOption("repos")
        r["CRAN"] <- "http://cran.r-project.org"
        options(repos=r)})
 
-# my package-loading script
+# My package-loading script
 URL <- "https://raw.githubusercontent.com/slamander/load_packages/main/prepare_libraries.R"
 
-# take that script, parse it, and load it to our environment
+# Take that script, parse it, and load it to our environment
 eval(parse(text = RCurl::getURL(URL, ssl.verifypeer = F)), envir = .GlobalEnv)
 
-# add packages to be used here
+# Add packages to be used here
 packages <-  c("lme4","AICcmodavg","glmmTMB","TMB","tidyverse","readr","scales",
                "formula.tools","sjPlot","ggpubr","scales","Hmisc","visreg","bbmle")
 
-# run function:
+# Run function:
 prepare_libraries(packages)
 ```
 
 ## Loading data
 ```{r loading data}
-# weights <- c(bin_weight, spatial_effort_unit, spatial_effort, temporal_effort_unit, metric_effort, temporal_effort_at_each_height, data_quality)
-
 dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
   dplyr::filter(taxa != "All mammals") %>%
   dplyr::filter(taxa != "Primates") %>%
@@ -48,9 +49,11 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
                 season = as.factor(season), 
                 forest_type = as.factor(forest_type),  
                 mean_strata_height_p = as.numeric(mean_strata_height_p)) %>%
-  dplyr::select(link, study_id.x, method, taxa, bin_weight, continent, biodiversity_metric, taxa_order,
-                treatment, season, forest_type, elevation, canopy_height, latitude, longitude, 
-                scaled_met, strata = mean_strata_height_p, weight) 
+  dplyr::select(link, study_id.x, method, taxa, bin_weight, weight, indepedence_weight, 
+                continent, biodiversity_metric, taxa_order, treatment, season, forest_type, 
+                elevation, canopy_height, latitude, longitude, scaled_met, strata = mean_strata_height_p) %>%
+  dplyr::mutate(composite_weight = bin_weight*weight*indepedence_weight) %>%
+  dplyr::select(-c(bin_weight, weight, indepedence_weight))
 
 abund <- dat %>%
   dplyr::filter(biodiversity_metric == "abundance")
@@ -61,77 +64,48 @@ rich <- dat %>%
 
 # Modeling species richness
 ## Richness GLMs
-```{r Modeling species richness: GLMs, message=FALSE, warning=FALSE}
-mods_rich <- list()
-
-# strata only models 
-mods_rich[[1]]  <- glmmTMB(scaled_met ~ 1 +                                                (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[2]]  <- glmmTMB(scaled_met ~ strata +                                           (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[3]]  <- glmmTMB(scaled_met ~ poly(strata, 2) +                                  (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[4]]  <- glmmTMB(scaled_met ~ poly(strata, 3) +                                  (strata|link), family = beta_family(link = "logit"), data = rich)
-# strata and taxa
-mods_rich[[5]]  <- glmmTMB(scaled_met ~ strata + taxa +                                    (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[6]]  <- glmmTMB(scaled_met ~ poly(strata, 2) + taxa +                           (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[7]]  <- glmmTMB(scaled_met ~ poly(strata, 3) + taxa +                           (strata|link), family = beta_family(link = "logit"), data = rich)
-# strata and continent 
-mods_rich[[8]]  <- glmmTMB(scaled_met ~ strata + continent +                               (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[9]]  <- glmmTMB(scaled_met ~ poly(strata, 2) + continent +                      (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[10]] <- glmmTMB(scaled_met ~ poly(strata, 3) + continent +                      (strata|link), family = beta_family(link = "logit"), data = rich)
-# strata and elevation
-mods_rich[[11]] <- glmmTMB(scaled_met ~ strata + elevation +                               (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[12]] <- glmmTMB(scaled_met ~ poly(strata, 2) + elevation +                      (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[13]] <- glmmTMB(scaled_met ~ poly(strata, 3) + elevation +                      (strata|link), family = beta_family(link = "logit"), data = rich)
-# strata method
-mods_rich[[14]] <- glmmTMB(scaled_met ~ strata + method +                                  (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[15]] <- glmmTMB(scaled_met ~ poly(strata, 2) + method +                         (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[16]] <- glmmTMB(scaled_met ~ poly(strata, 3) + method +                         (strata|link), family = beta_family(link = "logit"), data = rich)
-# strata, elevation, and continent 
-mods_rich[[17]] <- glmmTMB(scaled_met ~ strata + elevation + continent +                   (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[18]] <- glmmTMB(scaled_met ~ poly(strata, 2) + elevation + continent +          (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[19]] <- glmmTMB(scaled_met ~ poly(strata, 3) + elevation + continent +          (strata|link), family = beta_family(link = "logit"), data = rich)
-# strata, method, and continent 
-mods_rich[[20]] <- glmmTMB(scaled_met ~ strata + method + continent +                      (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[21]] <- glmmTMB(scaled_met ~ poly(strata, 2) + method + continent +             (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[22]] <- glmmTMB(scaled_met ~ poly(strata, 3) + method + continent +             (strata|link), family = beta_family(link = "logit"), data = rich)
-# strata, method, and elevation 
-mods_rich[[23]] <- glmmTMB(scaled_met ~ strata + method + continent + elevation +          (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[24]] <- glmmTMB(scaled_met ~ poly(strata, 2) + method + continent + elevation + (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[25]] <- glmmTMB(scaled_met ~ poly(strata, 3) + method + continent + elevation + (strata|link), family = beta_family(link = "logit"), data = rich)
-# strata interactions with methods or continent or elevation 
-mods_rich[[26]] <- glmmTMB(scaled_met ~ strata*method +                                    (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[27]] <- glmmTMB(scaled_met ~ strata*continent +                                 (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[28]] <- glmmTMB(scaled_met ~ strata*elevation +                                 (strata|link), family = beta_family(link = "logit"), data = rich)
-# strata interactions with methods or continent or elevation plus additive relationships continent and elevation and methods 
-mods_rich[[29]] <- glmmTMB(scaled_met ~ strata*method + continent +                        (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[30]] <- glmmTMB(scaled_met ~ strata*method + elevation +                        (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[31]] <- glmmTMB(scaled_met ~ strata*continent + method +                        (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[32]] <- glmmTMB(scaled_met ~ strata*continent + elevation +                     (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[33]] <- glmmTMB(scaled_met ~ strata*elevation + method +                        (strata|link), family = beta_family(link = "logit"), data = rich)
-mods_rich[[34]] <- glmmTMB(scaled_met ~ strata*elevation + continent +                     (strata|link), family = beta_family(link = "logit"), data = rich)
-
-mods_rich_bats_names <- list()
-for(i in 1:length(mods_rich_bats)){
-  mods_rich_bats_names[[i]] <- as.character(mods_rich_bats[[i]]$call$formula)
-}
-
-rich_bats_aictab <- aictab(cand.set = mods_rich_bats, modnames = unlist(mods_rich_bats_names)); rich_bats_aictab
+```{r Creating model formulas, message=FALSE, warning=FALSE}
+model_formulas_ch <- list("scaled_met ~ 1 + (strata | link)",
+                          "scaled_met ~ strata + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) + (strata | link)",
+                          "scaled_met ~ strata + taxa + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) + taxa + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) + taxa + (strata | link)",
+                          "scaled_met ~ strata + continent + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) + continent + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) + continent + (strata | link)",
+                          "scaled_met ~ strata + elevation + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) + elevation + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) + elevation + (strata | link)",
+                          "scaled_met ~ strata + method + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) + method + (strata | link)",
+                          "scaled_met ~ strata + elevation + continent + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) + elevation + continent + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) + elevation + continent + (strata | link)",
+                          "scaled_met ~ strata + method + continent + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) + method + continent + (strata | link)",
+                          "scaled_met ~ strata + method + continent + elevation + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) + method + continent + elevation + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) + method + continent + elevation + (strata | link)",
+                          "scaled_met ~ strata * method + (strata | link)",
+                          "scaled_met ~ strata * continent + (strata | link)",
+                          "scaled_met ~ strata * elevation + (strata | link)",
+                          "scaled_met ~ strata * method + continent + (strata | link)",
+                          "scaled_met ~ strata * continent + method + (strata | link)",
+                          "scaled_met ~ strata * continent + elevation + (strata | link)",
+                          "scaled_met ~ strata * elevation + method + (strata | link)",
+                          "scaled_met ~ strata * elevation + continent + (strata | link)")
 ```
 
-## Creating AIC table
-```{r Modeling species richness: creating AIC table}
-rich_mod_names <- list()       # Extracting formulas from models 
-for(i in 1:length(mods_rich)){
-  rich_mod_names[[i]] <- as.character(mods_rich[[i]]$call$formula) # Using formulas to create model names
-}
+```{r Creating models}
 
-rich_modnames <- unlist(rich_mod_names) # Unpacking list of model formulas
+model_formulas <- lapply(paste(model_formulas_ch), as.formula)
 
-rich_aictab <- aictab(cand.set = mods_rich, modnames = unlist(rich_mod_names)) # Setting formulas as model names
+mods_rich <- lapply(model_formulas, function(x){
+  glmmTMB(x, family = beta_family(link = "logit"), weights = composite_weight, data = rich)
+})
 
-rich_aictab %>% 
-  knitr::kable()
-
-bbmle::AICtab(mods_rich, mnames = unlist(rich_mod_names), weights = T, logLik = T, k = T) 
+rich_aictab <- aictab(cand.set = mods_rich, modnames = unlist(model_formulas_ch)); rich_aictab
 ```
 
 ## Model predictions
@@ -182,7 +156,7 @@ for(i in 1:length(mods_rich)){
 ```
 
 ### Model averaging model estimates from `glmmTMB` class models using `AICcmodavg::modavgCustom`, a customized function for manual model averaging 
-```{r Getting richness model estimates: model averaging model estimates}
+```{r Getting richness model estimates: model averaging model estimates, message=FALSE, warning=FALSE}
 # Initializing list for intercepts and slopes
 rich_modavg_beta_intercept_list <- list() 
 rich_modavg_beta_strata_list <- list() 
@@ -201,7 +175,6 @@ rich_modavg_beta_strata_matrix <- rich_modavg_beta_intercept_matrix
 for(i in 1:nrow(rich_beta_intercept)){                                                     # this function takes the following data:
   rich_modavg_beta_intercept_list[[i]] <- AICcmodavg::modavgCustom(logL = rich_aictab$LL,  # log likelihood (LL)
                                                        K = rich_aictab$K, #                # number of terms in each model (K)
-                                                       modnames = rich_modnames,           # model names (might be optional)
                                                        estimate = rich_beta_intercept[i,], # point estimate of each term 
                                                        se = rich_beta_intercept_se[i,],    # uncertainty for each term 
                                                        nobs = nrow(rich))                  # number of observations in each model (to compute degrees of freedom)
@@ -214,7 +187,6 @@ for(i in 1:nrow(rich_beta_intercept)){                                          
   # repeat for slopes
   rich_modavg_beta_strata_list[[i]] <- AICcmodavg::modavgCustom(logL = rich_aictab$LL,
                                                     K = rich_aictab$K,
-                                                    modnames = rich_modnames,
                                                     estimate = rich_beta_strata[i,],
                                                     se = rich_beta_strata_se[i,],
                                                     nobs = nrow(rich))
@@ -265,7 +237,6 @@ rich_modavg_preds_matrix <- tibble(
 for(i in 1:nrow(rich_pred_fit)){
   rich_modavg_preds_list[[i]] <- modavgCustom(logL = rich_aictab$LL, 
                                   K = rich_aictab$K, 
-                                  modnames = rich_modnames, 
                                   estimate = rich_pred_fit[i,], 
                                   se = rich_pred_se[i,],
                                   nobs = nrow(rich_pred_fit))
@@ -419,59 +390,11 @@ ggsave("analysis/figures/coef_richness_height_method.jpeg")
 # Modeling abundance
 ## Abundance GLMs
 ```{r Modeling abundance: GLMs, message=FALSE, warning=FALSE}
-mods_abund <- list()
-# strata only models 
-mods_abund[[1]]  <- glmmTMB(scaled_met ~ 1 +                                                (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-mods_abund[[2]]  <- glmmTMB(scaled_met ~ strata +                                           (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-mods_abund[[3]]  <- glmmTMB(scaled_met ~ poly(strata, 2) +                                  (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-mods_abund[[4]]  <- glmmTMB(scaled_met ~ poly(strata, 3) +                                  (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-# strata and taxa
-mods_abund[[5]]  <- glmmTMB(scaled_met ~ strata + taxa +                                    (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-mods_abund[[6]]  <- glmmTMB(scaled_met ~ poly(strata, 2) + taxa +                           (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-mods_abund[[7]]  <- glmmTMB(scaled_met ~ poly(strata, 3) + taxa +                           (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-# strata and continent 
-mods_abund[[8]]  <- glmmTMB(scaled_met ~ strata + continent +                               (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-mods_abund[[9]]  <- glmmTMB(scaled_met ~ poly(strata, 2) + continent +                      (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-mods_abund[[10]] <- glmmTMB(scaled_met ~ poly(strata, 3) + continent +                      (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-# strata and elevation
-mods_abund[[11]] <- glmmTMB(scaled_met ~ strata + elevation +                               (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
-mods_abund[[12]] <- glmmTMB(scaled_met ~ poly(strata, 2) + elevation +                      (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
-mods_abund[[13]] <- glmmTMB(scaled_met ~ poly(strata, 3) + elevation +                      (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
-# strata method
-mods_abund[[14]] <- glmmTMB(scaled_met ~ strata + method +                                  (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-mods_abund[[15]] <- glmmTMB(scaled_met ~ poly(strata, 2) + method +                         (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-mods_abund[[16]] <- glmmTMB(scaled_met ~ poly(strata, 3) + method +                         (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-# strata, elevation, and continent 
-mods_abund[[17]] <- glmmTMB(scaled_met ~ strata + elevation + continent +                   (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
-mods_abund[[18]] <- glmmTMB(scaled_met ~ poly(strata, 2) + elevation + continent +          (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
-mods_abund[[19]] <- glmmTMB(scaled_met ~ poly(strata, 3) + elevation + continent +          (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
-mods_abund[[20]] <- glmmTMB(scaled_met ~ poly(strata, 3) + elevation + continent + taxa +   (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
-# strata, method, and continent 
-mods_abund[[21]] <- glmmTMB(scaled_met ~ strata + method + continent +                      (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-mods_abund[[22]] <- glmmTMB(scaled_met ~ poly(strata, 2) + method + continent +             (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-mods_abund[[23]] <- glmmTMB(scaled_met ~ poly(strata, 3) + method + continent +             (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-# strata, method, and elevation 
-mods_abund[[24]] <- glmmTMB(scaled_met ~ strata + method + continent + elevation +          (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
-mods_abund[[25]] <- glmmTMB(scaled_met ~ poly(strata, 2) + method + continent + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
-mods_abund[[26]] <- glmmTMB(scaled_met ~ poly(strata, 3) + method + continent + elevation + (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
-# strata interactions with methods or continent or elevation 
-mods_abund[[27]] <- glmmTMB(scaled_met ~ strata*method +                                    (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-mods_abund[[28]] <- glmmTMB(scaled_met ~ strata*continent +                                 (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-mods_abund[[29]] <- glmmTMB(scaled_met ~ strata*elevation +                                 (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
-#
-mods_abund[[30]] <- glmmTMB(scaled_met ~ strata*continent + taxa +                          (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-mods_abund[[31]] <- glmmTMB(scaled_met ~ strata*elevation + taxa +                          (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
-# strata interactions with methods or continent or elevation plus additive relationships continent and elevation and methods 
-mods_abund[[32]] <- glmmTMB(scaled_met ~ strata*method + continent +                        (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-mods_abund[[33]] <- glmmTMB(scaled_met ~ strata*method + elevation +                        (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
-mods_abund[[34]] <- glmmTMB(scaled_met ~ strata*continent + method +                        (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-#
-mods_abund[[35]] <- glmmTMB(scaled_met ~ strata*taxa + continent +                          (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
-mods_abund[[36]] <- glmmTMB(scaled_met ~ strata*taxa + elevation +                          (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
-#
-mods_abund[[37]] <- glmmTMB(scaled_met ~ strata*continent + elevation +                     (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
-mods_abund[[38]] <- glmmTMB(scaled_met ~ strata*elevation + method +                        (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund) 
-mods_abund[[39]] <- glmmTMB(scaled_met ~ strata*elevation + continent +                     (strata|link), weights = bin_weight, family = beta_family(link = "logit"), data = abund)
+mods_abund <- lapply(model_formulas, function(x){
+  glmmTMB(x, family = beta_family(link = "logit"), weights = composite_weight, data = abund)
+})
+
+abund_aictab <- aictab(cand.set = mods_abund, modnames = unlist(model_formulas_ch)); abund_aictab
 ```
 
 ### Extracting model formulas to label aic table 
@@ -544,7 +467,6 @@ abund_modavg_beta_strata_matrix <- abund_modavg_beta_intercept_matrix
 for(i in 1:nrow(abund_beta_intercept)){
   abund_modavg_beta_intercept_list[[i]] <- modavgCustom(logL = abund_aictab$LL, 
                                                        K = abund_aictab$K, 
-                                                       modnames = abund_modnames, 
                                                        estimate = abund_beta_intercept[i,],
                                                        se = abund_beta_intercept_se[i,],
                                                        nobs = nrow(abund))
@@ -555,7 +477,6 @@ for(i in 1:nrow(abund_beta_intercept)){
   
   abund_modavg_beta_strata_list[[i]] <- modavgCustom(logL = abund_aictab$LL,
                                                     K = abund_aictab$K,
-                                                    modnames = abund_modnames,
                                                     estimate = abund_beta_strata[i,],
                                                     se = abund_beta_strata_se[i,],
                                                     nobs = nrow(abund))
@@ -835,8 +756,8 @@ col_2_slope_rich_est_cont <- ggplot(taxa_link_slope_rich, aes(x = order, y = est
                      ymin = CI_95_lower)) +
   scale_x_continuous(breaks = taxa_link_slope_rich_plot$order, 
                      labels = taxa_link_slope_rich_plot$link_plot, expand = c(0.02, 0)) +
-  scale_y_continuous(limits = c(-8.5, 8.5), breaks = seq(-8, 8, by = 2), expand = c(0.05, 0),
-                     sec.axis = sec_axis(~., breaks = c(-4.2,0,4.2), labels = c("Decreasing"," ","Increasing"))) +
+  scale_y_continuous(limits = c(-13, 12), breaks = seq(-12, 12, by = 2), expand = c(0.05, 0),
+                     sec.axis = sec_axis(~., breaks = c(-8,0,8), labels = c("Decreasing"," ","Increasing"))) +
   geom_text(aes(x = order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
   annotate("text", x = seq(56, 54), y = rep(4.5,3), 
            label = c("  * = 80% CI excludes 0"," ** = 95% CI excludes 0","*** = 99% CI excludes 0"), size = 3) +
@@ -855,8 +776,8 @@ col_2_slope_abund_est_cont <- ggplot(taxa_link_slope_abund, aes(x = order, y = e
                      ymin = CI_95_lower)) +
   scale_x_continuous(breaks = taxa_link_slope_abund_plot$order, 
                      labels = taxa_link_slope_abund_plot$link_plot, expand = c(0.02, 0)) +
-  scale_y_continuous(limits = c(-12,12), breaks = seq(-12, 12, by = 4), expand = c(0.05, 0),
-                     sec.axis = sec_axis(~., breaks = c(-6,0,6), labels = c("Decreasing"," ","Increasing"))) +
+  scale_y_continuous(limits = c(-14.78,14.5), breaks = seq(-14, 14, by = 2), expand = c(0.05, 0),
+                     sec.axis = sec_axis(~., breaks = c(-7,0,7), labels = c("Decreasing"," ","Increasing"))) +
   geom_text(aes(x = order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
   scale_color_viridis_d("Taxa") + theme_classic() + 
   theme(legend.position = "none", axis.text.x.top = element_text(size = 8),
@@ -865,7 +786,9 @@ col_2_slope_abund_est_cont <- ggplot(taxa_link_slope_abund, aes(x = order, y = e
         axis.line = element_blank(), plot.margin = unit(c(1,1,0,0), "lines")); col_2_slope_abund_est_cont
 
 col_2_slope_est_cont <- ggarrange(col_2_slope_rich_est_cont, col_2_slope_abund_est_cont); col_2_slope_est_cont
+```
 
+```{r}
 col_2_slope_rich_avg_cont <- ggplot(taxa_link_slope_rich_avg, 
                                aes(x = factor(taxa_order, levels = c(
                                 "Small mammals", "Amphibians", "Birds", "Bats"
@@ -878,8 +801,8 @@ col_2_slope_rich_avg_cont <- ggplot(taxa_link_slope_rich_avg,
                      ymin = CI_95_lower)) +
   geom_text(aes(x = taxa_order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
   scale_x_discrete(labels = rev(c("Bats","Birds","Amphibians", "      Small Mammals"))) +
-  scale_y_continuous(limits = c(-8.5,8.5), breaks = seq(-8, 8, by = 2), expand = c(0.05, 0), 
-                     sec.axis = sec_axis(~., breaks = c(-4.2,0,4.2), labels = c("Decreasing"," ","Increasing"))) +
+  scale_y_continuous(limits = c(-14, 14), breaks = seq(-14, 14, by = 2), expand = c(0.05, 0), 
+                     sec.axis = sec_axis(~., breaks = c(-7,0,7), labels = c("Decreasing"," ","Increasing"))) +
   scale_color_viridis_d("Taxa") + theme_classic() + 
   theme(legend.position = c(.5,-0.1), legend.direction = "horizontal", panel.border = element_rect(colour = "black", fill=NA, size=1), 
         axis.text.x.top = element_text(size = 8), legend.title.align = 0.5,
@@ -899,8 +822,8 @@ col_2_slope_abund_avg_cont <- ggplot(taxa_link_slope_abund_avg,
                      ymin = CI_95_lower)) +
   geom_text(aes(x = taxa_order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
   scale_x_discrete(labels = rev(c("Bats", "Birds", "Amphibians", "      Small Mammals"))) +
-  scale_y_continuous(limits = c(-12,12), breaks = seq(-12, 12, by = 4), expand = c(0.05, 0), 
-                     sec.axis = sec_axis(~., breaks = c(-6,0,6), labels = c("Decreasing"," ","Increasing"))) +  scale_color_viridis_d(" ") + theme_classic() + 
+  scale_y_continuous(limits = c(-14.78,14.5), breaks = seq(-14, 14, by = 2), expand = c(0.05, 0), 
+                     sec.axis = sec_axis(~., breaks = c(-7,0,7), labels = c("Decreasing"," ","Increasing"))) +  scale_color_viridis_d(" ") + theme_classic() + 
   theme(legend.position = "none", panel.border = element_rect(colour = "black", fill=NA, size=1),
         axis.text.x.top = element_text(size = 8),
         axis.ticks.length.x.top = unit(0, "cm"),
