@@ -52,8 +52,14 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
   dplyr::select(link, study_id.x, method, taxa, bin_weight, weight, indepedence_weight, 
                 continent, biodiversity_metric, taxa_order, treatment, season, forest_type, 
                 elevation, canopy_height, latitude, longitude, scaled_met, strata = mean_strata_height_p) %>%
-  dplyr::mutate(composite_weight = bin_weight*weight*indepedence_weight) %>%
+  dplyr::mutate(composite_weight = as.numeric(bin_weight*weight*indepedence_weight)) %>%
   dplyr::select(-c(bin_weight, weight, indepedence_weight))
+
+mean(scale(dat$composite_weight) + 1)
+test <- scale(dat$composite_weight) + 1
+test1 <- rescale(dat$composite_weight, to = c(1,2))
+
+glimpse(dat)
 
 abund <- dat %>%
   dplyr::filter(biodiversity_metric == "abundance")
@@ -68,42 +74,103 @@ rich <- dat %>%
 model_formulas_ch <- list("scaled_met ~ 1 + (strata | link)",
                           "scaled_met ~ strata + (strata | link)",
                           "scaled_met ~ poly(strata, 2) + (strata | link)",
+
                           "scaled_met ~ strata + taxa + (strata | link)",
                           "scaled_met ~ poly(strata, 2) + taxa + (strata | link)",
                           "scaled_met ~ poly(strata, 3) + taxa + (strata | link)",
+
                           "scaled_met ~ strata + continent + (strata | link)",
                           "scaled_met ~ poly(strata, 2) + continent + (strata | link)",
                           "scaled_met ~ poly(strata, 3) + continent + (strata | link)",
-                          "scaled_met ~ strata + elevation + (strata | link)",
+
+                          "scaled_met ~ strata +          elevation + (strata | link)",
                           "scaled_met ~ poly(strata, 2) + elevation + (strata | link)",
                           "scaled_met ~ poly(strata, 3) + elevation + (strata | link)",
-                          "scaled_met ~ strata + method + (strata | link)",
+
+                          "scaled_met ~ strata +          longitude + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) + longitude + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) + longitude + (strata | link)",
+
+                          "scaled_met ~ strata +          canopy_height + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) + canopy_height + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) + canopy_height + (strata | link)",
+
+                          "scaled_met ~ strata +          latitude + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) + latitude + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) + latitude + (strata | link)",
+
+                          "scaled_met ~ strata +          method + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) + method + (strata | link)",
                           "scaled_met ~ poly(strata, 3) + method + (strata | link)",
-                          "scaled_met ~ strata + elevation + continent + (strata | link)",
+
+                          "scaled_met ~ strata +          elevation + continent + (strata | link)",
                           "scaled_met ~ poly(strata, 2) + elevation + continent + (strata | link)",
                           "scaled_met ~ poly(strata, 3) + elevation + continent + (strata | link)",
-                          "scaled_met ~ strata + method + continent + (strata | link)",
+
+                          "scaled_met ~ strata +          elevation + latitude + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) + elevation + latitude + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) + elevation + latitude + (strata | link)",
+
+                          "scaled_met ~ strata +          elevation + canopy_height + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) + elevation + canopy_height + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) + elevation + canopy_height + (strata | link)",
+
+                          "scaled_met ~ strata +          latitude + canopy_height + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) + latitude + canopy_height + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) + latitude + canopy_height + (strata | link)",
+
+                          "scaled_met ~ strata +          method + latitude + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) + method + latitude + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) + method + latitude + (strata | link)",
+
+                          "scaled_met ~ strata +          method + canopy_height + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) + method + canopy_height + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) + method + canopy_height + (strata | link)",
+
+                          "scaled_met ~ strata +          method + continent + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) + method + continent + (strata | link)",
                           "scaled_met ~ poly(strata, 3) + method + continent + (strata | link)",
-                          "scaled_met ~ strata + method + continent + elevation + (strata | link)",
-                          "scaled_met ~ poly(strata, 2) + method + continent + elevation + (strata | link)",
+
+                          "scaled_met ~ strata +          method + elevation + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) + method + elevation + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) + method + elevation + (strata | link)",
+
+                          "scaled_met ~ strata +          method + continent + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) + method + continent + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) + method + continent + (strata | link)",
+
+                          "scaled_met ~ strata +          method + continent + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) + method + continent + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) + method + continent + (strata | link)",
+
+                          "scaled_met ~ strata +          method + continent + elevation + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) + method + elevation + elevation + (strata | link)",
                           "scaled_met ~ poly(strata, 3) + method + continent + elevation + (strata | link)",
+
+                          "scaled_met ~ strata +          method + canopy_height + elevation + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) + method + continent + elevation + (strata | link)",
+
                           "scaled_met ~ strata * method + (strata | link)",
                           "scaled_met ~ strata * continent + (strata | link)",
                           "scaled_met ~ strata * elevation + (strata | link)",
+
                           "scaled_met ~ strata * method + continent + (strata | link)",
                           "scaled_met ~ strata * continent + method + (strata | link)",
                           "scaled_met ~ strata * continent + elevation + (strata | link)",
                           "scaled_met ~ strata * elevation + method + (strata | link)",
                           "scaled_met ~ strata * elevation + continent + (strata | link)")
+
 ```
 
+## Running models 
 ```{r Creating models}
-
 model_formulas <- lapply(paste(model_formulas_ch), as.formula)
 
-mods_rich <- lapply(model_formulas, function(x){
-  glmmTMB(x, family = beta_family(link = "logit"), weights = composite_weight, data = rich)
-})
+mods_rich <- lapply(model_formulas, function(x){      # using lappy, instead of for loops 
+  glmmTMB(x, family = beta_family(link = "logit"), 
+#          weights = composite_weight, 
+          data = rich)
+  })
 
 rich_aictab <- aictab(cand.set = mods_rich, modnames = unlist(model_formulas_ch)); rich_aictab
 ```
@@ -120,9 +187,10 @@ model_estimates_rich <- sjPlot::get_model_data(top_rich_mod, type = "re", se = T
 ```{r Modeling species richness: getting model averaged estimates}
 # Creating matrices for model predictions; 4 matrices, each with 53 rows (for each study) and 34 cols (for each model)
 ## 4 matrices:
-rich_length <- nrow(sjPlot::get_model_data(mods_rich[[1]], type = "re", se = T, transform = NULL))
+rich_length_total <- nrow(sjPlot::get_model_data(top_rich_mod, type = "re", se = T, transform = NULL))
+rich_length <- rich_length_total/2
 
-rich_beta_intercept <- matrix(NA, nrow = rich_length/2, ncol = length(mods_rich))
+rich_beta_intercept <- matrix(NA, nrow = rich_length, ncol = length(mods_rich))
 ### 2) Intercept uncertainty
 rich_beta_intercept_se <- rich_beta_intercept
 ### 3) Slope
@@ -133,21 +201,21 @@ rich_beta_strata_se <- rich_beta_intercept
 ## Extracting model estimates with `sjPlot::get_model_data`
 for(i in 1:length(mods_rich)){
   ### 1) Intercept
-  rich_beta_intercept[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[1:(rich_length/2),] %>%
+  rich_beta_intercept[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[1:(rich_length),] %>%
     dplyr::select(estimate) %>%
     as.matrix()
   ### 2) Intercept uncertainty
-  rich_beta_intercept_se[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[1:(rich_length/2),] %>%
+  rich_beta_intercept_se[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[1:(rich_length),] %>%
     dplyr::select(estimate, conf.low) %>%
     dplyr::mutate(se = (estimate - conf.low)/1.96) %>%
     dplyr::select(se) %>% 
     as.matrix()
   ### 3) Slope
-  rich_beta_strata[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[((rich_length/2)+1):(rich_length),] %>%
+  rich_beta_strata[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[((rich_length)+1):(rich_length_total),] %>%
     dplyr::select(estimate) %>%
     as.matrix()
   ### 4) Slope uncertainty
-  rich_beta_strata_se[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[((rich_length/2)+1):(rich_length),] %>%
+  rich_beta_strata_se[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[((rich_length)+1):(rich_length_total),] %>%
     dplyr::select(estimate, conf.low) %>%
     dplyr::mutate(se = (estimate - conf.low)/1.96) %>%
     dplyr::select(se) %>% 
@@ -236,10 +304,10 @@ rich_modavg_preds_matrix <- tibble(
 # The customized model averaging function also has to work one point prediction at a time, so here we loop over each point estimate across all models 
 for(i in 1:nrow(rich_pred_fit)){
   rich_modavg_preds_list[[i]] <- modavgCustom(logL = rich_aictab$LL, 
-                                  K = rich_aictab$K, 
-                                  estimate = rich_pred_fit[i,], 
-                                  se = rich_pred_se[i,],
-                                  nobs = nrow(rich_pred_fit))
+                                              K = rich_aictab$K, 
+                                              estimate = rich_pred_fit[i,], 
+                                              se = rich_pred_se[i,],
+                                              nobs = nrow(rich_pred_fit))
   rich_modavg_preds_matrix$Mod.avg.est[i] <- rich_modavg_preds_list[[i]]$Mod.avg.est
   rich_modavg_preds_matrix$Uncond.SE [i] <- rich_modavg_preds_list[[i]]$Uncond.SE
   rich_modavg_preds_matrix$Lower.CL[i] <- rich_modavg_preds_list[[i]]$Lower.CL
@@ -258,7 +326,9 @@ rich$predictions_95CI_upper[rich$predictions_95CI_upper > 1] <- 1
 
 taxa_link_rich <- rich %>% 
   dplyr::group_by(taxa_order, link, continent, method) %>%
-  dplyr::summarise(mean_elevation = mean(elevation)) %>%
+  dplyr::summarise(mean_elevation = mean(elevation),
+                   mean_latitude = mean(latitude),
+                   canopy_height = mean(canopy_height)) %>%
   dplyr::full_join(modavg_estimates_rich, by = c("link")) %>%
   dplyr::rename(CI_95_lower = Lower.CL,
          CI_95_upper = Upper.CL,
@@ -330,9 +400,41 @@ ggplot(rich, aes(y = predictions_fit, x = strata,
     geom_line(size = 1, alpha = 0.3) +
     geom_ribbon(color = NA, alpha = 0.2) +
     scale_fill_viridis_d("Taxa") +
-    facet_grid(rows = vars(taxa), cols = vars(continent)) +
+    facet_wrap(~continent*taxa_order) +
     theme_bw() + theme(legend.position = "bottom")
 ggsave("analysis/figures/richness_strata_full_continent.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
+
+ggplot(taxa_link_rich_order %>% filter(facet == "Change in richness with increasing strata"), 
+       aes(y = estimate, x = abs(mean_latitude), col = taxa_order)) + 
+  geom_point() + geom_smooth(method = "glm") +
+  ylab("Coef(richness ~ height)") + xlab("Absolute Latitude") +
+  ggtitle("Species Richness") +
+  scale_fill_viridis_d("Taxa") +
+  facet_wrap(~taxa_order, scales = "free") +
+  theme(legend.position = "bottom") + theme_bw()
+ggsave("analysis/figures/coef_rich_height_lat.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
+ggplot(taxa_link_rich_order %>% filter(facet == "Change in richness with increasing strata"), 
+       aes(y = estimate, x = mean_elevation, col = taxa_order)) + 
+  geom_point() + geom_smooth(method = "glm") +
+  ylab("Coef(richness ~ height)") + xlab("Elevation") +
+  ggtitle("Species Richness") +
+  scale_fill_viridis_d("Taxa") +
+  facet_wrap(~taxa_order, scales = "free") +
+  theme(legend.position = "bottom") + theme_bw()
+ggsave("analysis/figures/coef_rich_height_elv.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
+ggplot(taxa_link_rich_order %>% filter(facet == "Change in richness with increasing strata"), 
+       aes(y = estimate, x = canopy_height, col = taxa_order)) + 
+  geom_point() + geom_smooth(method = "glm") +
+  ylab("Coef(richness ~ height)") + xlab("Canopy Height") +
+  ggtitle("Species Richness") +
+  scale_fill_viridis_d("Taxa") +
+  facet_wrap(~taxa_order, scales = "free") +
+  theme(legend.position = "bottom") + theme_bw()
+ggsave("analysis/figures/coef_rich_height_canopy.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
 ```
 
 ```{r Model averaged richness predictions: two panel plotting}
@@ -391,23 +493,12 @@ ggsave("analysis/figures/coef_richness_height_method.jpeg")
 ## Abundance GLMs
 ```{r Modeling abundance: GLMs, message=FALSE, warning=FALSE}
 mods_abund <- lapply(model_formulas, function(x){
-  glmmTMB(x, family = beta_family(link = "logit"), weights = composite_weight, data = abund)
-})
+  glmmTMB(x, family = beta_family(link = "logit"), 
+#          weights = composite_weight, 
+          data = abund)
+  })
 
 abund_aictab <- aictab(cand.set = mods_abund, modnames = unlist(model_formulas_ch)); abund_aictab
-```
-
-### Extracting model formulas to label aic table 
-```{r}
-abund_mod_names <- list()
-for(i in 1:length(mods_abund)){
-  abund_mod_names[[i]] <- as.character(mods_abund[[i]]$call$formula)
-}
-
-abund_modnames <- unlist(abund_mod_names)
-
-abund_aictab <- aictab(cand.set = mods_abund, modnames = unlist(abund_mod_names))
-abund_aictab
 ```
 
 ### Getting model esimates from top abundance model 
@@ -415,35 +506,34 @@ abund_aictab
 top_abund_mod <- mods_abund[[as.numeric(str_extract(aictab(mods_abund)[1,1], "(\\d)+"))]]
 
 model_estimates_abund <- sjPlot::get_model_data(top_abund_mod, type = "re", se = T, transform = NULL)
-
-length_abund <- nrow(model_estimates_abund[model_estimates_abund$facet == "link (Intercept)",])
 ```
 
 ### Getting model estimates from all models 
 ```{r Getting abundance model esimates from all models}
-abund_term_length <- nrow(sjPlot::get_model_data(mods_abund[[1]], type = "re", se = T, transform = NULL))
+abund_length_total <- nrow(model_estimates_abund)
+abund_length <- abund_length_total/2
 
-abund_beta_intercept <- matrix(NA, nrow = abund_term_length/2, ncol = length(mods_abund))
+abund_beta_intercept <- matrix(NA, nrow = abund_length, ncol = length(mods_abund))
 abund_beta_intercept_se <- abund_beta_intercept
 abund_beta_strata <- abund_beta_intercept
 abund_beta_strata_se <- abund_beta_intercept
 
 for(i in 1:length(mods_abund)){
-  abund_beta_intercept[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[1:(abund_term_length/2),] %>%
+  abund_beta_intercept[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[1:(abund_length),] %>%
     dplyr::select(estimate) %>%
     as.matrix()
   
-  abund_beta_intercept_se[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[1:(abund_term_length/2),] %>%
+  abund_beta_intercept_se[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[1:(abund_length),] %>%
     dplyr::select(estimate, conf.low) %>%
     dplyr::mutate(se = (estimate - conf.low)/1.96) %>%
     dplyr::select(se) %>% 
     as.matrix()
 
-  abund_beta_strata[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[((abund_term_length/2) + 1):abund_term_length,] %>%
+  abund_beta_strata[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[((abund_length) + 1):abund_length_total,] %>%
     dplyr::select(estimate) %>%
     as.matrix()
 
-  abund_beta_strata_se[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[((abund_term_length/2) + 1):abund_term_length,] %>%
+  abund_beta_strata_se[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[((abund_length) + 1):abund_length_total,] %>%
     dplyr::select(estimate, conf.low) %>%
     dplyr::mutate(se = (estimate - conf.low)/1.96) %>%
     dplyr::select(se) %>% 
@@ -520,7 +610,6 @@ abund_modavg_preds_matrix <- tibble(
 for(i in 1:nrow(abund_pred_fit)){
   abund_modavg_preds_list[[i]] <- modavgCustom(logL = abund_aictab$LL, 
                                                K = abund_aictab$K, 
-                                               modnames = abund_modnames, 
                                                estimate = abund_pred_fit[i,], 
                                                se = abund_pred_se[i,],
                                                nobs = nrow(abund_pred_fit))
@@ -542,7 +631,9 @@ abund$predictions_95CI_upper[abund$predictions_95CI_upper > 1] <- 1
 
 (taxa_link_abund <- abund %>% 
   dplyr::group_by(taxa_order,link,continent,method) %>%
-  dplyr::summarise(mean_elevation = mean(elevation)) %>%
+  dplyr::summarise(mean_elevation = mean(elevation),
+                   mean_canopy_height = mean(canopy_height),
+                   mean_latitude = mean(latitude)) %>%
   dplyr::full_join(modavg_estimates_abund, by = c("link")) %>%
   dplyr::rename(CI_95_lower = Lower.CL,
          CI_95_upper = Upper.CL,
@@ -617,6 +708,54 @@ ggplot(abund, aes(y = predictions_fit, x = strata,
   facet_grid(rows = vars(taxa), cols = vars(continent)) + theme_bw() + 
   theme(legend.position = "bottom");
 ggsave("analysis/figures/abundance_strata_full_continent.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
+ggplot(abund, aes(y = predictions_fit, x = canopy_height)) + geom_point() +
+  ylab("Predicted species abundance") + xlab("canopy_height") +
+  ggtitle("                                                            Abundance") +
+  scale_fill_viridis_d("Taxa") +
+  facet_grid(rows = vars(taxa), cols = vars(continent)) + theme_bw() + 
+  theme(legend.position = "bottom");
+ggsave("analysis/figures/abundance_strata_canopy_continent.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
+ggplot(abund, aes(y = predictions_fit, x = latitude)) + geom_point() +
+  ylab("Predicted species abundance") + xlab("latitude") +
+  ggtitle("                                                            Abundance") +
+  scale_fill_viridis_d("Taxa") +
+  facet_grid(rows = vars(taxa), cols = vars(continent)) + theme_bw() + 
+  theme(legend.position = "bottom");
+ggsave("analysis/figures/coef_abund_height_latitude.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
+
+
+ggplot(taxa_link_abund_order %>% filter(facet == "Change in abundance with increasing strata"), 
+       aes(y = estimate, x = abs(mean_latitude), col = taxa_order)) + 
+  geom_point() + geom_smooth(method = "glm") +
+  ylab("Coef(abundance ~ height)") + xlab("Absolute Latitude") +
+  ggtitle("Abundance") +
+  scale_fill_viridis_d("Taxa") +
+  facet_wrap(~taxa_order, scales = "free") +
+  theme(legend.position = "bottom") + theme_bw()
+ggsave("analysis/figures/coef_abund_height_lat.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
+ggplot(taxa_link_abund_order %>% filter(facet == "Change in abundance with increasing strata"), 
+       aes(y = estimate, x = mean_elevation, col = taxa_order)) + 
+  geom_point() + geom_smooth(method = "glm") +
+  ylab("Coef(abundance ~ height)") + xlab("Elevation") +
+  ggtitle("Abundance") +
+  scale_fill_viridis_d(name = "Taxa") +
+  facet_wrap(~taxa_order, scales = "free") +
+  theme(legend.position = "bottom") + theme_bw()
+ggsave("analysis/figures/coef_abund_height_elv.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+
+ggplot(taxa_link_abund_order %>% filter(facet == "Change in abundance with increasing strata"), 
+       aes(y = estimate, x = mean_canopy_height, col = taxa_order)) + 
+  geom_point() + geom_smooth(method = "glm") +
+  ylab("Coef(abundance ~ height)") + xlab("Canopy Height") +
+  ggtitle("Abundance") +
+  scale_fill_viridis_d("Taxa") +
+  facet_wrap(~taxa_order, scales = "free") +
+  theme(legend.position = "bottom") + theme_bw()
+ggsave("analysis/figures/coef_abund_height_canopy.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 ```
 ### Plotting abundance: Two panel figure
 ```{r Plotting abundance: Two panel figure}
@@ -628,7 +767,7 @@ col_2_abund_est <- ggplot(taxa_link_abund_order, aes(x = rev(order), y = estimat
                      ymin = CI_80_lower), size = 1.1) +
   geom_linerange(aes(ymax = CI_95_upper,
                      ymin = CI_95_lower)) +
-  scale_x_continuous(breaks = rev(taxa_link_abund_order$order[1:length_abund]), labels = taxa_link_abund_order$link[1:length_abund]) +
+  scale_x_continuous(breaks = rev(taxa_link_abund_order$order[1:abund_length]), labels = taxa_link_abund_order$link[1:abund_length]) +
   facet_grid(cols = vars(factor(facet, levels = c(abundance_intercept, abundance_slope)))) + 
   scale_color_viridis_d("Taxa") + theme_bw() + theme(legend.position = "none"); col_2_abund_est
 
@@ -756,8 +895,8 @@ col_2_slope_rich_est_cont <- ggplot(taxa_link_slope_rich, aes(x = order, y = est
                      ymin = CI_95_lower)) +
   scale_x_continuous(breaks = taxa_link_slope_rich_plot$order, 
                      labels = taxa_link_slope_rich_plot$link_plot, expand = c(0.02, 0)) +
-  scale_y_continuous(limits = c(-13, 12), breaks = seq(-12, 12, by = 2), expand = c(0.05, 0),
-                     sec.axis = sec_axis(~., breaks = c(-8,0,8), labels = c("Decreasing"," ","Increasing"))) +
+  scale_y_continuous(limits = c(-8.5, 8.5), breaks = seq(-8, 8, by = 2), expand = c(0.05, 0),
+                     sec.axis = sec_axis(~., breaks = c(-5,0,5), labels = c("Decreasing"," ","Increasing"))) +
   geom_text(aes(x = order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
   annotate("text", x = seq(56, 54), y = rep(4.5,3), 
            label = c("  * = 80% CI excludes 0"," ** = 95% CI excludes 0","*** = 99% CI excludes 0"), size = 3) +
@@ -776,8 +915,8 @@ col_2_slope_abund_est_cont <- ggplot(taxa_link_slope_abund, aes(x = order, y = e
                      ymin = CI_95_lower)) +
   scale_x_continuous(breaks = taxa_link_slope_abund_plot$order, 
                      labels = taxa_link_slope_abund_plot$link_plot, expand = c(0.02, 0)) +
-  scale_y_continuous(limits = c(-14.78,14.5), breaks = seq(-14, 14, by = 2), expand = c(0.05, 0),
-                     sec.axis = sec_axis(~., breaks = c(-7,0,7), labels = c("Decreasing"," ","Increasing"))) +
+  scale_y_continuous(limits = c(-11.5, 11), breaks = seq(-10, 10, by = 2), expand = c(0.05, 0),
+                     sec.axis = sec_axis(~., breaks = c(-6,0,6), labels = c("Decreasing"," ","Increasing"))) +
   geom_text(aes(x = order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
   scale_color_viridis_d("Taxa") + theme_classic() + 
   theme(legend.position = "none", axis.text.x.top = element_text(size = 8),
@@ -786,9 +925,7 @@ col_2_slope_abund_est_cont <- ggplot(taxa_link_slope_abund, aes(x = order, y = e
         axis.line = element_blank(), plot.margin = unit(c(1,1,0,0), "lines")); col_2_slope_abund_est_cont
 
 col_2_slope_est_cont <- ggarrange(col_2_slope_rich_est_cont, col_2_slope_abund_est_cont); col_2_slope_est_cont
-```
 
-```{r}
 col_2_slope_rich_avg_cont <- ggplot(taxa_link_slope_rich_avg, 
                                aes(x = factor(taxa_order, levels = c(
                                 "Small mammals", "Amphibians", "Birds", "Bats"
@@ -801,8 +938,8 @@ col_2_slope_rich_avg_cont <- ggplot(taxa_link_slope_rich_avg,
                      ymin = CI_95_lower)) +
   geom_text(aes(x = taxa_order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
   scale_x_discrete(labels = rev(c("Bats","Birds","Amphibians", "      Small Mammals"))) +
-  scale_y_continuous(limits = c(-14, 14), breaks = seq(-14, 14, by = 2), expand = c(0.05, 0), 
-                     sec.axis = sec_axis(~., breaks = c(-7,0,7), labels = c("Decreasing"," ","Increasing"))) +
+  scale_y_continuous(limits = c(-8.5, 8.5), breaks = seq(-8, 8, by = 2), expand = c(0.05, 0), 
+                     sec.axis = sec_axis(~., breaks = c(-4,0,4), labels = c("Decreasing"," ","Increasing"))) +
   scale_color_viridis_d("Taxa") + theme_classic() + 
   theme(legend.position = c(.5,-0.1), legend.direction = "horizontal", panel.border = element_rect(colour = "black", fill=NA, size=1), 
         axis.text.x.top = element_text(size = 8), legend.title.align = 0.5,
@@ -822,12 +959,12 @@ col_2_slope_abund_avg_cont <- ggplot(taxa_link_slope_abund_avg,
                      ymin = CI_95_lower)) +
   geom_text(aes(x = taxa_order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
   scale_x_discrete(labels = rev(c("Bats", "Birds", "Amphibians", "      Small Mammals"))) +
-  scale_y_continuous(limits = c(-14.78,14.5), breaks = seq(-14, 14, by = 2), expand = c(0.05, 0), 
-                     sec.axis = sec_axis(~., breaks = c(-7,0,7), labels = c("Decreasing"," ","Increasing"))) +  scale_color_viridis_d(" ") + theme_classic() + 
+  scale_y_continuous(limits = c(-11.5, 11), breaks = seq(-10, 10, by = 2), expand = c(0.05, 0), 
+                     sec.axis = sec_axis(~., breaks = c(-5,0,5), labels = c("Decreasing"," ","Increasing"))) +  scale_color_viridis_d(" ") + theme_classic() + 
   theme(legend.position = "none", panel.border = element_rect(colour = "black", fill=NA, size=1),
         axis.text.x.top = element_text(size = 8),
         axis.ticks.length.x.top = unit(0, "cm"),
-        legend.text=element_text(color="white"),
+        legend.text = element_text(color="white"),
         axis.line = element_blank(), plot.margin = unit(c(0,1,0,0), "lines")) + 
   guides(color=guide_legend(override.aes=list(fill="white", col = "white"))); col_2_slope_abund_avg_cont
 
@@ -835,3 +972,20 @@ col_2_slope_avg_cont <- ggarrange(col_2_slope_rich_avg_cont, col_2_slope_abund_a
 ggarrange(col_2_slope_est_cont, col_2_slope_avg_cont, nrow = 2, heights = c(6,1.5))
 ggsave("analysis/figures/parm_taxa_4_panel.jpeg", width = 10, height = 10, units = "in", dpi = 300)
 ```
+
+```{r}
+taxa_link_biomet_order <- full_join(taxa_link_abund_order,taxa_link_rich_order)
+
+taxa_link_biomet_sum <- taxa_link_biomet_order %>%
+  mutate(sign = sign(estimate)) %>%
+  group_by(taxa_order) %>%
+  dplyr::summarize(pos = sum(sign == 1),
+                   neg = sum(sign == -1),
+                   pos_sig = sum(sign == 1 & sig == "*"),
+                   neg_sig = sum(sign == -1 & sig == "*"))
+
+
+
+taxa_link_biomet_order
+```
+
