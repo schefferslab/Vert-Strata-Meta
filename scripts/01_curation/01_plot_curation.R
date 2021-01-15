@@ -15,8 +15,9 @@ library(googlesheets4)
 ## If googlesheets4 is installed....
 if("googlesheets4" %in% rownames(installed.packages()) == TRUE) {
   big_data_plots_url <- "https://docs.google.com/spreadsheets/d/1-kY3Ono0ypzgahjbH8YyaZwFqB6zTwXkiQ96zOPixCw/edit?usp=sharing"
-  plots <- read_sheet(big_data_plots_url, sheet = "2020 Raw Data", na = c(""," ","NA"))[-1,]  # removing the second row, which appears to be an explanation of the data(?)...
-} else {
+  plots <- try(read_sheet(big_data_plots_url, sheet = "2020 Raw Data", na = c(""," ","NA"))[-1,])  # removing the second row, which appears to be an explanation of the data(?)...
+}
+if ("googlesheets4" %in% rownames(installed.packages()) == FALSE | any(class(plots) == "try-error")){
   plots <- read_excel("data/stripped_data/original/Big data.xlsx", sheet = "2020 Raw Data",
                       skip = 1)
   colnames(plots) <- colnames(read_excel("data/stripped_data/original/Big data.xlsx", 
