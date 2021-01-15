@@ -12,8 +12,13 @@ library(googlesheets4)
 
 ## ....Load in data ---------------
 
-big_data_url <- "https://docs.google.com/spreadsheets/d/1-kY3Ono0ypzgahjbH8YyaZwFqB6zTwXkiQ96zOPixCw/edit?usp=sharing"
-papers <- read_sheet(big_data_url, sheet = "2020 Papers")
+## If googlesheets4 is installed....
+if("googlesheets4" %in% rownames(installed.packages()) == TRUE) {
+  big_data_url <- "https://docs.google.com/spreadsheets/d/1-kY3Ono0ypzgahjbH8YyaZwFqB6zTwXkiQ96zOPixCw/edit?usp=sharing"
+  papers <- read_sheet(big_data_url, sheet = "2020 Papers")
+} else {
+  papers <- read_excel("data/stripped_data/original/Big data.xlsx", sheet = "2020 Papers")
+}
 
 sites <- suppressMessages(read_csv(Sys.glob("data/*/*/intermediate_sites.csv")))
 plots <- suppressMessages(read_csv(Sys.glob("data/*/*/intermediate_plots.csv")))

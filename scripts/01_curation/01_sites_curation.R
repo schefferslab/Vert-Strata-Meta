@@ -13,11 +13,20 @@ library(readxl)
 library(raster)
 
 ## ....Load in data -----------
-# the first row (column names) first time through....
-big_data_sites_url <- "https://docs.google.com/spreadsheets/d/1-kY3Ono0ypzgahjbH8YyaZwFqB6zTwXkiQ96zOPixCw/edit?usp=sharing"
-sites_gs <- read_sheet(big_data_sites_url, sheet = "2020 Site Info")
 
-sites <- sites_gs %>%
+## If googlesheets4 is installed....
+if("googlesheets4" %in% rownames(installed.packages()) == TRUE) {
+  big_data_sites_url <- "https://docs.google.com/spreadsheets/d/1-kY3Ono0ypzgahjbH8YyaZwFqB6zTwXkiQ96zOPixCw/edit?usp=sharing"
+  sites <- read_sheet(big_data_sites_url, sheet = "2020 Site Info")
+} else {
+  # the first row (column names) first time through....
+  sites <- read_excel("data/stripped_data/original/Big data.xlsx", sheet = "2020 Site Info",
+                      skip = 1)
+  # ....then overwrite the colnames here
+  colnames(sites) <- colnames(read_excel("data/stripped_data/original/Big data.xlsx", sheet = "2020 Site Info"))
+}
+
+sites <- sites %>%
   mutate(Year = sapply(Year, toString)) %>%
   mutate(`Data Quality`  = sapply(`Data Quality`, toString)) %>%
   mutate(`Data Quality explanation`  = sapply(`Data Quality explanation`, toString)) %>%
