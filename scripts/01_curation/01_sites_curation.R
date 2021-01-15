@@ -8,15 +8,29 @@
 ## ....Load libraries ------------
 
 library(tidyverse)
+library(googlesheets4)
 library(readxl)
 library(raster)
 
 ## ....Load in data -----------
 # the first row (column names) first time through....
-sites <- read_excel("data/stripped_data/original/Big data.xlsx", sheet = "2020 Site Info",
-                    skip = 1)
-# ....then overwrite the colnames here
-colnames(sites) <- colnames(read_excel("data/stripped_data/original/Big data.xlsx", sheet = "2020 Site Info"))
+big_data_sites_url <- "https://docs.google.com/spreadsheets/d/1-kY3Ono0ypzgahjbH8YyaZwFqB6zTwXkiQ96zOPixCw/edit?usp=sharing"
+sites_gs <- read_sheet(big_data_sites_url, sheet = "2020 Site Info")
+
+sites <- sites_gs %>%
+  mutate(Year = sapply(Year, toString)) %>%
+  mutate(`Data Quality`  = sapply(`Data Quality`, toString)) %>%
+  mutate(`Data Quality explanation`  = sapply(`Data Quality explanation`, toString)) %>%
+  mutate(`Sum Total Richness` = sapply(`Sum Total Richness`, toString)) %>%
+  mutate(`Sum Total Abundance`  = sapply(`Sum Total Abundance`, toString)) %>%
+  mutate(`Canopy height` = sapply(`Canopy height`, toString)) %>%
+  mutate(Latitude = sapply(Latitude, toString)) %>%
+  mutate(Longitude = sapply(Longitude, toString)) %>%
+  mutate(`Study start date` = sapply(`Study start date`, toString)) %>%
+  mutate(`Study end date` = sapply(`Study end date`, toString))
+sites[sites == ""] <- NA
+sites[sites == " "] <- NA
+sites[sites == "NA"] <- NA
 
 ## ....Load in and merge Simard raster --------------
 
@@ -51,7 +65,6 @@ if (!file.exists("data/remote_sensing/canopy_height/global_coverage/global_canop
 
 colnames(sites) <- tolower(colnames(sites))
 colnames(sites) <- gsub(" ", "_", colnames(sites))
-
 
 ## ....B. Variable recoding ------------
 
