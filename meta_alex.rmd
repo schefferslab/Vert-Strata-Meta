@@ -25,10 +25,41 @@ eval(parse(text = RCurl::getURL(URL, ssl.verifypeer = F)), envir = .GlobalEnv)
 
 # Add packages to be used here
 packages <-  c("lme4","AICcmodavg","glmmTMB","TMB","tidyverse","readr","scales",
-               "formula.tools","sjPlot","ggpubr","scales","Hmisc","visreg","bbmle")
+               "formula.tools","sjPlot","ggpubr","Hmisc","visreg","bbmle")
+
+library(lme4)
+library(AICcmodavg)
+library(glmmTMB)
+library(TMB)
+library(tidyverse)
+library(readr)
+library(scales)
+library(formula.tools)
+library(sjPlot)
+library(ggpubr)
+library(Hmisc)
+library(visreg)
+library(bbmle)
+
 
 # Run function:
 prepare_libraries(packages)
+```
+
+```{r load packages, message=TRUE, warning=TRUE}
+library(lme4)
+library(AICcmodavg)
+library(glmmTMB)
+library(TMB)
+library(tidyverse)
+library(readr)
+library(scales)
+library(formula.tools)
+library(sjPlot)
+library(ggpubr)
+library(Hmisc)
+library(visreg)
+library(bbmle)
 ```
 
 ## Loading data
