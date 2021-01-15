@@ -8,7 +8,7 @@
 
 library(tidyverse)
 library(readxl)
-
+library(scales)
 
 ## ....Load in data -----------
 # the first row (column names) first time through....
@@ -112,7 +112,7 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
                 season = as.factor(season), 
                 forest_type = as.factor(forest_type),  
                 mean_strata_height_p = as.numeric(mean_strata_height_p)) %>%
-  dplyr::select(link, study_id.x, method, taxa, continent,country, biodiversity_metric, taxa_order,
+  dplyr::select(link, study_id.x,year, method, taxa, continent,country, biodiversity_metric, taxa_order,
                 treatment, season, forest_type, elevation, canopy_height, latitude, longitude, 
                 scaled_met, strata = mean_strata_height_p) 
 
@@ -165,7 +165,7 @@ triple_groups$investigated_percent = (triple_groups$n.investigated / triple_grou
 ##   justify inclusions 
 ##
 
-specifics = triple_groups %>% filter(factors %in% c("food", "structure","climate", "morphology", "shelter", "species_interactions", "sex","age",  "seasonality", "diurnality")
+specifics = triple_groups %>% filter(factors %in% c("food", "structure","climate", "morphology", "shelter", "species_interactions", "sex","age",  "seasonality", "diurnality", "light")
                                      )
 
 specifics_tall <- specifics %>% gather(key = Level, value = Value, theorised_percent:investigated_percent)
@@ -183,7 +183,7 @@ ggplot(specifics_tall, aes(x = factors, y = Value, fill = Level)) +
   ylab("Percent of Papers") + xlab("Stratification Factors") +
   scale_fill_brewer(palette = "Set1", labels = c("Investigated", "Referenced"), guide = guide_legend(reverse=TRUE)) +
   ######  scale x discrete labels will need to be changed if the plot changes is updated!    or it will show the wrong labels because it is overriting thrm
-  scale_x_discrete(labels=c("Habitat Structure", "Food / Foraging", "Morphology", "Species Interactions", "Climate",  "Nesting / Roosting",  "Seasonality", "Diurnality",   "Age",  "Sex")) +
+  scale_x_discrete(labels=c("Habitat Structure", "Food / Foraging", "Morphology", "Species Interactions", "Climate",  "Nesting / Roosting",  "Seasonality","light", "Diurnality",   "Age",  "Sex")) +
   theme(legend.position = "top", legend.title = element_blank(),
         strip.background = element_rect(colour="black",
                                         fill="white"),
@@ -206,7 +206,7 @@ ggsave("analysis/figures/drivers_all_taxa.jpeg", width = 7, height = 10, units =
 #
 #     without primates 
 
-specifics_select = triple_groups %>% filter(factors %in% c("food", "structure","climate", "morphology", "shelter", "species_interactions", "sex","age",  "seasonality", "diurnality")
+specifics_select = triple_groups %>% filter(factors %in% c("food", "structure","climate", "morphology", "shelter", "species_interactions", "sex","age",  "seasonality", "diurnality", "light")
                                      ,taxa !="Primates"
 )
 
@@ -225,7 +225,7 @@ ggplot(specifics_tall_select, aes(x = factors, y = Value, fill = Level)) +
   ylab("Percent of Papers") + xlab("Stratification Factors") +
   scale_fill_brewer(palette = "Set1", labels = c("Investigated", "Referenced"), guide = guide_legend(reverse=TRUE)) +
   ######  scale x discrete labels will need to be changed if the plot changes is updated!    or it will show the wrong labels because it is overriting thrm
-  scale_x_discrete(labels=c("Habitat Structure", "Food / Foraging","Climate", "Species Interactions","Morphology", "Seasonality", "Nesting / Roosting",  "Diurnality",     "Age", "Sex")) +
+  scale_x_discrete(labels=c("Habitat Structure", "Food / Foraging","Climate", "Species Interactions","Morphology", "Seasonality", "Nesting / Roosting","light",  "Diurnality",  "Age", "Sex")) +
   theme(legend.position = "top", legend.title = element_blank(),
         strip.background = element_rect(colour="black", fill="white"),
         panel.background = element_blank(),
@@ -258,12 +258,14 @@ world <- ne_countries(scale = "medium", returnclass = "sf")
 
 locations = dat[, c("latitude", "longitude", "taxa", "continent","country", "link", "method", "elevation", "year")]
 locations = unique(locations)
-
+locations_np = locations %>%
+  filter(taxa != "Primates")
 # count how many studies occured across different taxa and continents
 continent_taxa = as.data.frame(locations) %>%
   group_by(continent, taxa) %>%
   tally()
 
+#here making a primate based dataset map thing
 # primates were not recorded in africa and asia so these rows need to get added and then re- ordered
 continent_add = continent_taxa[c(4,13),]
 continent_mix = rbind(continent_taxa, continent_add)
@@ -277,10 +279,18 @@ continent_mix$longitude = c(rep(-15, 5), rep(-115, 5), rep(140, 5))
 continent_mix$latitude =  c(   0,-6,-12,-18,-24,   6, 0, -6, -12,-18,     24,18,12,6,0)
 continent_mix$inset = paste("n = ", continent_mix$n)
 
+##
+## here making one without primates
+continent_np = continent_taxa[-8,]
+continent_np$longitude = c(rep(-15, 4), rep(-115, 4), rep(140, 4))
+continent_np$latitude =  c(0,-6,-12,-18,   6, 0, -6, -12,    24, 18,12,6)
+continent_np$inset = paste("n = ", continent_np$n)
+
+
 ### select the lists of countries in each continent
-africa = c(unique(subset(locations, continent == "Africa")$country))
-asia =   c(unique(subset(locations, continent == "Asia and Oceania")$country))
-neo =    c(unique(subset(locations, continent == "Americas")$country))
+africa = c(unique(subset(locations_np, continent == "Africa")$country))
+asia =   c(unique(subset(locations_np, continent == "Asia and Oceania")$country))
+neo =    c(unique(subset(locations_np, continent == "Americas")$country))
 
 
 chop_africa <- ne_countries(scale = "medium", returnclass = "sf", country = africa)
@@ -296,9 +306,9 @@ ggplot(data = world) +
   geom_sf(data = chop_africa, fill = "orangered1") + 
   geom_sf(data = chop_asia, fill = "deepskyblue1") + 
   geom_sf(data = chop_neo, fill = "yellowgreen") + 
-  geom_point(data = locations, aes(x = longitude, y = latitude, fill = taxa), size = 2, shape = 21)+
-  geom_point(data = continent_mix, aes(x = longitude, y = latitude, fill = taxa), size = 2, shape = 23, show.legend = FALSE)+
-  geom_text(data = continent_mix,  aes(x = longitude, y = latitude, label = inset, fontface = "bold"), nudge_x = 5, hjust = "left") +
+  geom_point(data = locations_np, aes(x = longitude, y = latitude, fill = taxa), size = 2, shape = 21)+
+  geom_point(data = continent_np, aes(x = longitude, y = latitude, fill = taxa), size = 2, shape = 23, show.legend = FALSE)+
+  geom_text(data = continent_np,  aes(x = longitude, y = latitude, label = inset, fontface = "bold"), nudge_x = 5, hjust = "left") +
   geom_hline(yintercept = 30) +
   geom_hline(yintercept = -30) +
   coord_sf(ylim= c(60, -60), xlim= c(165, -140) ) +  # 
@@ -424,7 +434,7 @@ method_breakdown = as.data.frame(locations) %>%
   group_by(method) %>%
   tally()
 
-years = locations %>% mutate(decade = floor(year/10)*10) 
+years = locations_np %>% mutate(decade = floor(year/10)*10) 
 years$decade = as.factor(years$decade)
 
 years_grouped = years %>% 
