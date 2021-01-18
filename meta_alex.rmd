@@ -8,41 +8,21 @@ output:
 
 # Preparing workspace
 ## Calling libraries
+
 ```{r load packages, message=TRUE, warning=TRUE}
-# Empty environment
-# rm(list = ls())
-# 
-# # Set session mirror for knitting
-# local({r <- getOption("repos")
-#        r["CRAN"] <- "http://cran.r-project.org"
-#        options(repos=r)})
-# 
-# # My package-loading script
-# URL <- "https://raw.githubusercontent.com/slamander/load_packages/main/prepare_libraries.R"
-# 
-# # Take that script, parse it, and load it to our environment
-# eval(parse(text = RCurl::getURL(URL)), envir = .GlobalEnv)
-# 
-# packages <- c("lme4","AICcmodavg","glmmTMB","TMB","tidyverse","readr","scales","formula.tools","sjPlot","ggpubr","scales","Hmisc","visreg","bbmle")
-# 
-# prepare_libraries(packages)
-
-library("lme4")
-library("AICcmodavg")
-library("glmmTMB")
-library("TMB")
-library("tidyverse")
-library("readr")
-library("scales")
-library("formula.tools")
-library("sjPlot")
-library("ggpubr")
-library("scales")
-library("Hmisc")
-library("visreg")
-library("bbmle") 
-
-# Run function:
+library(lme4)
+library(AICcmodavg)
+library(glmmTMB)
+library(TMB)
+library(tidyverse)
+library(readr)
+library(scales)
+library(formula.tools)
+library(sjPlot)
+library(ggpubr)
+library(Hmisc)
+library(visreg)
+library(bbmle)
 ```
 
 ## Loading data
