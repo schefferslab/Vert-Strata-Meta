@@ -10,25 +10,39 @@ output:
 ## Calling libraries
 ```{r load packages, message=TRUE, warning=TRUE}
 # Empty environment
-rm(list = ls())
+# rm(list = ls())
+# 
+# # Set session mirror for knitting
+# local({r <- getOption("repos")
+#        r["CRAN"] <- "http://cran.r-project.org"
+#        options(repos=r)})
+# 
+# # My package-loading script
+# URL <- "https://raw.githubusercontent.com/slamander/load_packages/main/prepare_libraries.R"
+# 
+# # Take that script, parse it, and load it to our environment
+# eval(parse(text = RCurl::getURL(URL)), envir = .GlobalEnv)
+# 
+# packages <- c("lme4","AICcmodavg","glmmTMB","TMB","tidyverse","readr","scales","formula.tools","sjPlot","ggpubr","scales","Hmisc","visreg","bbmle")
+# 
+# prepare_libraries(packages)
 
-# Set session mirror for knitting
-local({r <- getOption("repos")
-       r["CRAN"] <- "http://cran.r-project.org"
-       options(repos=r)})
-
-# My package-loading script
-URL <- "https://raw.githubusercontent.com/slamander/load_packages/main/prepare_libraries.R"
-
-# Take that script, parse it, and load it to our environment
-eval(parse(text = RCurl::getURL(URL, ssl.verifypeer = F)), envir = .GlobalEnv)
-
-# Add packages to be used here
-packages <-  c("lme4","AICcmodavg","glmmTMB","TMB","tidyverse","readr","scales",
-               "formula.tools","sjPlot","ggpubr","scales","Hmisc","visreg","bbmle")
+library("lme4")
+library("AICcmodavg")
+library("glmmTMB")
+library("TMB")
+library("tidyverse")
+library("readr")
+library("scales")
+library("formula.tools")
+library("sjPlot")
+library("ggpubr")
+library("scales")
+library("Hmisc")
+library("visreg")
+library("bbmle") 
 
 # Run function:
-prepare_libraries(packages)
 ```
 
 ## Loading data
@@ -52,14 +66,9 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
   dplyr::select(link, study_id.x, method, taxa, bin_weight, weight, indepedence_weight, 
                 continent, biodiversity_metric, taxa_order, treatment, season, forest_type, 
                 elevation, canopy_height, latitude, longitude, scaled_met, strata = mean_strata_height_p) %>%
-  dplyr::mutate(composite_weight = as.numeric(bin_weight*weight*indepedence_weight)) %>%
-  dplyr::select(-c(bin_weight, weight, indepedence_weight))
+  dplyr::mutate(composite_weight = as.numeric(bin_weight*rescale(weight, to = c(0,1))*indepedence_weight)) 
 
-mean(scale(dat$composite_weight) + 1)
-test <- scale(dat$composite_weight) + 1
-test1 <- rescale(dat$composite_weight, to = c(1,2))
-
-glimpse(dat)
+test <- scale(dat$composite_weight, center = T) + 1
 
 abund <- dat %>%
   dplyr::filter(biodiversity_metric == "abundance")
@@ -280,7 +289,7 @@ modavg_estimates_rich$facet <- model_estimates_rich$facet
 <!-- If you have predictions with SE's obtained from predict( ), then you could model-average these predictions across different models. To do so, you can use the modavgCustom( ) function which is designed for models that are not yet supported by modavg( ), modavgShrink( ), or modavgPred( ). The modavgCustom( ) function model-averages one prediction at a time. You can check ?modavgCustom( ) for an example. If you have several predictions from each model, you could then use a loop to model-average each prediction successively. To do so, you could create two matrices with nmodel rows x npredictions columns. One of these matrices would hold the predictions from each model and the other would hold the SE's of these predictions. -->
 
 ### Doing what Marc said above to obtain model averaged predictions using `stats::predict`, a customized function for manual model averaging 
-```{r Model averaging richness model estimates: model averaged predictions}
+```{r Model averaging richness model estimates: model averaged predictions, message=FALSE, warning=FALSE}
 # Initializing matrices for model averaged predictions 
 rich_pred_fit <- matrix(NA, nrow = nrow(rich), ncol = length(mods_rich))
 rich_pred_se <- matrix(NA, nrow = nrow(rich), ncol = length(mods_rich))
@@ -437,42 +446,13 @@ ggsave("analysis/figures/coef_rich_height_canopy.jpeg", width = 8, height = 6, u
 
 ```
 
-```{r Model averaged richness predictions: two panel plotting}
-## Two panel figure
-col_2_rich_est <- ggplot(taxa_link_rich_order, aes(x = rev(order), y = estimate, col = taxa_order)) + 
-  ylab(" ") + xlab(" ") + coord_flip() + ylim(-7.5,7.5) +
-  geom_hline(yintercept = 0, col = "grey80", size = 1, linetype = 1) + geom_point(size = 1.5) + 
-  geom_linerange(aes(ymax = CI_80_upper, 
-                     ymin = CI_80_lower), size = 1.1) +
-  geom_linerange(aes(ymax = CI_95_upper, 
-                     ymin = CI_95_lower)) +
-  scale_x_continuous(breaks = rev(taxa_link_rich_order$order[1:50]), labels = taxa_link_rich_order$link[1:50]) +
-  facet_grid(cols = vars(factor(facet, levels = c(richness_intercept, richness_slope)))) + 
-  scale_color_viridis_d("Taxa") + theme_bw() + 
-  theme(legend.position = "none"); col_2_rich_est
-
-col_2_rich_est_avg <- ggplot(taxa_link_rich_avg, aes(x = rev(taxa_order), y = estimate, col = taxa_order)) + 
-  ylab("Slope estimate") + xlab(" ") + coord_flip() + ylim(-7.5,7.5) +
-  geom_hline(yintercept = 0, col = "grey80", size = 1, linetype = 1) + geom_point(size = 1.5) + 
-  geom_linerange(aes(ymax = CI_80_upper, 
-                     ymin = CI_80_lower), size = 1.1) +
-  geom_linerange(aes(ymax = CI_95_upper, 
-                     ymin = CI_95_lower)) +
-  scale_x_discrete(labels = rev(c("Birds","Bats","             Small mammals","Amphibians"))) +
-  facet_grid(cols = vars(factor(facet, levels = c(richness_intercept, richness_slope)))) + 
-  scale_color_viridis_d("Taxa") + theme_bw() + 
-  theme(legend.position = "bottom"); col_2_rich_est_avg
-
-ggarrange(col_2_rich_est, col_2_rich_est_avg, ncol = 1, nrow = 2, heights = c(4,1), widths = c(4,1))
-```
-
 ## Plot study coef with elevation
 ```{r}
 taxa_link_rich_slope <- taxa_link_rich_order %>%
   filter(facet == "Change in richness with increasing strata")
 
 ggplot(taxa_link_rich_slope, aes(x = mean_elevation, y = estimate, col = taxa_order)) + 
-  ylab("Coef (Richness ~ Height") + xlab("Elevation") + geom_point(size = 1.5) + 
+  ylab("Coef (Richness ~ Height)") + xlab("Elevation") + geom_point(size = 1.5) + 
   geom_smooth(method = "glm") +
   facet_wrap(~taxa_order, scales = "free") + 
   scale_color_viridis_d("Taxa") + theme_bw() + 
@@ -480,7 +460,7 @@ ggplot(taxa_link_rich_slope, aes(x = mean_elevation, y = estimate, col = taxa_or
 ggsave("analysis/figures/coef_richness_height.jpeg")
 
 ggplot(taxa_link_rich_slope, aes(x = method, y = estimate, fill = taxa_order)) + 
-  ylab("Coef (Richness ~ Height") + xlab("Method") + 
+  ylab("Coef (Richness ~ Height)") + xlab("Method") + 
   geom_boxplot() + geom_jitter() +
   facet_wrap(~taxa_order, scales = "free") + 
   scale_color_viridis_d("Taxa") + theme_bw() + 
@@ -757,35 +737,6 @@ ggplot(taxa_link_abund_order %>% filter(facet == "Change in abundance with incre
   theme(legend.position = "bottom") + theme_bw()
 ggsave("analysis/figures/coef_abund_height_canopy.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 ```
-### Plotting abundance: Two panel figure
-```{r Plotting abundance: Two panel figure}
-## Two panel figure
-col_2_abund_est <- ggplot(taxa_link_abund_order, aes(x = rev(order), y = estimate, col = taxa_order)) + 
-  ylab(" ") + xlab(" ") + coord_flip() + 
-  geom_hline(yintercept = 0, col = "grey80", size = 1, linetype = 1) + geom_point(size = 1.5) + 
-  geom_linerange(aes(ymax = CI_80_upper, 
-                     ymin = CI_80_lower), size = 1.1) +
-  geom_linerange(aes(ymax = CI_95_upper,
-                     ymin = CI_95_lower)) +
-  scale_x_continuous(breaks = rev(taxa_link_abund_order$order[1:abund_length]), labels = taxa_link_abund_order$link[1:abund_length]) +
-  facet_grid(cols = vars(factor(facet, levels = c(abundance_intercept, abundance_slope)))) + 
-  scale_color_viridis_d("Taxa") + theme_bw() + theme(legend.position = "none"); col_2_abund_est
-
-col_2_abund_est_avg <- ggplot(taxa_link_abund_avg, aes(x = rev(taxa_order), y = estimate, col = taxa_order)) + 
-  ylab("Slope estimate") + xlab(" ") + coord_flip() + ylim(-10,10) +
-  geom_hline(yintercept = 0, col = "grey80", size = 1, linetype = 1) + geom_point(size = 1.5) + 
-  geom_linerange(aes(ymax = CI_80_upper, 
-                     ymin = CI_80_lower), size = 1.1) +
-  geom_linerange(aes(ymax = CI_95_upper,
-                     ymin = CI_95_lower)) +
-  scale_x_discrete(labels = rev(c("Birds","Bats","             Small mammals","Amphibians"))) +
-  facet_grid(cols = vars(factor(facet, levels = c(abundance_intercept, abundance_slope)))) + 
-  scale_color_viridis_d("Taxa") + theme_bw() + 
-  theme(legend.position = "bottom"); col_2_abund_est_avg
-
-ggarrange(col_2_abund_est, col_2_abund_est_avg, ncol = 1, nrow = 2, heights = c(4,1), widths = c(4,1))
-```
-
 ## Plot study coef with elevation
 ```{r}
 taxa_link_abund_slope <- taxa_link_abund_order %>%
@@ -974,18 +925,24 @@ ggsave("analysis/figures/parm_taxa_4_panel.jpeg", width = 10, height = 10, units
 ```
 
 ```{r}
-taxa_link_biomet_order <- full_join(taxa_link_abund_order,taxa_link_rich_order)
+taxa_link_biomet_order <- full_join(taxa_link_abund_order,taxa_link_rich_order) %>%
+  filter(!facet %in% c("Abundance at lowest strata", "Richness at lowest strata"))
 
 taxa_link_biomet_sum <- taxa_link_biomet_order %>%
   mutate(sign = sign(estimate)) %>%
-  group_by(taxa_order) %>%
-  dplyr::summarize(pos = sum(sign == 1),
-                   neg = sum(sign == -1),
-                   pos_sig = sum(sign == 1 & sig == "*"),
+  group_by(taxa_order, facet) %>%
+  dplyr::summarize(pos_sig = sum(sign == 1 & sig == "*"),
                    neg_sig = sum(sign == -1 & sig == "*"))
 
+log((taxa_link_biomet_sum$pos_sig+1)/(taxa_link_biomet_sum$neg_sig+1))
 
-
-taxa_link_biomet_order
+ggplot(taxa_link_biomet_sum, aes(y = log((pos_sig+1)/(neg_sig+1)), x = taxa_order, fill = taxa_order)) + 
+  geom_hline(yintercept = 0, alpha = 0.5, size = 0.8) + ylim(c(-3,1)) +
+  geom_bar(stat = "identity") + xlab("Taxa") + 
+  ylab(log ~ italic(bgroup("(", over("frequency of positive slopes + 1", "frequency of negative slopes + 1"), ")"))) + 
+  facet_wrap(~facet) + 
+  scale_x_discrete(labels = c("Bats", "Birds", "Small Mammals", "Amphibians")) +
+  scale_fill_viridis_d("Taxa") + theme_bw() + theme(legend.position = "none") 
+ggsave("analysis/figures/summary_slopes_taxa_biometric.jpeg", width = 8, height = 4, units = "in", dpi = 300)
 ```
 
