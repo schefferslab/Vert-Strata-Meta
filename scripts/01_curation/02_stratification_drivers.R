@@ -219,10 +219,14 @@ list_in_order_select = list_not_in_order_select[order(-list_not_in_order_select$
 specifics_tall_select <- within(specifics_tall_select, 
                          factors <- factor(factors, levels=list_in_order_select$Group.1))
 
+f_labels <- data.frame(taxa = c("Amphibians", "Bats", "Birds", "Small mammals"), label = c("n = 4", "n = 21", "n = 18", "n = 14"))
+
 ggplot(specifics_tall_select, aes(x = factors, y = Value, fill = Level)) + 
   geom_col(position = "identity") +
+  geom_text(x = 10, y = 80, aes(label = label, fill = NULL, size = 1), data = f_labels, show.legend = FALSE) +
+  geom_text(x = 10, y = 80, aes(label = label, fill = NULL, size = 1), data = f_labels, show.legend = FALSE) +
   facet_wrap(~taxa, ncol = 1) +
-  ylab("Percent of Papers") + xlab("Stratification Factors") +
+  ylab("Percent of Studies") + xlab("Stratification Factors") +
   scale_fill_brewer(palette = "Set1", labels = c("Investigated", "Referenced"), guide = guide_legend(reverse=TRUE)) +
   ######  scale x discrete labels will need to be changed if the plot changes is updated!    or it will show the wrong labels because it is overriting thrm
   scale_x_discrete(labels=c("Habitat Structure", "Food / Foraging","Climate", "Species Interactions","Morphology", "Seasonality", "Nesting / Roosting","light",  "Diurnality",  "Age", "Sex")) +
