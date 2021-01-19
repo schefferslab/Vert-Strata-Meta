@@ -949,8 +949,6 @@ summary_coef_re_rbind <- rbind(
   dplyr::select(-c("p.label","xpos","title","xmin","xmax","conf.low","conf.high","group","reihe")) %>%
   relocate(metric) %>%
   pivot_wider(names_from = facet, values_from = c(estimate, sig))
-summary_coef_re_rbind
 
 write_csv(summary_coef_re_rbind, "summary_coef_re.csv")
-
 ```
