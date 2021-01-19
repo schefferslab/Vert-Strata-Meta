@@ -33,7 +33,7 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
   dplyr::mutate(weight = spatial_rank + temporal_bredth_rank + temporal_resolution_rank,
                 taxa = as.factor(taxa),
                 taxa_order = factor(taxa, levels = c("Birds","Bats","Small mammals","Amphibians")),
-                elevation = as.numeric(elevation),
+                elevation = as.numeric(scale(elevation)),
                 scaled_met = as.numeric(rescale(corrected_biodiversity_metric_value, to = c(1e-05, 0.99999))),
                 link = as.factor(link), 
                 method = as.factor(method), 
@@ -42,11 +42,17 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
                 biodiversity_metric = as.factor(biodiversity_metric), 
                 season = as.factor(season), 
                 forest_type = as.factor(forest_type),  
-                mean_strata_height_p = as.numeric(mean_strata_height_p)) %>%
+                mean_strata_height_p = as.numeric(scale(mean_strata_height_p)),
+                canopy_height = as.numeric(scale(canopy_height)),
+                latitude = as.numeric(scale(latitude)),
+                longitude = as.numeric(scale(longitude)),
+                strata = as.numeric(scale(mean_strata_height_p))) %>%
   dplyr::select(link, study_id.x, method, taxa, bin_weight, weight, indepedence_weight, 
                 continent, biodiversity_metric, taxa_order, treatment, season, forest_type, 
-                elevation, canopy_height, latitude, longitude, scaled_met, strata = mean_strata_height_p) %>%
+                elevation, canopy_height, latitude, longitude, scaled_met, strata) %>%
   dplyr::mutate(weight = as.numeric(scale(weight)*indepedence_weight))
+
+glimpse(dat)
 
 abund <- dat %>%
   dplyr::filter(biodiversity_metric == "abundance")
@@ -146,9 +152,6 @@ mods_rich <- lapply(model_formulas, function(x){      # using lappy, instead of 
   })
 
 rich_aictab <- aictab(cand.set = mods_rich, modnames = unlist(model_formulas_ch)); rich_aictab
-
-summary(mods_rich[[1]])
-
 ```
 
 ## Model predictions
@@ -699,7 +702,7 @@ ggplot(taxa_link_abund_order %>% filter(facet == "Change in abundance with incre
 ggsave("analysis/figures/coef_abund_height_elv.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
 ggplot(taxa_link_abund_order %>% filter(facet == "Change in abundance with increasing strata"), 
-       aes(y = estimate, x = mean_canopy_height, col = taxa_order)) + 
+       aes(y = estimate, x = canopy_height, col = taxa_order)) + 
   geom_point() + geom_smooth(method = "glm") +
   ylab("Coef(abundance ~ height)") + xlab("Canopy Height") +
   ggtitle("Abundance") +
@@ -818,8 +821,8 @@ col_2_slope_rich_est_cont <- ggplot(taxa_link_slope_rich, aes(x = order, y = est
                      ymin = CI_95_lower)) +
   scale_x_continuous(breaks = taxa_link_slope_rich_plot$order, 
                      labels = taxa_link_slope_rich_plot$link_plot, expand = c(0.02, 0)) +
-  scale_y_continuous(limits = c(-8.5, 8.5), breaks = seq(-8, 8, by = 2), expand = c(0.05, 0),
-                     sec.axis = sec_axis(~., breaks = c(-5,0,5), labels = c("Decreasing"," ","Increasing"))) +
+  scale_y_continuous(limits = c(-4, 4), breaks = seq(-4, 4, by = 2), expand = c(0.05, 0),
+                     sec.axis = sec_axis(~., breaks = c(-2,0,2), labels = c("Decreasing"," ","Increasing"))) +
   geom_text(aes(x = order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
   annotate("text", x = seq(56, 54), y = rep(4.5,3), 
            label = c("  * = 80% CI excludes 0"," ** = 95% CI excludes 0","*** = 99% CI excludes 0"), size = 3) +
@@ -838,8 +841,8 @@ col_2_slope_abund_est_cont <- ggplot(taxa_link_slope_abund, aes(x = order, y = e
                      ymin = CI_95_lower)) +
   scale_x_continuous(breaks = taxa_link_slope_abund_plot$order, 
                      labels = taxa_link_slope_abund_plot$link_plot, expand = c(0.02, 0)) +
-  scale_y_continuous(limits = c(-11.5, 11), breaks = seq(-10, 10, by = 2), expand = c(0.05, 0),
-                     sec.axis = sec_axis(~., breaks = c(-6,0,6), labels = c("Decreasing"," ","Increasing"))) +
+  scale_y_continuous(limits = c(-4, 4), breaks = seq(-4, 4, by = 2), expand = c(0.05, 0),
+                     sec.axis = sec_axis(~., breaks = c(-2,0,2), labels = c("Decreasing"," ","Increasing"))) +
   geom_text(aes(x = order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
   scale_color_viridis_d("Taxa") + theme_classic() + 
   theme(legend.position = "none", axis.text.x.top = element_text(size = 8),
@@ -848,9 +851,7 @@ col_2_slope_abund_est_cont <- ggplot(taxa_link_slope_abund, aes(x = order, y = e
         axis.line = element_blank(), plot.margin = unit(c(1,1,0,0), "lines")); col_2_slope_abund_est_cont
 
 col_2_slope_est_cont <- ggarrange(col_2_slope_rich_est_cont, col_2_slope_abund_est_cont); col_2_slope_est_cont
-```
 
-```{r}
 col_2_slope_rich_avg_cont <- ggplot(taxa_link_slope_rich_avg, 
                                aes(x = factor(taxa_order, levels = c(
                                 "Small mammals", "Amphibians", "Birds", "Bats"
@@ -863,8 +864,8 @@ col_2_slope_rich_avg_cont <- ggplot(taxa_link_slope_rich_avg,
                      ymin = CI_95_lower)) +
   geom_text(aes(x = taxa_order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
   scale_x_discrete(labels = rev(c("Bats","Birds","Amphibians", "      Small Mammals"))) +
-  scale_y_continuous(limits = c(-8.5, 8.5), breaks = seq(-8, 8, by = 2), expand = c(0.05, 0), 
-                     sec.axis = sec_axis(~., breaks = c(-4,0,4), labels = c("Decreasing"," ","Increasing"))) +
+  scale_y_continuous(limits = c(-4, 4), breaks = seq(-4, 4, by = 2), expand = c(0.05, 0), 
+                     sec.axis = sec_axis(~., breaks = c(-2,0,2), labels = c("Decreasing"," ","Increasing"))) +
   scale_color_viridis_d("Taxa") + theme_classic() + 
   theme(legend.position = c(.5,-0.1), legend.direction = "horizontal", panel.border = element_rect(colour = "black", fill=NA, size=1), 
         axis.text.x.top = element_text(size = 8), legend.title.align = 0.5,
@@ -884,8 +885,8 @@ col_2_slope_abund_avg_cont <- ggplot(taxa_link_slope_abund_avg,
                      ymin = CI_95_lower)) +
   geom_text(aes(x = taxa_order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
   scale_x_discrete(labels = rev(c("Bats", "Birds", "Amphibians", "      Small Mammals"))) +
-  scale_y_continuous(limits = c(-11.5, 11), breaks = seq(-10, 10, by = 2), expand = c(0.05, 0), 
-                     sec.axis = sec_axis(~., breaks = c(-5,0,5), labels = c("Decreasing"," ","Increasing"))) +  scale_color_viridis_d(" ") + theme_classic() + 
+  scale_y_continuous(limits = c(-4, 4), breaks = seq(-4, 4, by = 2), expand = c(0.05, 0), 
+                     sec.axis = sec_axis(~., breaks = c(-2,0,2), labels = c("Decreasing"," ","Increasing"))) +  scale_color_viridis_d(" ") + theme_classic() + 
   theme(legend.position = "none", panel.border = element_rect(colour = "black", fill=NA, size=1),
         axis.text.x.top = element_text(size = 8),
         axis.ticks.length.x.top = unit(0, "cm"),
