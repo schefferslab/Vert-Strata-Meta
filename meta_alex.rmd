@@ -46,8 +46,7 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
   dplyr::select(link, study_id.x, method, taxa, bin_weight, weight, indepedence_weight, 
                 continent, biodiversity_metric, taxa_order, treatment, season, forest_type, 
                 elevation, canopy_height, latitude, longitude, scaled_met, strata = mean_strata_height_p) %>%
-  dplyr::mutate(composite_weight = as.numeric(bin_weight*rescale(weight, to = c(0,1))*indepedence_weight),
-                weight = scale(weight)) 
+  dplyr::mutate(weight = as.numeric(scale(weight)*indepedence_weight))
 
 abund <- dat %>%
   dplyr::filter(biodiversity_metric == "abundance")
@@ -147,6 +146,9 @@ mods_rich <- lapply(model_formulas, function(x){      # using lappy, instead of 
   })
 
 rich_aictab <- aictab(cand.set = mods_rich, modnames = unlist(model_formulas_ch)); rich_aictab
+
+summary(mods_rich[[1]])
+
 ```
 
 ## Model predictions
@@ -435,8 +437,6 @@ ggplot(taxa_link_rich_slope, aes(x = method, y = estimate, fill = taxa_order)) +
   theme(legend.position = "none")
 ggsave("analysis/figures/coef_richness_height_method.jpeg")
 ```
-
-
 # Modeling abundance
 ## Abundance GLMs
 ```{r Modeling abundance: GLMs, message=FALSE, warning=FALSE}
@@ -583,7 +583,7 @@ abund$predictions_95CI_upper[abund$predictions_95CI_upper > 1] <- 1
 (taxa_link_abund <- abund %>% 
   dplyr::group_by(taxa_order,link,continent,method) %>%
   dplyr::summarise(mean_elevation = mean(elevation),
-                   mean_canopy_height = mean(canopy_height),
+                   canopy_height = mean(canopy_height),
                    mean_latitude = mean(latitude)) %>%
   dplyr::full_join(modavg_estimates_abund, by = c("link")) %>%
   dplyr::rename(CI_95_lower = Lower.CL,
@@ -918,3 +918,39 @@ ggplot(taxa_link_biomet_sum, aes(y = log((pos_sig+1)/(neg_sig+1)), x = taxa_orde
 ggsave("analysis/figures/summary_slopes_taxa_biometric.jpeg", width = 8, height = 4, units = "in", dpi = 300)
 ```
 
+## Summary statistics for coef(richness ~ height) ~ elevation / canopy height 
+```{r}
+summary_rich_coef <- list()
+summary_rich_coef[[1]] <- lmer(estimate ~ canopy_height + (canopy_height|taxa_order), data = taxa_link_rich_slope)
+summary_rich_coef[[2]] <- lmer(estimate ~ mean_elevation + (mean_elevation|taxa_order), data = taxa_link_rich_slope)
+summary_rich_coef[[3]] <- lmer(estimate ~ abs(mean_latitude) + (abs(mean_latitude)|taxa_order), data = taxa_link_rich_slope)
+
+summary_abund_coef <- list()
+summary_abund_coef[[1]] <- lmer(estimate ~ canopy_height + (canopy_height|taxa_order), data = taxa_link_abund_slope)
+summary_abund_coef[[2]] <- lmer(estimate ~ mean_elevation + (mean_elevation|taxa_order), data = taxa_link_abund_slope)
+summary_abund_coef[[3]] <- lmer(estimate ~ abs(mean_latitude) + (abs(mean_latitude)|taxa_order), data = taxa_link_abund_slope)
+
+summary_coef_re_rbind <- rbind(
+  sjPlot::get_model_data(summary_rich_coef[[1]], type = "re", se = T, transform = NULL) %>%
+    filter(!facet == "taxa_order (Intercept)"),
+  sjPlot::get_model_data(summary_rich_coef[[2]], type = "re", se = T, transform = NULL) %>%
+    filter(!facet == "taxa_order (Intercept)"),
+  sjPlot::get_model_data(summary_rich_coef[[3]], type = "re", se = T, transform = NULL) %>%
+    filter(!facet == "taxa_order (Intercept)"),
+    sjPlot::get_model_data(summary_abund_coef[[1]], type = "re", se = T, transform = NULL) %>%
+    filter(!facet == "taxa_order (Intercept)"),
+  sjPlot::get_model_data(summary_abund_coef[[2]], type = "re", se = T, transform = NULL) %>%
+    filter(!facet == "taxa_order (Intercept)"),
+  sjPlot::get_model_data(summary_abund_coef[[3]], type = "re", se = T, transform = NULL) %>%
+    filter(!facet == "taxa_order (Intercept)")) %>%
+  mutate(metric = c(rep("species_richness", 4*3),
+                    rep("abundance", 4*3))) %>%
+  dplyr::mutate(sig = if_else(sign(conf.low) == sign(conf.high), "*", "")) %>%
+  dplyr::select(-c("p.label","xpos","title","xmin","xmax","conf.low","conf.high","group","reihe")) %>%
+  relocate(metric) %>%
+  pivot_wider(names_from = facet, values_from = c(estimate, sig))
+summary_coef_re_rbind
+
+write_csv(summary_coef_re_rbind, "summary_coef_re.csv")
+
+```
