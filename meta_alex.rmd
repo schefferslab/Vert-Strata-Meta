@@ -848,7 +848,9 @@ col_2_slope_abund_est_cont <- ggplot(taxa_link_slope_abund, aes(x = order, y = e
         axis.line = element_blank(), plot.margin = unit(c(1,1,0,0), "lines")); col_2_slope_abund_est_cont
 
 col_2_slope_est_cont <- ggarrange(col_2_slope_rich_est_cont, col_2_slope_abund_est_cont); col_2_slope_est_cont
+```
 
+```{r}
 col_2_slope_rich_avg_cont <- ggplot(taxa_link_slope_rich_avg, 
                                aes(x = factor(taxa_order, levels = c(
                                 "Small mammals", "Amphibians", "Birds", "Bats"
