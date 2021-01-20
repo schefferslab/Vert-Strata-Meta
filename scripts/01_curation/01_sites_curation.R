@@ -97,6 +97,11 @@ sites <- sites %>%
                                            method = 'simple'),
                                   canopy_height))
 
+## ....C. Extract IUCN fores types ----------
+
+source("scripts/00_source/extract_forest_types.R")
+sites <- extract_forest_types(sites)
+
 ## 3. Write out files ------------
 
 if (exists("global_canopy_height") & !file.exists("data/remote_sensing/canopy_height/global_coverage/global_canopy_height.tif")) {
