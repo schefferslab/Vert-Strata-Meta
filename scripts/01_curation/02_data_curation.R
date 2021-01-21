@@ -17,6 +17,7 @@ if("googlesheets4" %in% rownames(installed.packages()) == TRUE) {
   big_data_url <- "https://docs.google.com/spreadsheets/d/1-kY3Ono0ypzgahjbH8YyaZwFqB6zTwXkiQ96zOPixCw/edit?usp=sharing"
   papers <- try(read_sheet(big_data_url, sheet = "2020 Papers"))
 }
+
 if ("googlesheets4" %in% rownames(installed.packages()) == FALSE | any(class(papers) == "try-error")){
   papers <- read_excel("data/stripped_data/original/Big data.xlsx", sheet = "2020 Papers")
 }

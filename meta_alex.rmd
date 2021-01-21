@@ -36,6 +36,7 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
                 elevation = as.numeric(scale(elevation)),
                 scaled_met = as.numeric(rescale(corrected_biodiversity_metric_value, to = c(1e-05, 0.99999))),
                 link = as.factor(link), 
+                forest_type_iucn = as.factor(forest_type_iucn),
                 method = as.factor(method), 
                 treatment = as.factor(treatment),
                 continent = as.factor(continent),
@@ -48,17 +49,17 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
                 longitude = as.numeric(scale(longitude)),
                 strata = as.numeric(scale(mean_strata_height_p))) %>%
   dplyr::select(link, study_id.x, method, taxa, bin_weight, weight, indepedence_weight, 
-                continent, biodiversity_metric, taxa_order, treatment, season, forest_type, 
+                continent, biodiversity_metric, taxa_order, treatment, season, forest_type_iucn, 
                 elevation, canopy_height, latitude, longitude, scaled_met, strata) %>%
   dplyr::mutate(weight = as.numeric(scale(weight)*indepedence_weight))
-
-glimpse(dat)
 
 abund <- dat %>%
   dplyr::filter(biodiversity_metric == "abundance")
 
 rich <- dat %>% 
   dplyr::filter(biodiversity_metric == "richness")
+
+dat$forest_type_iucn
 ```
 
 # Modeling species richness
