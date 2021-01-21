@@ -113,13 +113,14 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
                 forest_type = as.factor(forest_type),  
                 mean_strata_height_p = as.numeric(mean_strata_height_p)) %>%
   dplyr::select(link, study_id.x,year, method, taxa, continent,country, biodiversity_metric, taxa_order,
-                treatment, season, forest_type, elevation, canopy_height, latitude, longitude, 
+                treatment, season,forest_type, forest_type_iucn, elevation, canopy_height, latitude, longitude, 
                 scaled_met, strata = mean_strata_height_p) 
 
 #     unique(study.id)   from data including abundance and richness
 
 studies = unique(dat[,c("study_id.x", "taxa")])
 studies = studies %>% rename(study_id= study_id.x) ; studies = as.data.frame(studies)
+
 
 #merge them across so there is a full dataset with what study with what taxa looked at what factors
 
@@ -219,7 +220,12 @@ list_in_order_select = list_not_in_order_select[order(-list_not_in_order_select$
 specifics_tall_select <- within(specifics_tall_select, 
                          factors <- factor(factors, levels=list_in_order_select$Group.1))
 
-f_labels <- data.frame(taxa = c("Amphibians", "Bats", "Birds", "Small mammals"), label = c("n = 4", "n = 21", "n = 18", "n = 14"))
+#here making the labels for the plots below - need to figure out how many studies per taxa
+n_studs = studies %>%
+  count(taxa)
+
+#input those numbers here manually
+f_labels <- data.frame(taxa = c("Amphibians", "Bats", "Birds", "Small mammals"), label = c("n = 4", "n = 21", "n = 18", "n = 15"))
 
 ggplot(specifics_tall_select, aes(x = factors, y = Value, fill = Level)) + 
   geom_col(position = "identity") +
@@ -472,3 +478,10 @@ ggplot(years_grouped, aes(x = decade, y = n, fill = factor(taxa, levels= c( "Pri
 
 ggsave("analysis/figures/studies_decades.jpeg", width = 7, height = 7.5, units = "in", dpi = 350)
 
+
+
+
+locations_forest = dat[, c("latitude", "longitude", "taxa", "continent","country", "link", "method", "elevation", "year","forest_type", "forest_type_iucn")]
+locations_forest = unique(locations_forest)
+locations_forest_np = locations_forest %>%
+  filter(taxa != "Primates")
