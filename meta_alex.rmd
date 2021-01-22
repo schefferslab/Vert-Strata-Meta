@@ -293,7 +293,7 @@ rich$predictions_95CI_lower[rich$predictions_95CI_lower < 0] <- 0
 rich$predictions_95CI_upper[rich$predictions_95CI_upper > 1] <- 1
 
 taxa_link_rich <- rich %>% 
-  dplyr::group_by(taxa_order, link, continent, method) %>%
+  dplyr::group_by(taxa_order, link, continent,method,season,forest_type_iucn) %>%
   dplyr::summarise(mean_elevation = mean(elevation),
                    mean_latitude = mean(latitude),
                    canopy_height = mean(canopy_height)) %>%
@@ -571,7 +571,7 @@ abund$predictions_95CI_lower[abund$predictions_95CI_lower < 0] <- 0
 abund$predictions_95CI_upper[abund$predictions_95CI_upper > 1] <- 1
 
 (taxa_link_abund <- abund %>% 
-  dplyr::group_by(taxa_order,link,continent,method) %>%
+  dplyr::group_by(taxa_order,link,continent,method,season,forest_type_iucn) %>%
   dplyr::summarise(mean_elevation = mean(elevation),
                    canopy_height = mean(canopy_height),
                    mean_latitude = mean(latitude)) %>%
@@ -897,7 +897,7 @@ taxa_link_biomet_sum <- taxa_link_biomet_order %>%
 log((taxa_link_biomet_sum$pos_sig+1)/(taxa_link_biomet_sum$neg_sig+1))
 
 ggplot(taxa_link_biomet_sum, aes(y = log((pos_sig+1)/(neg_sig+1)), x = taxa_order, fill = taxa_order)) + 
-  geom_hline(yintercept = 0, alpha = 0.5, size = 0.8) + ylim(c(-3,1)) +
+  geom_hline(yintercept = 0, alpha = 0.5, size = 0.8) + ylim(c(-3,3)) +
   geom_bar(stat = "identity") + xlab("Taxa") + 
   ylab(log ~ italic(bgroup("(", over("frequency of positive slopes + 1", "frequency of negative slopes + 1"), ")"))) + 
   facet_wrap(~facet) + 
