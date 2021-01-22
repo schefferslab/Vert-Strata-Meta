@@ -906,7 +906,7 @@ ggplot(taxa_link_biomet_sum, aes(y = log((pos_sig+1)/(neg_sig+1)), x = taxa_orde
 ggsave("analysis/figures/summary_slopes_taxa_biometric.jpeg", width = 8, height = 4, units = "in", dpi = 300)
 ```
 
-
+## Ed--this is the section:
 ```{r}
 taxa_link_rich_slope
 taxa_link_abund_slope
