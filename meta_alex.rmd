@@ -27,6 +27,10 @@ library(bbmle)
 
 ## Loading data
 ```{r loading data}
+read_csv("data/stripped_data/final/data_joined.csv") %>%
+  glimpse()
+
+
 dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
   dplyr::filter(taxa != "All mammals") %>%
   dplyr::filter(taxa != "Primates") %>%
@@ -36,13 +40,12 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
                 elevation = as.numeric(scale(elevation)),
                 scaled_met = as.numeric(rescale(corrected_biodiversity_metric_value, to = c(1e-05, 0.99999))),
                 link = as.factor(link), 
-                forest_type_iucn = as.factor(forest_type_iucn),
                 method = as.factor(method), 
                 treatment = as.factor(treatment),
                 continent = as.factor(continent),
                 biodiversity_metric = as.factor(biodiversity_metric), 
                 season = as.factor(season), 
-                forest_type = as.factor(forest_type),  
+                forest_type_iucn  = as.factor(forest_type_iucn_new),  
                 mean_strata_height_p = as.numeric(scale(mean_strata_height_p)),
                 canopy_height = as.numeric(scale(canopy_height)),
                 latitude = as.numeric(scale(latitude)),
@@ -51,95 +54,77 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
   dplyr::select(link, study_id.x, method, taxa, bin_weight, weight, indepedence_weight, 
                 continent, biodiversity_metric, taxa_order, treatment, season, forest_type_iucn, 
                 elevation, canopy_height, latitude, longitude, scaled_met, strata) %>%
+  dplyr::select(-c(study_id.x)) %>%
   dplyr::mutate(weight = as.numeric(scale(weight)*indepedence_weight))
+
+glimpse(dat)
 
 abund <- dat %>%
   dplyr::filter(biodiversity_metric == "abundance")
 
 rich <- dat %>% 
   dplyr::filter(biodiversity_metric == "richness")
-
-dat$forest_type_iucn
 ```
 
 # Modeling species richness
 ## Richness GLMs
-```{r Creating model formulas, message=FALSE, warning=FALSE}
-model_formulas_ch <- list("scaled_met ~ 1 + weight + (strata | link)",
-                          "scaled_met ~ strata + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 2) + weight + (strata | link)",
 
-                          "scaled_met ~ strata + taxa + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 2) + taxa + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 3) + taxa + weight + (strata | link)",
-
-                          "scaled_met ~ strata + continent + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 2) + continent + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 3) + continent + weight + (strata | link)",
-
-                          "scaled_met ~ strata +          elevation + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 2) + elevation + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 3) + elevation + weight + (strata | link)",
-
-                          "scaled_met ~ strata +          longitude + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 2) + longitude + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 3) + longitude + weight + (strata | link)",
-
-                          "scaled_met ~ strata +          canopy_height + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 2) + canopy_height + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 3) + canopy_height + weight + (strata | link)",
-
-                          "scaled_met ~ strata +          latitude + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 2) + latitude + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 3) + latitude + weight + (strata | link)",
-
-                          "scaled_met ~ strata +          method + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 2) + method + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 3) + method + weight + (strata | link)",
-
-                          "scaled_met ~ strata +          elevation + continent + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 2) + elevation + continent + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 3) + elevation + continent + weight + (strata | link)",
-
-                          "scaled_met ~ strata +          elevation + latitude + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 2) + elevation + latitude + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 3) + elevation + latitude + weight + (strata | link)",
-
-                          "scaled_met ~ strata +          elevation + canopy_height + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 2) + elevation + canopy_height + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 3) + elevation + canopy_height + weight + (strata | link)",
-
-                          "scaled_met ~ strata +          latitude + canopy_height + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 2) + latitude + canopy_height + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 3) + latitude + canopy_height + weight + (strata | link)",
-
-                          "scaled_met ~ strata +          method + latitude + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 2) + method + latitude + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 3) + method + latitude + weight + (strata | link)",
-
-                          "scaled_met ~ strata +          method + canopy_height + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 2) + method + canopy_height + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 3) + method + canopy_height + weight + (strata | link)",
-
-                          "scaled_met ~ strata +          method + continent + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 2) + method + continent + weight + (strata | link)",
-                          "scaled_met ~ poly(strata, 3) + method + continent + weight + (strata | link)",
-
-                          "scaled_met ~ strata +          method + continent + elevation + weight + (strata | link)",
-                          "scaled_met ~ strata +          method + canopy_height + elevation + weight + (strata | link)",
+```{r}
+model_formulas_ch <- list("scaled_met ~ 1 +                                                            weight + (strata | link)",
                           
-                          "scaled_met ~ poly(strata, 3) + method + continent + elevation + weight + (strata | link)",
+                          "scaled_met ~ strata +             taxa +                                    weight + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) +    taxa +                                    weight + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) +    taxa +                                    weight + (strata | link)",
+                          
+                          "scaled_met ~ strata +             taxa + continent +                        weight + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) +    taxa + continent +                        weight + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) +    taxa + continent +                        weight + (strata | link)",
+                          
+                          "scaled_met ~ strata +             taxa + elevation +                        weight + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) +    taxa + elevation +                        weight + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) +    taxa + elevation +                        weight + (strata | link)",
+                          
+                          "scaled_met ~ strata +             taxa + latitude +                         weight + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) +    taxa + latitude +                         weight + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) +    taxa + latitude +                         weight + (strata | link)",
+                          
+                          "scaled_met ~ strata +             taxa + longitude +                        weight + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) +    taxa + longitude +                        weight + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) +    taxa + longitude +                        weight + (strata | link)",
+                          
+                          "scaled_met ~ strata +             taxa + canopy_height +                    weight + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) +    taxa + canopy_height +                    weight + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) +    taxa + canopy_height +                    weight + (strata | link)",
+                          
+                          "scaled_met ~ strata +             taxa + forest_type_iucn +                 weight + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) +    taxa + forest_type_iucn +                 weight + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) +    taxa + forest_type_iucn +                 weight + (strata | link)",
+                          
+                          "scaled_met ~ strata +             taxa + season +                           weight + (strata | link)",
+                          "scaled_met ~ poly(strata, 2) +    taxa + season +                           weight + (strata | link)",
+                          "scaled_met ~ poly(strata, 3) +    taxa + season +                           weight + (strata | link)",
+                          
+                          "scaled_met ~ strata +             taxa + continent +        canopy_height + weight + (strata | link)",
+                          "scaled_met ~ strata +             taxa + elevation +        canopy_height + weight + (strata | link)",
+                          "scaled_met ~ strata +             taxa + latitude +         canopy_height + weight + (strata | link)",
+                          "scaled_met ~ strata +             taxa + longitude +        canopy_height + weight + (strata | link)",
+                          "scaled_met ~ strata +             taxa + season +           canopy_height + weight + (strata | link)",
+                          "scaled_met ~ strata +             taxa + forest_type_iucn + canopy_height + weight + (strata | link)",
 
-                          "scaled_met ~ strata * method + weight + (strata | link)",
-                          "scaled_met ~ strata * continent + weight + (strata | link)",
-                          "scaled_met ~ strata * elevation + weight + (strata | link)",
+                          "scaled_met ~ strata +             taxa + continent +        elevation +     weight + (strata | link)",
+                          "scaled_met ~ strata +             taxa + canopy_height +    elevation +     weight + (strata | link)",
+                          "scaled_met ~ strata +             taxa + latitude +         elevation +     weight + (strata | link)",
+                          "scaled_met ~ strata +             taxa + longitude +        elevation +     weight + (strata | link)",
+                          "scaled_met ~ strata +             taxa + season +           elevation +     weight + (strata | link)",
+                          "scaled_met ~ strata +             taxa + forest_type_iucn + elevation +     weight + (strata | link)")
 
-                          "scaled_met ~ strata * method + continent + weight + (strata | link)",
-                          "scaled_met ~ strata * continent + method + weight + (strata | link)",
-                          "scaled_met ~ strata * continent + elevation + weight + (strata | link)",
-                          "scaled_met ~ strata * elevation + method + weight + (strata | link)",
-                          "scaled_met ~ strata * elevation + continent + weight + (strata | link)")
-
+                          # "scaled_met ~ strata * taxa +                                                weight + (strata | link)",
+                          # "scaled_met ~ strata * taxa + continent +                                    weight + (strata | link)",
+                          # "scaled_met ~ strata * taxa + canopy_height +                                weight + (strata | link)",
+                          # "scaled_met ~ strata * taxa + latitude +                                     weight + (strata | link)",
+                          # "scaled_met ~ strata * taxa + longitude +                                    weight + (strata | link)",
+                          # "scaled_met ~ strata * taxa + season +                                       weight + (strata | link)",
+                          # "scaled_met ~ strata * taxa + forest_type_iucn +                             weight + (strata | link)"
 ```
 
 ## Running models 
@@ -308,7 +293,7 @@ rich$predictions_95CI_lower[rich$predictions_95CI_lower < 0] <- 0
 rich$predictions_95CI_upper[rich$predictions_95CI_upper > 1] <- 1
 
 taxa_link_rich <- rich %>% 
-  dplyr::group_by(taxa_order, link, continent, method) %>%
+  dplyr::group_by(taxa_order, link, continent,method,season,forest_type_iucn) %>%
   dplyr::summarise(mean_elevation = mean(elevation),
                    mean_latitude = mean(latitude),
                    canopy_height = mean(canopy_height)) %>%
@@ -374,6 +359,7 @@ taxa_link_rich_avg$order[taxa_link_rich_avg$facet == richness_slope] <-
 
 ### Plot predictions
 ```{r Plottingrichness predictions}
+rich
 ggplot(rich, aes(y = predictions_fit, x = strata,
                   ymin = predictions_95CI_lower, 
                   ymax = predictions_95CI_upper,
@@ -585,7 +571,7 @@ abund$predictions_95CI_lower[abund$predictions_95CI_lower < 0] <- 0
 abund$predictions_95CI_upper[abund$predictions_95CI_upper > 1] <- 1
 
 (taxa_link_abund <- abund %>% 
-  dplyr::group_by(taxa_order,link,continent,method) %>%
+  dplyr::group_by(taxa_order,link,continent,method,season,forest_type_iucn) %>%
   dplyr::summarise(mean_elevation = mean(elevation),
                    canopy_height = mean(canopy_height),
                    mean_latitude = mean(latitude)) %>%
@@ -679,8 +665,6 @@ ggplot(abund, aes(y = predictions_fit, x = latitude)) + geom_point() +
   facet_grid(rows = vars(taxa), cols = vars(continent)) + theme_bw() + 
   theme(legend.position = "bottom");
 ggsave("analysis/figures/coef_abund_height_latitude.jpeg", width = 8, height = 6, units = "in", dpi = 300)
-
-
 
 ggplot(taxa_link_abund_order %>% filter(facet == "Change in abundance with increasing strata"), 
        aes(y = estimate, x = abs(mean_latitude), col = taxa_order)) + 
@@ -825,7 +809,7 @@ col_2_slope_rich_est_cont <- ggplot(taxa_link_slope_rich, aes(x = order, y = est
   scale_y_continuous(limits = c(-4, 4), breaks = seq(-4, 4, by = 2), expand = c(0.05, 0),
                      sec.axis = sec_axis(~., breaks = c(-2,0,2), labels = c("Decreasing"," ","Increasing"))) +
   geom_text(aes(x = order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
-  annotate("text", x = seq(56, 54), y = rep(4.5,3), 
+  annotate("text", x = seq(56, 54), y = rep(2,3), 
            label = c("  * = 80% CI excludes 0"," ** = 95% CI excludes 0","*** = 99% CI excludes 0"), size = 3) +
   scale_color_viridis_d("Taxa") + theme_classic() +
   theme(legend.position = "none", axis.text.x.top = element_text(size = 8),
@@ -913,7 +897,7 @@ taxa_link_biomet_sum <- taxa_link_biomet_order %>%
 log((taxa_link_biomet_sum$pos_sig+1)/(taxa_link_biomet_sum$neg_sig+1))
 
 ggplot(taxa_link_biomet_sum, aes(y = log((pos_sig+1)/(neg_sig+1)), x = taxa_order, fill = taxa_order)) + 
-  geom_hline(yintercept = 0, alpha = 0.5, size = 0.8) + ylim(c(-3,1)) +
+  geom_hline(yintercept = 0, alpha = 0.5, size = 0.8) + ylim(c(-3,3)) +
   geom_bar(stat = "identity") + xlab("Taxa") + 
   ylab(log ~ italic(bgroup("(", over("frequency of positive slopes + 1", "frequency of negative slopes + 1"), ")"))) + 
   facet_wrap(~facet) + 
@@ -922,37 +906,51 @@ ggplot(taxa_link_biomet_sum, aes(y = log((pos_sig+1)/(neg_sig+1)), x = taxa_orde
 ggsave("analysis/figures/summary_slopes_taxa_biometric.jpeg", width = 8, height = 4, units = "in", dpi = 300)
 ```
 
+## Ed--this is the section:
+```{r}
+taxa_link_rich_slope
+taxa_link_abund_slope
+
+left_join(taxa_link_rich_slope, taxa_link_abund_slope)
+
+```
+
+
 ## Summary statistics for coef(richness ~ height) ~ elevation / canopy height 
 ```{r}
-summary_rich_coef <- list()
-summary_rich_coef[[1]] <- lmer(estimate ~ canopy_height + (canopy_height|taxa_order), data = taxa_link_rich_slope)
-summary_rich_coef[[2]] <- lmer(estimate ~ mean_elevation + (mean_elevation|taxa_order), data = taxa_link_rich_slope)
-summary_rich_coef[[3]] <- lmer(estimate ~ abs(mean_latitude) + (abs(mean_latitude)|taxa_order), data = taxa_link_rich_slope)
-
-summary_abund_coef <- list()
-summary_abund_coef[[1]] <- lmer(estimate ~ canopy_height + (canopy_height|taxa_order), data = taxa_link_abund_slope)
-summary_abund_coef[[2]] <- lmer(estimate ~ mean_elevation + (mean_elevation|taxa_order), data = taxa_link_abund_slope)
-summary_abund_coef[[3]] <- lmer(estimate ~ abs(mean_latitude) + (abs(mean_latitude)|taxa_order), data = taxa_link_abund_slope)
-
-summary_coef_re_rbind <- rbind(
-  sjPlot::get_model_data(summary_rich_coef[[1]], type = "re", se = T, transform = NULL) %>%
-    filter(!facet == "taxa_order (Intercept)"),
-  sjPlot::get_model_data(summary_rich_coef[[2]], type = "re", se = T, transform = NULL) %>%
-    filter(!facet == "taxa_order (Intercept)"),
-  sjPlot::get_model_data(summary_rich_coef[[3]], type = "re", se = T, transform = NULL) %>%
-    filter(!facet == "taxa_order (Intercept)"),
-    sjPlot::get_model_data(summary_abund_coef[[1]], type = "re", se = T, transform = NULL) %>%
-    filter(!facet == "taxa_order (Intercept)"),
-  sjPlot::get_model_data(summary_abund_coef[[2]], type = "re", se = T, transform = NULL) %>%
-    filter(!facet == "taxa_order (Intercept)"),
-  sjPlot::get_model_data(summary_abund_coef[[3]], type = "re", se = T, transform = NULL) %>%
-    filter(!facet == "taxa_order (Intercept)")) %>%
-  mutate(metric = c(rep("species_richness", 4*3),
-                    rep("abundance", 4*3))) %>%
-  dplyr::mutate(sig = if_else(sign(conf.low) == sign(conf.high), "*", "")) %>%
-  dplyr::select(-c("p.label","xpos","title","xmin","xmax","conf.low","conf.high","group","reihe")) %>%
-  relocate(metric) %>%
-  pivot_wider(names_from = facet, values_from = c(estimate, sig))
-
-write_csv(summary_coef_re_rbind, "summary_coef_re.csv")
+# summary_rich_coef <- list()
+# summary_rich_coef[[1]] <- lmer(estimate ~ canopy_height +      (canopy_height|taxa_order), data = taxa_link_rich_slope)
+# summary_rich_coef[[2]] <- lmer(estimate ~ mean_elevation +     (mean_elevation|taxa_order), data = taxa_link_rich_slope)
+# summary_rich_coef[[3]] <- lmer(estimate ~ abs(mean_latitude) + (abs(mean_latitude)|taxa_order), data = taxa_link_rich_slope)
+# summary_rich_coef[[4]] <- lmer(estimate ~ forest_type_iucn +   (forest_type_iucn|taxa_order), data = taxa_link_rich_slope)
+# summary_rich_coef[[5]] <- lmer(estimate ~ season +             (season|taxa_order), data = taxa_link_rich_slope)
+# 
+# summary_abund_coef <- list()
+# summary_abund_coef[[1]] <- lmer(estimate ~ canopy_height +      (canopy_height|taxa_order), data = taxa_link_abund_slope)
+# summary_abund_coef[[2]] <- lmer(estimate ~ mean_elevation +     (mean_elevation|taxa_order), data = taxa_link_abund_slope)
+# summary_abund_coef[[3]] <- lmer(estimate ~ abs(mean_latitude) + (abs(mean_latitude)|taxa_order), data = taxa_link_abund_slope)
+# summary_abund_coef[[4]] <- lmer(estimate ~ forest_type_iucn +   (forest_type_iucn|taxa_order), data = taxa_link_abund_slope)
+# summary_abund_coef[[5]] <- lmer(estimate ~ season +             (season|taxa_order), data = taxa_link_abund_slope)
+# 
+# summary_coef_re_rbind <- rbind(
+#   sjPlot::get_model_data(summary_rich_coef[[1]], type = "re", se = T, transform = NULL) %>%
+#     filter(!facet == "taxa_order (Intercept)"),
+#   sjPlot::get_model_data(summary_rich_coef[[2]], type = "re", se = T, transform = NULL) %>%
+#     filter(!facet == "taxa_order (Intercept)"),
+#   sjPlot::get_model_data(summary_rich_coef[[3]], type = "re", se = T, transform = NULL) %>%
+#     filter(!facet == "taxa_order (Intercept)"),
+#     sjPlot::get_model_data(summary_abund_coef[[1]], type = "re", se = T, transform = NULL) %>%
+#     filter(!facet == "taxa_order (Intercept)"),
+#   sjPlot::get_model_data(summary_abund_coef[[2]], type = "re", se = T, transform = NULL) %>%
+#     filter(!facet == "taxa_order (Intercept)"),
+#   sjPlot::get_model_data(summary_abund_coef[[3]], type = "re", se = T, transform = NULL) %>%
+#     filter(!facet == "taxa_order (Intercept)")) %>%
+#   mutate(metric = c(rep("species_richness", 4*3),
+#                     rep("abundance", 4*3))) %>%
+#   dplyr::mutate(sig = if_else(sign(conf.low) == sign(conf.high), "*", "")) %>%
+#   dplyr::select(-c("p.label","xpos","title","xmin","xmax","conf.low","conf.high","group","reihe")) %>%
+#   relocate(metric) %>%
+#   pivot_wider(names_from = facet, values_from = c(estimate, sig))
+# 
+# write_csv(summary_coef_re_rbind, "summary_coef_re.csv")
 ```
