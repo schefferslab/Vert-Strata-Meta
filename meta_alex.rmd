@@ -371,7 +371,7 @@ ggplot(rich, aes(y = predictions_fit, x = strata,
     scale_fill_viridis_d("Taxa") +
     facet_wrap(~continent*taxa_order) +
     theme_bw() + theme(legend.position = "bottom")
-ggsave("analysis/figures/richness_strata_full_continent.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+ggsave("analysis/figures/model results/richness_strata_full_continent.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
 
 ggplot(taxa_link_rich_order %>% filter(facet == "Change in richness with increasing strata"), 
@@ -382,7 +382,7 @@ ggplot(taxa_link_rich_order %>% filter(facet == "Change in richness with increas
   scale_fill_viridis_d("Taxa") +
   facet_wrap(~taxa_order, scales = "free") +
   theme(legend.position = "bottom") + theme_bw()
-ggsave("analysis/figures/coef_rich_height_lat.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+ggsave("analysis/figures/model results/coef_rich_height_lat.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
 ggplot(taxa_link_rich_order %>% filter(facet == "Change in richness with increasing strata"), 
        aes(y = estimate, x = mean_elevation, col = taxa_order)) + 
@@ -392,7 +392,7 @@ ggplot(taxa_link_rich_order %>% filter(facet == "Change in richness with increas
   scale_fill_viridis_d("Taxa") +
   facet_wrap(~taxa_order, scales = "free") +
   theme(legend.position = "bottom") + theme_bw()
-ggsave("analysis/figures/coef_rich_height_elv.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+ggsave("analysis/figures/model results/coef_rich_height_elv.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
 ggplot(taxa_link_rich_order %>% filter(facet == "Change in richness with increasing strata"), 
        aes(y = estimate, x = canopy_height, col = taxa_order)) + 
@@ -402,7 +402,7 @@ ggplot(taxa_link_rich_order %>% filter(facet == "Change in richness with increas
   scale_fill_viridis_d("Taxa") +
   facet_wrap(~taxa_order, scales = "free") +
   theme(legend.position = "bottom") + theme_bw()
-ggsave("analysis/figures/coef_rich_height_canopy.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+ggsave("analysis/figures/model results/coef_rich_height_canopy.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
 ```
 
@@ -417,7 +417,7 @@ ggplot(taxa_link_rich_slope, aes(x = mean_elevation, y = estimate, col = taxa_or
   facet_wrap(~taxa_order, scales = "free") + 
   scale_color_viridis_d("Taxa") + theme_bw() + 
   theme(legend.position = "none")
-ggsave("analysis/figures/coef_richness_height.jpeg")
+ggsave("analysis/figures/model results/coef_richness_height.jpeg")
 
 ggplot(taxa_link_rich_slope, aes(x = method, y = estimate, fill = taxa_order)) + 
   ylab("Coef (Richness ~ Height)") + xlab("Method") + 
@@ -425,7 +425,7 @@ ggplot(taxa_link_rich_slope, aes(x = method, y = estimate, fill = taxa_order)) +
   facet_wrap(~taxa_order, scales = "free") + 
   scale_color_viridis_d("Taxa") + theme_bw() + 
   theme(legend.position = "none")
-ggsave("analysis/figures/coef_richness_height_method.jpeg")
+ggsave("analysis/figures/model results/coef_richness_height_method.jpeg")
 ```
 # Modeling abundance
 ## Abundance GLMs
@@ -648,7 +648,7 @@ ggplot(abund, aes(y = predictions_fit, x = strata,
   scale_fill_viridis_d("Taxa") +
   facet_grid(rows = vars(taxa), cols = vars(continent)) + theme_bw() + 
   theme(legend.position = "bottom");
-ggsave("analysis/figures/abundance_strata_full_continent.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+ggsave("analysis/figures/model results/abundance_strata_full_continent.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
 ggplot(abund, aes(y = predictions_fit, x = canopy_height)) + geom_point() +
   ylab("Predicted species abundance") + xlab("canopy_height") +
@@ -656,7 +656,7 @@ ggplot(abund, aes(y = predictions_fit, x = canopy_height)) + geom_point() +
   scale_fill_viridis_d("Taxa") +
   facet_grid(rows = vars(taxa), cols = vars(continent)) + theme_bw() + 
   theme(legend.position = "bottom");
-ggsave("analysis/figures/abundance_strata_canopy_continent.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+ggsave("analysis/figures/model results/abundance_strata_canopy_continent.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
 ggplot(abund, aes(y = predictions_fit, x = latitude)) + geom_point() +
   ylab("Predicted species abundance") + xlab("latitude") +
@@ -664,7 +664,7 @@ ggplot(abund, aes(y = predictions_fit, x = latitude)) + geom_point() +
   scale_fill_viridis_d("Taxa") +
   facet_grid(rows = vars(taxa), cols = vars(continent)) + theme_bw() + 
   theme(legend.position = "bottom");
-ggsave("analysis/figures/coef_abund_height_latitude.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+ggsave("analysis/figures/model results/coef_abund_height_latitude.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
 ggplot(taxa_link_abund_order %>% filter(facet == "Change in abundance with increasing strata"), 
        aes(y = estimate, x = abs(mean_latitude), col = taxa_order)) + 
@@ -674,7 +674,7 @@ ggplot(taxa_link_abund_order %>% filter(facet == "Change in abundance with incre
   scale_fill_viridis_d("Taxa") +
   facet_wrap(~taxa_order, scales = "free") +
   theme(legend.position = "bottom") + theme_bw()
-ggsave("analysis/figures/coef_abund_height_lat.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+ggsave("analysis/figures/model results/coef_abund_height_lat.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
 ggplot(taxa_link_abund_order %>% filter(facet == "Change in abundance with increasing strata"), 
        aes(y = estimate, x = mean_elevation, col = taxa_order)) + 
@@ -684,7 +684,7 @@ ggplot(taxa_link_abund_order %>% filter(facet == "Change in abundance with incre
   scale_fill_viridis_d(name = "Taxa") +
   facet_wrap(~taxa_order, scales = "free") +
   theme(legend.position = "bottom") + theme_bw()
-ggsave("analysis/figures/coef_abund_height_elv.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+ggsave("analysis/figures/model results/coef_abund_height_elv.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
 ggplot(taxa_link_abund_order %>% filter(facet == "Change in abundance with increasing strata"), 
        aes(y = estimate, x = canopy_height, col = taxa_order)) + 
@@ -694,7 +694,7 @@ ggplot(taxa_link_abund_order %>% filter(facet == "Change in abundance with incre
   scale_fill_viridis_d("Taxa") +
   facet_wrap(~taxa_order, scales = "free") +
   theme(legend.position = "bottom") + theme_bw()
-ggsave("analysis/figures/coef_abund_height_canopy.jpeg", width = 8, height = 6, units = "in", dpi = 300)
+ggsave("analysis/figures/model results/coef_abund_height_canopy.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 ```
 
 ## Plot study coef with elevation
@@ -708,7 +708,7 @@ ggplot(taxa_link_abund_slope, aes(x = mean_elevation, y = estimate, col = taxa_o
   facet_wrap(~taxa_order, scales = "free") + 
   scale_color_viridis_d("Taxa") + theme_bw() + 
   theme(legend.position = "none")
-ggsave("analysis/figures/coef_abund_height.jpeg")
+ggsave("analysis/figures/model results/coef_abund_height.jpeg")
 
 ggplot(taxa_link_abund_slope, aes(x = method, y = estimate, fill = taxa_order)) + 
   ylab("Coef (Abundance ~ Height)") + xlab("Method") + 
@@ -716,7 +716,7 @@ ggplot(taxa_link_abund_slope, aes(x = method, y = estimate, fill = taxa_order)) 
   facet_wrap(~taxa_order, scales = "free") + 
   scale_color_viridis_d("Taxa") + theme_bw() + 
   theme(legend.position = "none")
-ggsave("analysis/figures/coef_abund_height_method.jpeg")
+ggsave("analysis/figures/model results/coef_abund_height_method.jpeg")
 ```
 
 ## Plotting slopes of abundance and richness
@@ -881,7 +881,7 @@ col_2_slope_abund_avg_cont <- ggplot(taxa_link_slope_abund_avg,
 
 col_2_slope_avg_cont <- ggarrange(col_2_slope_rich_avg_cont, col_2_slope_abund_avg_cont, common.legend = T, legend = "bottom"); col_2_slope_avg_cont
 ggarrange(col_2_slope_est_cont, col_2_slope_avg_cont, nrow = 2, heights = c(6,1.5))
-ggsave("analysis/figures/parm_taxa_4_panel.jpeg", width = 10, height = 10, units = "in", dpi = 300)
+ggsave("analysis/figures/model results/parm_taxa_4_panel.jpeg", width = 10, height = 10, units = "in", dpi = 300)
 ```
 
 ```{r}
@@ -903,7 +903,7 @@ ggplot(taxa_link_biomet_sum, aes(y = log((pos_sig+1)/(neg_sig+1)), x = taxa_orde
   facet_wrap(~facet) + 
   scale_x_discrete(labels = c("Bats", "Birds", "Small Mammals", "Amphibians")) +
   scale_fill_viridis_d("Taxa") + theme_bw() + theme(legend.position = "none") 
-ggsave("analysis/figures/summary_slopes_taxa_biometric.jpeg", width = 8, height = 4, units = "in", dpi = 300)
+ggsave("analysis/figures/model results/summary_slopes_taxa_biometric.jpeg", width = 8, height = 4, units = "in", dpi = 300)
 ```
 
 ## Ed--this is the section:
