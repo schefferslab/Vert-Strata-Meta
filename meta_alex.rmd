@@ -908,10 +908,75 @@ ggsave("analysis/figures/summary_slopes_taxa_biometric.jpeg", width = 8, height 
 
 ## Ed--this is the section:
 ```{r}
-taxa_link_rich_slope
-taxa_link_abund_slope
+# select taxa specific data
 
-left_join(taxa_link_rich_slope, taxa_link_abund_slope)
+sm_rich_slope = subset(taxa_link_rich_slope, taxa_order == "Small mammals")
+bat_rich_slope = subset(taxa_link_rich_slope, taxa_order == "Bats")
+bird_rich_slope = subset(taxa_link_rich_slope, taxa_order == "Birds")
+amph_rich_slope = subset(taxa_link_rich_slope, taxa_order == "Amphibians")
+
+sm_abund_slope = subset(taxa_link_abund_slope, taxa_order == "Small mammals")
+bat_abund_slope = subset(taxa_link_abund_slope, taxa_order == "Bats")
+bird_abund_slope = subset(taxa_link_abund_slope, taxa_order == "Birds")
+amph_abund_slope = subset(taxa_link_abund_slope, taxa_order == "Amphibians")
+
+# creating linear models for  abundance slope estimate against the covariate
+sm_abund_elev = summary(lm(sm_abund_slope$estimate ~ sm_abund_slope$mean_elevation))           ; m1 = cbind(sm_abund_elev$coefficients[2], sm_abund_elev$coefficients[8])
+sm_abund_can = summary(lm(sm_abund_slope$estimate ~ sm_abund_slope$canopy_height))             ; m2 = cbind(sm_abund_can$coefficients[2], sm_abund_can$coefficients[8])
+sm_abund_lat = summary(lm(sm_abund_slope$estimate ~ abs(sm_abund_slope$mean_latitude)))        ; m3 = cbind(sm_abund_lat$coefficients[2], sm_abund_lat$coefficients[8])
+
+bat_abund_elev = summary(lm(bat_abund_slope$estimate ~ bat_abund_slope$mean_elevation))        ; m4 = cbind(bat_abund_elev$coefficients[2], bat_abund_elev$coefficients[8])
+bat_abund_can = summary(lm(bat_abund_slope$estimate ~ bat_abund_slope$canopy_height))          ; m5 = cbind(bat_abund_can$coefficients[2], bat_abund_can$coefficients[8])
+bat_abund_lat = summary(lm(bat_abund_slope$estimate ~ abs(bat_abund_slope$mean_latitude)))     ; m6 = cbind(bat_abund_lat$coefficients[2], bat_abund_lat$coefficients[8])
+
+bird_abund_elev = summary(lm(bird_abund_slope$estimate ~ bird_abund_slope$mean_elevation))     ; m7 = cbind(bird_abund_elev$coefficients[2], bird_abund_elev$coefficients[8])
+bird_abund_can = summary(lm(bird_abund_slope$estimate ~ bird_abund_slope$canopy_height))       ; m8 = cbind(bird_abund_can$coefficients[2], bird_abund_can$coefficients[8])
+bird_abund_lat = summary(lm(bird_abund_slope$estimate ~ abs(bird_abund_slope$mean_latitude)))  ; m9 = cbind(bird_abund_lat$coefficients[2], bird_abund_lat$coefficients[8])
+
+amph_abund_elev = summary(lm(amph_abund_slope$estimate ~ amph_abund_slope$mean_elevation))     ; m10 = cbind(amph_abund_elev$coefficients[2], amph_abund_elev$coefficients[8])
+amph_abund_can = summary(lm(amph_abund_slope$estimate ~ amph_abund_slope$canopy_height))       ; m11 = cbind(amph_abund_can$coefficients[2], amph_abund_can$coefficients[8])
+amph_abund_lat = summary(lm(amph_abund_slope$estimate ~ abs(amph_abund_slope$mean_latitude)))  ; m12 = cbind(amph_abund_lat$coefficients[2], amph_abund_lat$coefficients[8])
+
+n1 = cbind(m1,m2,m3) ; n2 = cbind(m4,m5,m6) ; n3 = cbind(m7,m8,m9) ; n4 = cbind(m10,m11,m12)
+o1 = round(as.data.frame(rbind(n1,n2,n3,n4)), 3) 
+rownames(o1) <- c("Small mammals", "Bats","Birds" ,"Amphibians")
+colnames(o1) <- c("Elev (slope)", "Elev (P)","Canopy (slope)", "Canopy (P)","Latitude (slope)", "Latitude (P)")
+abund_stats = o1
+
+# creating linear models for  richness slope estimate against the covariate
+
+sm_rich_elev = summary(lm(sm_rich_slope$estimate ~ sm_rich_slope$mean_elevation))           ; p1 = cbind(sm_rich_elev$coefficients[2], sm_rich_elev$coefficients[8])
+sm_rich_can = summary(lm(sm_rich_slope$estimate ~ sm_rich_slope$canopy_height))             ; p2 = cbind(sm_rich_can$coefficients[2], sm_rich_can$coefficients[8])
+sm_rich_lat = summary(lm(sm_rich_slope$estimate ~ abs(sm_rich_slope$mean_latitude)))        ; p3 = cbind(sm_rich_lat$coefficients[2], sm_rich_lat$coefficients[8])
+
+bat_rich_elev = summary(lm(bat_rich_slope$estimate ~ bat_rich_slope$mean_elevation))        ; p4 = cbind(bat_rich_elev$coefficients[2], bat_rich_elev$coefficients[8])
+bat_rich_can = summary(lm(bat_rich_slope$estimate ~ bat_rich_slope$canopy_height))          ; p5 = cbind(bat_rich_can$coefficients[2], bat_rich_can$coefficients[8])
+bat_rich_lat = summary(lm(bat_rich_slope$estimate ~ abs(bat_rich_slope$mean_latitude)))     ; p6 = cbind(bat_rich_lat$coefficients[2], bat_rich_lat$coefficients[8])
+
+bird_rich_elev = summary(lm(bird_rich_slope$estimate ~ bird_rich_slope$mean_elevation))     ; p7 = cbind(bird_rich_elev$coefficients[2], bird_rich_elev$coefficients[8])
+bird_rich_can = summary(lm(bird_rich_slope$estimate ~ bird_rich_slope$canopy_height))       ; p8 = cbind(bird_rich_can$coefficients[2], bird_rich_can$coefficients[8])
+bird_rich_lat = summary(lm(bird_rich_slope$estimate ~ abs(bird_rich_slope$mean_latitude)))  ; p9 = cbind(bird_rich_lat$coefficients[2], bird_rich_lat$coefficients[8])
+
+amph_rich_elev = summary(lm(amph_rich_slope$estimate ~ amph_rich_slope$mean_elevation))     ; p10 = cbind(amph_rich_elev$coefficients[2], amph_rich_elev$coefficients[8])
+amph_rich_can = summary(lm(amph_rich_slope$estimate ~ amph_rich_slope$canopy_height))       ; p11 = cbind(amph_rich_can$coefficients[2], amph_rich_can$coefficients[8])
+amph_rich_lat = summary(lm(amph_rich_slope$estimate ~ abs(amph_rich_slope$mean_latitude)))  ; p12 = cbind(amph_rich_lat$coefficients[2], amph_rich_lat$coefficients[8])
+
+q1 = cbind(p1,p2,p3) ; q2 = cbind(p4,p5,p6) ; q3 = cbind(p7,p8,p9) ; q4 = cbind(p10,p11,p12)
+r1 = round(as.data.frame(rbind(q1,q2,q3,q4)), 3) 
+rownames(r1) <- c("Small mammals", "Bats","Birds" ,"Amphibians")
+colnames(r1) <- c("Elev (slope)", "Elev (P)","Canopy (slope)", "Canopy (P)","Latitude (slope)", "Latitude (P)")
+rich_stats = r1
+
+all_stats = rbind(abund_stats, rich_stats)
+all_stats$Metric = c(rep("Abundance", 4), rep("Richness", 4))
+
+###
+     ###   Now try to select only studies that did both abundance and richness and plot the estimates against one another
+###
+
+
+
+#left_join(taxa_link_rich_slope, taxa_link_abund_slope)
 
 ```
 
