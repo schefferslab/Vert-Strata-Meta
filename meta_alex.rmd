@@ -958,9 +958,36 @@ all_stats$Metric = c(rep("Abundance", 4), rep("Richness", 4))
      ###   Now try to select only studies that did both abundance and richness and plot the estimates against one another
 ###
 
+rich_studies  =  as.data.frame(unique(taxa_link_rich_slope$link)) ; colnames(rich_studies) = "link"
+abund_studies  =  as.data.frame(unique(taxa_link_abund_slope$link)) ; colnames(abund_studies) = "link"
+all_studies =  rbind(rich_studies, abund_studies)
+all_studies_count = all_studies %>%
+  count(link)
+studies_matched = subset(all_studies_count, n == 2)
+
+rich_studies_matched = taxa_link_rich_slope %>% 
+  filter(link %in% studies_matched$link) %>% 
+  mutate(estimate_rich = estimate) %>% 
+  select(taxa_order, link, estimate_rich)
+
+abund_studies_matched = taxa_link_abund_slope %>% 
+  filter(link %in% studies_matched$link) %>% 
+  mutate(estimate_abund = estimate) %>% 
+  select(taxa_order, link, estimate_abund)
+
+estimates_matched = merge(rich_studies_matched, abund_studies_matched, by = "link")
+
+ggplot(estimates_matched, aes(x = estimate_abund, y = estimate_rich, color = taxa_order.x))+
+         geom_point()+
+  scale_x_continuous(limits = c(-2,2)) +
+  scale_y_continuous(limits = c(-2,2)) +
+  geom_abline(slope=1)
+
+#bernard , peters, rodriguez , pereira = odd ones out  
 
 
-#left_join(taxa_link_rich_slope, taxa_link_abund_slope)
+ggsave("analysis/figures/study descriptions/abundance_richness_correlation.jpeg", width = 7, height = 5, units = "in", dpi = 300)
+
 
 ```
 
