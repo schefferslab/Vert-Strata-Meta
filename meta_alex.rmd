@@ -14,6 +14,7 @@ library(lme4)
 library(AICcmodavg)
 library(glmmTMB)
 library(TMB)
+library(emmeans)
 library(tidyverse)
 library(readr)
 library(scales)
@@ -44,7 +45,7 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
                 continent = as.factor(continent),
                 biodiversity_metric = as.factor(biodiversity_metric), 
                 season = as.factor(season), 
-                forest_type_iucn  = as.factor(forest_type_iucn_new),  
+                forest_type_iucn = as.factor(forest_type_iucn_new),  
                 mean_strata_height_p = as.numeric(scale(mean_strata_height_p)),
                 canopy_height = as.numeric(scale(canopy_height)),
                 latitude = as.numeric(scale(latitude)),
@@ -54,9 +55,8 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
                 continent, biodiversity_metric, taxa_order, treatment, season, forest_type_iucn, 
                 elevation, canopy_height, latitude, longitude, scaled_met, strata) %>%
   dplyr::select(-c(study_id.x)) %>%
-  dplyr::mutate(weight = as.numeric(scale(weight)*indepedence_weight))
-
-glimpse(dat)
+  dplyr::mutate(weight = as.numeric(scale(weight)*indepedence_weight),
+                forest_type_iucn = recode(forest_type_iucn, "dry forest" = "dry_forest"))
 
 abund <- dat %>%
   dplyr::filter(biodiversity_metric == "abundance")
@@ -288,7 +288,7 @@ rich$predictions_95CI_lower[rich$predictions_95CI_lower < 0] <- 0
 rich$predictions_95CI_upper[rich$predictions_95CI_upper > 1] <- 1
 
 taxa_link_rich <- rich %>% 
-  dplyr::group_by(taxa_order, link) %>%
+  dplyr::group_by(taxa_order,link,continent,method,season,forest_type_iucn) %>%
   dplyr::summarise(mean_elevation = mean(elevation),
                    mean_latitude = mean(latitude),
                    canopy_height = mean(canopy_height)) %>%
@@ -354,18 +354,17 @@ taxa_link_rich_avg$order[taxa_link_rich_avg$facet == richness_slope] <-
 
 ### Plot predictions
 ```{r Plottingrichness predictions}
-rich
 ggplot(rich, aes(y = predictions_fit, x = strata,
                   ymin = predictions_95CI_lower, 
                   ymax = predictions_95CI_upper,
                   fill = taxa_order, group = link)) + 
-    ylab("Predicted species richness") + xlab("Mean strata height measure") +
-    ggtitle("                                                               Richness") +
-    geom_line(size = 1, alpha = 0.3) +
-    geom_ribbon(color = NA, alpha = 0.2) +
-    scale_fill_viridis_d("Taxa") +
-    facet_wrap(~continent*taxa_order) +
-    theme_bw() + theme(legend.position = "bottom")
+  ylab("Predicted species richness") + xlab("Mean strata height measure") +
+  ggtitle("                                                               Richness") +
+  geom_line(size = 1, alpha = 0.3) +
+  geom_ribbon(color = NA, alpha = 0.2) +
+  scale_fill_viridis_d("Taxa") +
+  facet_grid(rows = vars(taxa), cols = vars(continent)) + theme_bw() +
+  theme_bw() + theme(legend.position = "bottom")
 ggsave("analysis/figures/model results/richness_strata_full_continent.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
 
@@ -433,7 +432,6 @@ abund_aictab <- aictab(cand.set = mods_abund, modnames = unlist(model_formulas_c
 top_abund_mod <- mods_abund[[as.numeric(str_extract(aictab(mods_abund)[1,1], "(\\d)+"))]]
 
 model_estimates_abund <- sjPlot::get_model_data(top_abund_mod, type = "re", se = T, transform = NULL)
-
 ```
 
 ### Getting model estimates from all models 
@@ -470,7 +468,7 @@ for(i in 1:length(mods_abund)){
 ```
 
 ### Model averaging model estimates from all models 
-```{r Model averaging abundance models: term estimates}
+```{r Model averaging abundance models: term estimates, message=FALSE, warning=FALSE}
 abund_modavg_beta_intercept_list <- list()
 abund_modavg_beta_strata_list <- list()
 
@@ -519,7 +517,7 @@ modavg_estimates_abund$facet <- model_estimates_abund$facet
 <!-- If you have predictions with SE's obtained from predict( ), then you could model-average these predictions across different models. To do so, you can use the modavgCustom( ) function which is designed for models that are not yet supported by modavg( ), modavgShrink( ), or modavgPred( ). The modavgCustom( ) function model-averages one prediction at a time. You can check ?modavgCustom( ) for an example. If you have several predictions from each model, you could then use a loop to model-average each prediction successively. To do so, you could create two matrices with nmodel rows x npredictions columns. One of these matrices would hold the predictions from each model and the other would hold the SE's of these predictions. -->
 
 #### Doing what Marc said ^
-```{r Model averaging abundance models: predictions}
+```{r Model averaging abundance models: predictions, message=FALSE, warning=FALSE}
 abund_pred_fit <- matrix(NA, nrow = nrow(abund), ncol = length(mods_abund))
 abund_pred_se <- matrix(NA, nrow = nrow(abund), ncol = length(mods_abund))
 
@@ -844,8 +842,7 @@ col_2_slope_rich_avg_cont <- ggplot(taxa_link_slope_rich_avg,
 
 col_2_slope_abund_avg_cont <- ggplot(taxa_link_slope_abund_avg, 
                                 aes(x = factor(taxa_order, levels = c(
-                                "Small mammals", "Amphibians", "Birds", "Bats"
-                               )), y = estimate, col = taxa_order)) + 
+                                "Small mammals", "Amphibians", "Birds", "Bats")), y = estimate, col = taxa_order)) + 
   ylab(expression(Delta ~ "metric with 1% increase in height")) + xlab(" ") + coord_flip() + 
   geom_hline(yintercept = 0, alpha = 0.5, size = 0.8) + geom_point(size = 1.5) + 
   geom_linerange(aes(ymax = CI_80_upper, 
@@ -880,84 +877,215 @@ taxa_link_biomet_sum <- taxa_link_biomet_order %>%
 
 log((taxa_link_biomet_sum$pos_sig+1)/(taxa_link_biomet_sum$neg_sig+1))
 
-ggplot(taxa_link_biomet_sum, aes(y = log((pos_sig+1)/(neg_sig+1)), x = taxa_order, fill = taxa_order)) + 
-  geom_hline(yintercept = 0, alpha = 0.5, size = 0.8) + ylim(c(-3,3)) +
+ggplot(taxa_link_biomet_sum, aes(y = log((pos_sig+1)/(neg_sig+1)), x = factor(taxa_order, levels = c("Bats", "Birds", "Small mammals", "Amphibians")), 
+                                 fill = factor(taxa_order, levels = c("Bats", "Birds", "Small mammals", "Amphibians")))) + 
+  geom_hline(yintercept = 0, alpha = 0.5, size = 0.8) + ylim(c(-2,3)) +
   geom_bar(stat = "identity") + xlab("Taxa") + 
   ylab(log ~ italic(bgroup("(", over("frequency of positive slopes + 1", "frequency of negative slopes + 1"), ")"))) + 
   facet_wrap(~facet) + 
-  scale_x_discrete(labels = c("Bats", "Birds", "Small Mammals", "Amphibians")) +
-  scale_fill_viridis_d("Taxa") + theme_bw() + theme(legend.position = "none") 
+  scale_x_discrete(labels = c("Bats", "Birds", "Small mammals", "Amphibians")) +
+  scale_fill_viridis_d("Taxa") + theme_classic() + theme(legend.position = "none") 
 ggsave("analysis/figures/model results/summary_slopes_taxa_biometric.jpeg", width = 8, height = 4, units = "in", dpi = 300)
 ```
 
-## Ed--this is the section:
+
+## Analyzing the model coefficients for continuous variables
 ```{r}
-# select taxa specific data
 
-sm_rich_slope = subset(taxa_link_rich_slope, taxa_order == "Small mammals")
-bat_rich_slope = subset(taxa_link_rich_slope, taxa_order == "Bats")
-bird_rich_slope = subset(taxa_link_rich_slope, taxa_order == "Birds")
-amph_rich_slope = subset(taxa_link_rich_slope, taxa_order == "Amphibians")
+sm_rich_slope <- subset(taxa_link_rich_slope, taxa_order == "Small mammals")
+bat_rich_slope <- subset(taxa_link_rich_slope, taxa_order == "Bats")
+bird_rich_slope <- subset(taxa_link_rich_slope, taxa_order == "Birds")
+amph_rich_slope <- subset(taxa_link_rich_slope, taxa_order == "Amphibians")
+sm_abund_slope <- subset(taxa_link_abund_slope, taxa_order == "Small mammals")
+bat_abund_slope <- subset(taxa_link_abund_slope, taxa_order == "Bats")
+bird_abund_slope <- subset(taxa_link_abund_slope, taxa_order == "Birds")
+amph_abund_slope <- subset(taxa_link_abund_slope, taxa_order == "Amphibians")
 
-sm_abund_slope = subset(taxa_link_abund_slope, taxa_order == "Small mammals")
-bat_abund_slope = subset(taxa_link_abund_slope, taxa_order == "Bats")
-bird_abund_slope = subset(taxa_link_abund_slope, taxa_order == "Birds")
-amph_abund_slope = subset(taxa_link_abund_slope, taxa_order == "Amphibians")
+sum_mods_list <- list(
+  lm(sm_rich_slope$estimate ~ sm_rich_slope$mean_elevation),
+  lm(sm_rich_slope$estimate ~ sm_rich_slope$canopy_height),
+  lm(sm_rich_slope$estimate ~ abs(sm_rich_slope$mean_latitude)),
+  lm(bat_rich_slope$estimate ~ bat_rich_slope$mean_elevation),
+  lm(bat_rich_slope$estimate ~ bat_rich_slope$canopy_height),
+  lm(bat_rich_slope$estimate ~ abs(bat_rich_slope$mean_latitude)),
+  lm(bird_rich_slope$estimate ~ bird_rich_slope$mean_elevation),
+  lm(bird_rich_slope$estimate ~ bird_rich_slope$canopy_height),
+  lm(bird_rich_slope$estimate ~ abs(bird_rich_slope$mean_latitude)),
+  lm(amph_rich_slope$estimate ~ amph_rich_slope$mean_elevation),
+  lm(amph_rich_slope$estimate ~ amph_rich_slope$canopy_height),
+  lm(amph_rich_slope$estimate ~ abs(amph_rich_slope$mean_latitude)),
+  lm(sm_abund_slope$estimate ~ sm_abund_slope$mean_elevation),
+  lm(sm_abund_slope$estimate ~ sm_abund_slope$canopy_height),
+  lm(sm_abund_slope$estimate ~ abs(sm_abund_slope$mean_latitude)),
+  lm(bat_abund_slope$estimate ~ bat_abund_slope$mean_elevation),
+  lm(bat_abund_slope$estimate ~ bat_abund_slope$canopy_height),
+  lm(bat_abund_slope$estimate ~ abs(bat_abund_slope$mean_latitude)),
+  lm(bird_abund_slope$estimate ~ bird_abund_slope$mean_elevation),
+  lm(bird_abund_slope$estimate ~ bird_abund_slope$canopy_height),
+  lm(bird_abund_slope$estimate ~ abs(bird_abund_slope$mean_latitude)),
+  lm(amph_abund_slope$estimate ~ amph_abund_slope$mean_elevation),
+  lm(amph_abund_slope$estimate ~ amph_abund_slope$canopy_height),
+  lm(amph_abund_slope$estimate ~ abs(amph_abund_slope$mean_latitude)))
 
-# creating linear models for  abundance slope estimate against the covariate
-sm_abund_elev = summary(lm(sm_abund_slope$estimate ~ sm_abund_slope$mean_elevation))           ; m1 = cbind(sm_abund_elev$coefficients[2], sm_abund_elev$coefficients[8])
-sm_abund_can = summary(lm(sm_abund_slope$estimate ~ sm_abund_slope$canopy_height))             ; m2 = cbind(sm_abund_can$coefficients[2], sm_abund_can$coefficients[8])
-sm_abund_lat = summary(lm(sm_abund_slope$estimate ~ abs(sm_abund_slope$mean_latitude)))        ; m3 = cbind(sm_abund_lat$coefficients[2], sm_abund_lat$coefficients[8])
+mod_sum <- data.frame(
+  metric = rep(c("Richness","Abundance"), each = 12),
+  taxa = rep(rep(c("Small mammals", "Bats","Birds" ,"Amphibians"), each = 3), 2),
+  variables = rep(rep(c("elevation","canopy height","latitude"),4), 2),
+  estimate = unlist(lapply(sum_mods_list, function(x){coef(x)[2]})),
+  lower_99_CI = unlist(lapply(sum_mods_list, function(x){confint(x, level = 0.99)[2,1]})),
+  upper_99_CI = unlist(lapply(sum_mods_list, function(x){confint(x, level = 0.99)[2,2]})),
+  lower_95_CI = unlist(lapply(sum_mods_list, function(x){confint(x, level = 0.95)[2,1]})),
+  upper_95_CI = unlist(lapply(sum_mods_list, function(x){confint(x, level = 0.95)[2,2]})),
+  lower_80_CI = unlist(lapply(sum_mods_list, function(x){confint(x, level = 0.80)[2,1]})),
+  upper_80_CI = unlist(lapply(sum_mods_list, function(x){confint(x, level = 0.80)[2,2]}))) %>%
+  dplyr::mutate(sig_95 = if_else(sign(upper_95_CI) == sign(lower_95_CI), "*", "")) %>%
+  dplyr::mutate(sig_99 = if_else(sign(upper_99_CI) == sign(lower_99_CI), "*", "")) %>%
+  dplyr::mutate(sig = if_else(sig_99 == "*", "**", 
+                              if_else(sig_95 == "*", "*", "")))
 
-bat_abund_elev = summary(lm(bat_abund_slope$estimate ~ bat_abund_slope$mean_elevation))        ; m4 = cbind(bat_abund_elev$coefficients[2], bat_abund_elev$coefficients[8])
-bat_abund_can = summary(lm(bat_abund_slope$estimate ~ bat_abund_slope$canopy_height))          ; m5 = cbind(bat_abund_can$coefficients[2], bat_abund_can$coefficients[8])
-bat_abund_lat = summary(lm(bat_abund_slope$estimate ~ abs(bat_abund_slope$mean_latitude)))     ; m6 = cbind(bat_abund_lat$coefficients[2], bat_abund_lat$coefficients[8])
+mod_sum_rich <- mod_sum %>%
+  filter(metric == "Richness") %>%
+  dplyr::group_by(variables, taxa = factor(taxa, levels = c("Bats","Birds","Small mammals","Amphibians"))) %>%
+  dplyr::arrange(estimate, .by_group = T) 
+mod_sum_rich$order <- rep(c(1,2,3,4), 3)
 
-bird_abund_elev = summary(lm(bird_abund_slope$estimate ~ bird_abund_slope$mean_elevation))     ; m7 = cbind(bird_abund_elev$coefficients[2], bird_abund_elev$coefficients[8])
-bird_abund_can = summary(lm(bird_abund_slope$estimate ~ bird_abund_slope$canopy_height))       ; m8 = cbind(bird_abund_can$coefficients[2], bird_abund_can$coefficients[8])
-bird_abund_lat = summary(lm(bird_abund_slope$estimate ~ abs(bird_abund_slope$mean_latitude)))  ; m9 = cbind(bird_abund_lat$coefficients[2], bird_abund_lat$coefficients[8])
+mod_sum_abund <- mod_sum %>%
+  filter(metric == "Abundance") %>%
+  dplyr::group_by(variables, taxa = factor(taxa, levels = c("Bats","Birds","Small mammals","Amphibians"))) %>%
+  dplyr::arrange(estimate, .by_group = T) 
+mod_sum_abund$order <- rep(c(1,2,3,4), 3)
 
-amph_abund_elev = summary(lm(amph_abund_slope$estimate ~ amph_abund_slope$mean_elevation))     ; m10 = cbind(amph_abund_elev$coefficients[2], amph_abund_elev$coefficients[8])
-amph_abund_can = summary(lm(amph_abund_slope$estimate ~ amph_abund_slope$canopy_height))       ; m11 = cbind(amph_abund_can$coefficients[2], amph_abund_can$coefficients[8])
-amph_abund_lat = summary(lm(amph_abund_slope$estimate ~ abs(amph_abund_slope$mean_latitude)))  ; m12 = cbind(amph_abund_lat$coefficients[2], amph_abund_lat$coefficients[8])
+```
 
-n1 = cbind(m1,m2,m3) ; n2 = cbind(m4,m5,m6) ; n3 = cbind(m7,m8,m9) ; n4 = cbind(m10,m11,m12)
-o1 = round(as.data.frame(rbind(n1,n2,n3,n4)), 3) 
-rownames(o1) <- c("Small mammals", "Bats","Birds" ,"Amphibians")
-colnames(o1) <- c("Elev (slope)", "Elev (P)","Canopy (slope)", "Canopy (P)","Latitude (slope)", "Latitude (P)")
-abund_stats = o1
 
-# creating linear models for  richness slope estimate against the covariate
+```{r}
+label_95_99 <- data.frame(
+  variables = factor("canopy height", levels = c("canopy height","elevation","latitude")),
+  order = c(2,3),
+  taxa = factor("Birds", levels = c("Bats","Birds","Small mammals","Amphibians")),
+  estimate = c(3.5,3.5),
+  lab = c("* = 95% CI excludes 0","** = 99% CI excludes 0")
+)
 
-sm_rich_elev = summary(lm(sm_rich_slope$estimate ~ sm_rich_slope$mean_elevation))           ; p1 = cbind(sm_rich_elev$coefficients[2], sm_rich_elev$coefficients[8])
-sm_rich_can = summary(lm(sm_rich_slope$estimate ~ sm_rich_slope$canopy_height))             ; p2 = cbind(sm_rich_can$coefficients[2], sm_rich_can$coefficients[8])
-sm_rich_lat = summary(lm(sm_rich_slope$estimate ~ abs(sm_rich_slope$mean_latitude)))        ; p3 = cbind(sm_rich_lat$coefficients[2], sm_rich_lat$coefficients[8])
+mod_sum_rich_pan <- ggplot(mod_sum_rich, aes(x = estimate, y = rev(order), color = taxa)) + 
+  ylab(" ") + xlab("Direction of vertical stratification") + 
+  ggtitle("                Species Richness") +
+  geom_vline(xintercept = 0, alpha = 0.5, size = 0.6) + geom_point(size = 1.5) + 
+  geom_linerange(aes(xmax = upper_80_CI, 
+                     xmin = lower_80_CI), size = 1.1) +
+  geom_linerange(aes(xmax = upper_95_CI,
+                     xmin = lower_95_CI)) +
+  geom_text(aes(y = rev(order), x = if_else(sign(estimate) == 1, upper_95_CI + 1, lower_95_CI - 1), label = sig), show.legend = F) +
+  geom_text(data = label_95_99, label = c("* = 95% CI excludes 0","** = 99% CI excludes 0"), size = 2.5, col = "black") +
+  facet_grid(rows = vars(variables)) +
+  scale_x_continuous(limits = c(-6, 6), breaks = seq(-6, 6, by = 2),
+                     sec.axis = sec_axis(~., breaks = c(-4,0,4), labels = c("Downward","","Upward"))) +
+  scale_y_continuous(breaks = c(1,2,3,4),
+                     labels = rev(c("Bats","Birds","Small mammals","Amphibians")),
+                     expand = c(0.25, 0)) +
+  scale_color_viridis_d("Taxa") + theme_classic() + 
+  theme(legend.position = "bottom"); mod_sum_rich_pan
 
-bat_rich_elev = summary(lm(bat_rich_slope$estimate ~ bat_rich_slope$mean_elevation))        ; p4 = cbind(bat_rich_elev$coefficients[2], bat_rich_elev$coefficients[8])
-bat_rich_can = summary(lm(bat_rich_slope$estimate ~ bat_rich_slope$canopy_height))          ; p5 = cbind(bat_rich_can$coefficients[2], bat_rich_can$coefficients[8])
-bat_rich_lat = summary(lm(bat_rich_slope$estimate ~ abs(bat_rich_slope$mean_latitude)))     ; p6 = cbind(bat_rich_lat$coefficients[2], bat_rich_lat$coefficients[8])
+mod_sum_abund_pan <- ggplot(mod_sum_abund, aes(x = estimate, y = rev(order), color = taxa)) + 
+  ylab(" ") + xlab("Direction of vertical stratification") + 
+  ggtitle("                    Abundance") +
+  geom_vline(xintercept = 0, alpha = 0.5, size = 0.6) + geom_point(size = 1.5) + 
+  geom_linerange(aes(xmax = upper_80_CI, 
+                     xmin = lower_80_CI), size = 1.1) +
+  geom_linerange(aes(xmax = upper_95_CI,
+                     xmin = lower_95_CI)) +
+  geom_text(aes(y = rev(order), x = if_else(sign(estimate) == 1, upper_95_CI + 1, lower_95_CI - 1), label = sig), show.legend = F) +
+  facet_grid(rows = vars(variables)) +
+  scale_x_continuous(limits = c(-6, 6), breaks = seq(-6, 6, by = 2),
+                     sec.axis = sec_axis(~., breaks = c(-4,0,4), labels = c("Downward","","Upward"))) +
+  scale_y_continuous(breaks = c(1,2,3,4),
+                     labels = rev(c("","","","")),
+                     expand = c(0.25, 0)) +
+  scale_color_viridis_d("Taxa") + theme_classic() + 
+  theme(legend.position = "bottom",
+        axis.line = element_line(),
+        axis.ticks.y = element_blank()); mod_sum_abund_pan
 
-bird_rich_elev = summary(lm(bird_rich_slope$estimate ~ bird_rich_slope$mean_elevation))     ; p7 = cbind(bird_rich_elev$coefficients[2], bird_rich_elev$coefficients[8])
-bird_rich_can = summary(lm(bird_rich_slope$estimate ~ bird_rich_slope$canopy_height))       ; p8 = cbind(bird_rich_can$coefficients[2], bird_rich_can$coefficients[8])
-bird_rich_lat = summary(lm(bird_rich_slope$estimate ~ abs(bird_rich_slope$mean_latitude)))  ; p9 = cbind(bird_rich_lat$coefficients[2], bird_rich_lat$coefficients[8])
+ggarrange(mod_sum_rich_pan, mod_sum_abund_pan, common.legend = T, legend = "bottom", widths = c(1,0.8))
 
-amph_rich_elev = summary(lm(amph_rich_slope$estimate ~ amph_rich_slope$mean_elevation))     ; p10 = cbind(amph_rich_elev$coefficients[2], amph_rich_elev$coefficients[8])
-amph_rich_can = summary(lm(amph_rich_slope$estimate ~ amph_rich_slope$canopy_height))       ; p11 = cbind(amph_rich_can$coefficients[2], amph_rich_can$coefficients[8])
-amph_rich_lat = summary(lm(amph_rich_slope$estimate ~ abs(amph_rich_slope$mean_latitude)))  ; p12 = cbind(amph_rich_lat$coefficients[2], amph_rich_lat$coefficients[8])
+ggsave("analysis/figures/model results/summary_slopes_vars.jpeg", width = 8, height = 4.5, units = "in", dpi = 300)
 
-q1 = cbind(p1,p2,p3) ; q2 = cbind(p4,p5,p6) ; q3 = cbind(p7,p8,p9) ; q4 = cbind(p10,p11,p12)
-r1 = round(as.data.frame(rbind(q1,q2,q3,q4)), 3) 
-rownames(r1) <- c("Small mammals", "Bats","Birds" ,"Amphibians")
-colnames(r1) <- c("Elev (slope)", "Elev (P)","Canopy (slope)", "Canopy (P)","Latitude (slope)", "Latitude (P)")
-rich_stats = r1
+```
 
-all_stats = rbind(abund_stats, rich_stats)
-all_stats$Metric = c(rep("Abundance", 4), rep("Richness", 4))
+```{r}
+sum_mods_cat_list <- list(
+  lm(estimate ~ continent,        data = sm_rich_slope),
+  lm(estimate ~ season,           data = sm_rich_slope),
+  lm(estimate ~ forest_type_iucn, data = sm_rich_slope),
+  lm(estimate ~ continent,        data = bat_rich_slope),
+  lm(estimate ~ season,           data = bat_rich_slope),
+  lm(estimate ~ forest_type_iucn, data = bat_rich_slope),
+  lm(estimate ~ continent,        data = bird_rich_slope), #7 *
+  lm(estimate ~ season,           data = bird_rich_slope), #8 *
+  lm(estimate ~ forest_type_iucn, data = bird_rich_slope), #9 *
+  lm(estimate ~ continent,        data = amph_rich_slope),
+  lm(estimate ~ season,           data = amph_rich_slope),
+  lm(estimate ~ forest_type_iucn, data = amph_rich_slope),
+  lm(estimate ~ continent,        data = sm_abund_slope),
+  lm(estimate ~ season,           data = sm_abund_slope),
+  lm(estimate ~ forest_type_iucn, data = sm_abund_slope), 
+  lm(estimate ~ continent,        data = bat_abund_slope), #16 *
+  lm(estimate ~ season,           data = bat_abund_slope),
+  lm(estimate ~ forest_type_iucn, data = bat_abund_slope),
+  lm(estimate ~ continent,        data = bird_abund_slope),
+  lm(estimate ~ season,           data = bird_abund_slope),
+  lm(estimate ~ forest_type_iucn, data = bird_abund_slope), #21 *
+  lm(estimate ~ continent,        data = amph_abund_slope),
+  lm(estimate ~ season,           data = amph_abund_slope),
+  lm(estimate ~ forest_type_iucn, data = amph_abund_slope)) #24 *
 
-###
-     ###   Now try to select only studies that did both abundance and richness and plot the estimates against one another
-###
+mod_cat_sum <- data.frame(
+  metric = rep(c("Richness","Abundance"), each = 12),
+  taxa = rep(rep(c("Small mammals", "Bats","Birds" ,"Amphibians"), each = 3), 2),
+  variables = rep(rep(c("continent","season","forest_type_iucn"),4), 2),
+  estimate = unlist(lapply(sum_mods_cat_list, function(x){coef(x)[2]})),
+  p_value = unlist(lapply(sum_mods_cat_list, function(x){anova(x)[1,5]})))
 
+emmeans::emmeans(sum_mods_cat_list[[7]], pairwise~continent)$contrasts
+ # contrast                    estimate    SE df t.ratio p.value
+ # Africa - Americas             -0.166 0.645 26 -0.257  0.9643 
+ # Africa - Asia and Oceania      0.911 0.661 26  1.378  0.3667 
+ # Americas - Asia and Oceania    1.077 0.337 26  3.196  0.0098      # Bird richness in the Americas is more upwardly stratified than Asia and Oceania 
+
+emmeans::emmeans(sum_mods_cat_list[[8]],  pairwise~season)$contrasts
+ # contrast                estimate    SE df t.ratio p.value
+ # Dry - Sampling combined    1.099 0.375 26  2.929  0.0185
+ # Dry - Wet                 -0.364 0.418 26 -0.871  0.6633 
+ # Sampling combined - Wet   -1.463 0.317 26 -4.611  0.0003 
+
+emmeans::emmeans(sum_mods_cat_list[[9]],  pairwise~forest_type_iucn)$contrasts
+ # contrast                                    estimate    SE df t.ratio p.value
+ # dry_forest - moist_lowland_forest             -0.532 0.412 26 -1.292  0.4123 
+ # dry_forest - moist_montane_forest              0.717 0.387 26  1.853  0.1727 
+ # moist_lowland_forest - moist_montane_forest    1.250 0.374 26  3.341  0.0069  # Bird richness in the moist lowland forest is more upwardly stratified than moist montane forest
+
+emmeans::emmeans(sum_mods_cat_list[[16]], pairwise~continent)$contrasts
+ # contrast                    estimate    SE df t.ratio p.value
+ # Africa - Americas             0.9998 0.839 19  1.192  0.4719 
+ # Africa - Asia and Oceania    -0.0419 0.891 19 -0.047  0.9988 
+ # Americas - Asia and Oceania  -1.0417 0.417 19 -2.499  0.0543          # Bat abundance in the Americas is less upwardly stratified than Asia and Oceania 
+
+emmeans::emmeans(sum_mods_cat_list[[21]], pairwise~forest_type_iucn)$contrasts
+ # dry_forest - moist_lowland_forest              0.108 0.322 21 0.335   0.9403 
+ # dry_forest - moist_montane_forest              0.877 0.331 21 2.649   0.0383 
+ # moist_lowland_forest - moist_montane_forest    0.769 0.311 21 2.474   0.0550 # Bird abundance in the moist lowland forest is more upwardly stratified than moist montane forest
+
+emmeans::emmeans(sum_mods_cat_list[[24]], pairwise~forest_type_iucn)$contrasts
+# moist_lowland_forest - moist_montane_forest    0.643 0.145  4 4.423   0.0115 # Amphibian abundance in the moist lowland forest is more upwardly stratified than moist montane forest
+
+
+```
+
+
+
+
+###   Now try to select only studies that did both abundance and richness and plot the estimates against one another
+```{r}
 rich_studies  =  as.data.frame(unique(taxa_link_rich_slope$link)) ; colnames(rich_studies) = "link"
 abund_studies  =  as.data.frame(unique(taxa_link_abund_slope$link)) ; colnames(abund_studies) = "link"
 all_studies =  rbind(rich_studies, abund_studies)
@@ -986,47 +1114,7 @@ ggplot(estimates_matched, aes(x = estimate_abund, y = estimate_rich, color = tax
 #bernard , peters, rodriguez , pereira = odd ones out  
 
 
-ggsave("analysis/figures/study descriptions/abundance_richness_correlation.jpeg", width = 7, height = 5, units = "in", dpi = 300)
+ggsave("analysis/figures/study descriptions/abundance_richness_correlation.jpeg", width = 6, height = 4, units = "in", dpi = 300)
 
 
-```
-
-
-## Summary statistics for coef(richness ~ height) ~ elevation / canopy height 
-```{r}
-# summary_rich_coef <- list()
-# summary_rich_coef[[1]] <- lmer(estimate ~ canopy_height +      (canopy_height|taxa_order), data = taxa_link_rich_slope)
-# summary_rich_coef[[2]] <- lmer(estimate ~ mean_elevation +     (mean_elevation|taxa_order), data = taxa_link_rich_slope)
-# summary_rich_coef[[3]] <- lmer(estimate ~ abs(mean_latitude) + (abs(mean_latitude)|taxa_order), data = taxa_link_rich_slope)
-# summary_rich_coef[[4]] <- lmer(estimate ~ forest_type_iucn +   (forest_type_iucn|taxa_order), data = taxa_link_rich_slope)
-# summary_rich_coef[[5]] <- lmer(estimate ~ season +             (season|taxa_order), data = taxa_link_rich_slope)
-# 
-# summary_abund_coef <- list()
-# summary_abund_coef[[1]] <- lmer(estimate ~ canopy_height +      (canopy_height|taxa_order), data = taxa_link_abund_slope)
-# summary_abund_coef[[2]] <- lmer(estimate ~ mean_elevation +     (mean_elevation|taxa_order), data = taxa_link_abund_slope)
-# summary_abund_coef[[3]] <- lmer(estimate ~ abs(mean_latitude) + (abs(mean_latitude)|taxa_order), data = taxa_link_abund_slope)
-# summary_abund_coef[[4]] <- lmer(estimate ~ forest_type_iucn +   (forest_type_iucn|taxa_order), data = taxa_link_abund_slope)
-# summary_abund_coef[[5]] <- lmer(estimate ~ season +             (season|taxa_order), data = taxa_link_abund_slope)
-# 
-# summary_coef_re_rbind <- rbind(
-#   sjPlot::get_model_data(summary_rich_coef[[1]], type = "re", se = T, transform = NULL) %>%
-#     filter(!facet == "taxa_order (Intercept)"),
-#   sjPlot::get_model_data(summary_rich_coef[[2]], type = "re", se = T, transform = NULL) %>%
-#     filter(!facet == "taxa_order (Intercept)"),
-#   sjPlot::get_model_data(summary_rich_coef[[3]], type = "re", se = T, transform = NULL) %>%
-#     filter(!facet == "taxa_order (Intercept)"),
-#     sjPlot::get_model_data(summary_abund_coef[[1]], type = "re", se = T, transform = NULL) %>%
-#     filter(!facet == "taxa_order (Intercept)"),
-#   sjPlot::get_model_data(summary_abund_coef[[2]], type = "re", se = T, transform = NULL) %>%
-#     filter(!facet == "taxa_order (Intercept)"),
-#   sjPlot::get_model_data(summary_abund_coef[[3]], type = "re", se = T, transform = NULL) %>%
-#     filter(!facet == "taxa_order (Intercept)")) %>%
-#   mutate(metric = c(rep("species_richness", 4*3),
-#                     rep("abundance", 4*3))) %>%
-#   dplyr::mutate(sig = if_else(sign(conf.low) == sign(conf.high), "*", "")) %>%
-#   dplyr::select(-c("p.label","xpos","title","xmin","xmax","conf.low","conf.high","group","reihe")) %>%
-#   relocate(metric) %>%
-#   pivot_wider(names_from = facet, values_from = c(estimate, sig))
-# 
-# write_csv(summary_coef_re_rbind, "summary_coef_re.csv")
 ```
