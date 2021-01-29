@@ -1159,6 +1159,22 @@ metrics_studies = merge(rich_studies, abund_studies, by = "link", all = T)
 ## heres the final merge
 full_table_S1 =  cbind(tables_S1, metrics_studies[,2:3])
 
+# reformatting the links to look more like citations
+
+full_table_S1 <- full_table_S1 %>% 
+  mutate(link = link %>% 
+           str_replace("_"," ") %>% 
+           str_replace(" _ ",": ") %>%
+           str_replace(": 1","") %>%
+           str_replace(": 2"," (2)") %>%
+           str_replace(": 3"," (3)") %>%
+           str_replace(": 4"," (4)") %>%
+           str_replace(": 5"," (5)") %>%
+           str_replace(": 6"," (6)") %>%
+           str_replace(": 7"," (7)") %>%
+           str_replace(": 8"," (8)") %>%
+           str_replace(": 9"," (9)"))
+
 # rename columns
 colnames(full_table_S1) = c( "Reference","Study Unit", "Taxa", "Study Quality", "Bioregion" , "Latitude", "Longitude", "Elevation", "Forest Type", "Canopy Height", "Season", "Richness", "Abundance")
 
