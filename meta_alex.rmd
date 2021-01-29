@@ -29,7 +29,15 @@ library(bbmle)
 ## Loading data
 ```{r loading data}
 read_csv("data/stripped_data/final/data_joined.csv") %>%
-  glimpse()
+  glimpse() 
+
+var_bio_met <- read_csv("data/stripped_data/final/data_joined.csv") %>% 
+  dplyr::group_by(link, biodiversity_metric) %>%
+  dplyr::summarize(var_biodiversity_metric_mean = mean(var_biodiversity_metric))
+
+sum(is.na(var_bio_met$var_biodiversity_metric_mean[var_bio_met$biodiversity_metric == "abundance"]))/nrow(var_bio_met)
+sum(is.na(var_bio_met$var_biodiversity_metric_mean[var_bio_met$biodiversity_metric == "richness"]))/nrow(var_bio_met)
+
 
 dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
   dplyr::filter(taxa != "All mammals") %>%
@@ -160,21 +168,25 @@ rich_beta_strata_se <- rich_beta_intercept
 ## Extracting model estimates with `sjPlot::get_model_data`
 for(i in 1:length(mods_rich)){
   ### 1) Intercept
-  rich_beta_intercept[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[1:(rich_length),] %>%
+  rich_beta_intercept[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", 
+                                                    se = T, transform = NULL)[1:(rich_length),] %>%
     dplyr::select(estimate) %>%
     as.matrix()
   ### 2) Intercept uncertainty
-  rich_beta_intercept_se[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[1:(rich_length),] %>%
+  rich_beta_intercept_se[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", 
+                                                       se = T, transform = NULL)[1:(rich_length),] %>%
     dplyr::select(estimate, conf.low) %>%
     dplyr::mutate(se = (estimate - conf.low)/1.96) %>%
     dplyr::select(se) %>% 
     as.matrix()
   ### 3) Slope
-  rich_beta_strata[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[((rich_length)+1):(rich_length_total),] %>%
+  rich_beta_strata[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", 
+                                                 se = T, transform = NULL)[((rich_length)+1):(rich_length_total),] %>%
     dplyr::select(estimate) %>%
     as.matrix()
   ### 4) Slope uncertainty
-  rich_beta_strata_se[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", se = T, transform = NULL)[((rich_length)+1):(rich_length_total),] %>%
+  rich_beta_strata_se[,i] <- sjPlot::get_model_data(mods_rich[[i]], type = "re", 
+                                                    se = T, transform = NULL)[((rich_length)+1):(rich_length_total),] %>%
     dplyr::select(estimate, conf.low) %>%
     dplyr::mutate(se = (estimate - conf.low)/1.96) %>%
     dplyr::select(se) %>% 
@@ -354,7 +366,7 @@ taxa_link_rich_avg$order[taxa_link_rich_avg$facet == richness_slope] <-
 ```
 
 ### Plot predictions
-```{r Plottingrichness predictions}
+```{r Plotting richness predictions}
 ggplot(rich, aes(y = predictions_fit, x = strata,
                   ymin = predictions_95CI_lower, 
                   ymax = predictions_95CI_upper,
@@ -364,7 +376,7 @@ ggplot(rich, aes(y = predictions_fit, x = strata,
   geom_line(size = 1, alpha = 0.3) +
   geom_ribbon(color = NA, alpha = 0.2) +
   scale_fill_viridis_d("Taxa") +
-  facet_grid(rows = vars(taxa), cols = vars(continent)) + theme_bw() +
+  facet_grid(cols = vars(taxa), rows = vars(continent)) + theme_bw() +
   theme_bw() + theme(legend.position = "bottom")
 ggsave("analysis/figures/model results/richness_strata_full_continent.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
@@ -374,7 +386,7 @@ ggplot(taxa_link_rich_order %>% filter(facet == "Change in richness with increas
   geom_point() + geom_smooth(method = "glm") +
   ylab("Coef(richness ~ height)") + xlab("Absolute Latitude") +
   ggtitle("Species Richness") +
-  scale_fill_viridis_d("Taxa") +
+  scale_color_viridis_d("Taxa") +
   facet_wrap(~taxa_order, scales = "free") +
   theme(legend.position = "bottom") + theme_bw()
 ggsave("analysis/figures/model results/coef_rich_height_lat.jpeg", width = 8, height = 6, units = "in", dpi = 300)
@@ -384,7 +396,7 @@ ggplot(taxa_link_rich_order %>% filter(facet == "Change in richness with increas
   geom_point() + geom_smooth(method = "glm") +
   ylab("Coef(richness ~ height)") + xlab("Elevation") +
   ggtitle("Species Richness") +
-  scale_fill_viridis_d("Taxa") +
+  scale_color_viridis_d("Taxa") +
   facet_wrap(~taxa_order, scales = "free") +
   theme(legend.position = "bottom") + theme_bw()
 ggsave("analysis/figures/model results/coef_rich_height_elv.jpeg", width = 8, height = 6, units = "in", dpi = 300)
@@ -394,27 +406,12 @@ ggplot(taxa_link_rich_order %>% filter(facet == "Change in richness with increas
   geom_point() + geom_smooth(method = "glm") +
   ylab("Coef(richness ~ height)") + xlab("Canopy Height") +
   ggtitle("Species Richness") +
-  scale_fill_viridis_d("Taxa") +
+  scale_color_viridis_d("Taxa") +
   facet_wrap(~taxa_order, scales = "free") +
   theme(legend.position = "bottom") + theme_bw()
 ggsave("analysis/figures/model results/coef_rich_height_canopy.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
 ```
-
-## Plot study coef with elevation
-```{r}
-taxa_link_rich_slope <- taxa_link_rich_order %>%
-  filter(facet == "Change in richness with increasing strata")
-
-ggplot(taxa_link_rich_slope, aes(x = mean_elevation, y = estimate, col = taxa_order)) + 
-  ylab("Coef (Richness ~ Height)") + xlab("Elevation") + geom_point(size = 1.5) + 
-  geom_smooth(method = "glm") +
-  facet_wrap(~taxa_order, scales = "free") + 
-  scale_color_viridis_d("Taxa") + theme_bw() + 
-  theme(legend.position = "none")
-ggsave("analysis/figures/model results/coef_richness_height.jpeg")
-```
-
 
 # Modeling abundance
 ## Abundance GLMs
@@ -446,21 +443,25 @@ abund_beta_strata <- abund_beta_intercept
 abund_beta_strata_se <- abund_beta_intercept
 
 for(i in 1:length(mods_abund)){
-  abund_beta_intercept[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[1:(abund_length),] %>%
+  abund_beta_intercept[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", 
+                                                     se = T, transform = NULL)[1:(abund_length),] %>%
     dplyr::select(estimate) %>%
     as.matrix()
   
-  abund_beta_intercept_se[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[1:(abund_length),] %>%
+  abund_beta_intercept_se[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", 
+                                                        se = T, transform = NULL)[1:(abund_length),] %>%
     dplyr::select(estimate, conf.low) %>%
     dplyr::mutate(se = (estimate - conf.low)/1.96) %>%
     dplyr::select(se) %>% 
     as.matrix()
 
-  abund_beta_strata[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[((abund_length) + 1):abund_length_total,] %>%
+  abund_beta_strata[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", 
+                                                  se = T, transform = NULL)[((abund_length) + 1):abund_length_total,] %>%
     dplyr::select(estimate) %>%
     as.matrix()
 
-  abund_beta_strata_se[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", se = T, transform = NULL)[((abund_length) + 1):abund_length_total,] %>%
+  abund_beta_strata_se[,i] <- sjPlot::get_model_data(mods_abund[[i]], type = "re", 
+                                                     se = T, transform = NULL)[((abund_length) + 1):abund_length_total,] %>%
     dplyr::select(estimate, conf.low) %>%
     dplyr::mutate(se = (estimate - conf.low)/1.96) %>%
     dplyr::select(se) %>% 
@@ -640,22 +641,6 @@ ggplot(abund, aes(y = predictions_fit, x = strata,
   theme(legend.position = "bottom");
 ggsave("analysis/figures/model results/abundance_strata_full_continent.jpeg", width = 8, height = 6, units = "in", dpi = 300)
 
-ggplot(abund, aes(y = predictions_fit, x = canopy_height)) + geom_point() +
-  ylab("Predicted species abundance") + xlab("canopy_height") +
-  ggtitle("                                                            Abundance") +
-  scale_fill_viridis_d("Taxa") +
-  facet_grid(rows = vars(taxa), cols = vars(continent)) + theme_bw() + 
-  theme(legend.position = "bottom");
-ggsave("analysis/figures/model results/abundance_strata_canopy_continent.jpeg", width = 8, height = 6, units = "in", dpi = 300)
-
-ggplot(abund, aes(y = predictions_fit, x = latitude)) + geom_point() +
-  ylab("Predicted species abundance") + xlab("latitude") +
-  ggtitle("                                                            Abundance") +
-  scale_fill_viridis_d("Taxa") +
-  facet_grid(rows = vars(taxa), cols = vars(continent)) + theme_bw() + 
-  theme(legend.position = "bottom");
-ggsave("analysis/figures/model results/coef_abund_height_latitude.jpeg", width = 8, height = 6, units = "in", dpi = 300)
-
 ggplot(taxa_link_abund_order %>% filter(facet == "Change in abundance with increasing strata"), 
        aes(y = estimate, x = abs(mean_latitude), col = taxa_order)) + 
   geom_point() + geom_smooth(method = "glm") +
@@ -685,21 +670,6 @@ ggplot(taxa_link_abund_order %>% filter(facet == "Change in abundance with incre
   facet_wrap(~taxa_order, scales = "free") +
   theme(legend.position = "bottom") + theme_bw()
 ggsave("analysis/figures/model results/coef_abund_height_canopy.jpeg", width = 8, height = 6, units = "in", dpi = 300)
-```
-
-## Plot study coef with elevation
-```{r}
-taxa_link_abund_slope <- taxa_link_abund_order %>%
-  filter(facet == "Change in abundance with increasing strata")
-
-ggplot(taxa_link_abund_slope, aes(x = mean_elevation, y = estimate, col = taxa_order)) + 
-  ylab("Coef (Abund ~ Height)") + xlab("Elevation") + geom_point() +
-  geom_smooth(method = "glm") +
-  facet_wrap(~taxa_order, scales = "free") + 
-  scale_color_viridis_d("Taxa") + theme_bw() + 
-  theme(legend.position = "none")
-ggsave("analysis/figures/model results/coef_abund_height.jpeg")
-
 ```
 
 ## Plotting slopes of abundance and richness
@@ -781,7 +751,7 @@ taxa_link_slope_abund_plot <- taxa_link_slope_abund %>%
 ### Creating slope estimate figures for both richness and abundance
 ```{r Creating slope estimate figures for both richness and abundance}
 col_2_slope_rich_est_cont <- ggplot(taxa_link_slope_rich, aes(x = order, y = estimate, col = taxa_order)) + 
-  ylab(" ") + xlab(" ") + ggtitle("                   Species Richness") + coord_flip() + 
+  ylab(" ") + xlab(" ") + ggtitle("                      Species Richness") + coord_flip() + 
   geom_hline(yintercept = 0, alpha = 0.5, size = 0.8) + geom_point(size = 1.5) + 
   geom_linerange(aes(ymax = CI_80_upper, 
                      ymin = CI_80_lower), size = 1.1) +
@@ -789,7 +759,7 @@ col_2_slope_rich_est_cont <- ggplot(taxa_link_slope_rich, aes(x = order, y = est
                      ymin = CI_95_lower)) +
   scale_x_continuous(breaks = taxa_link_slope_rich_plot$order, 
                      labels = taxa_link_slope_rich_plot$link_plot, expand = c(0.02, 0)) +
-  scale_y_continuous(limits = c(-4, 4), breaks = seq(-4, 4, by = 2), expand = c(0.05, 0),
+  scale_y_continuous(limits = c(-4.5, 4.5), breaks = seq(-4, 4, by = 2), expand = c(0.05, 0),
                      sec.axis = sec_axis(~., breaks = c(-2,0,2), labels = c("Decreasing"," ","Increasing"))) +
   geom_text(aes(x = order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
   annotate("text", x = seq(56, 54), y = rep(2,3), 
@@ -801,7 +771,7 @@ col_2_slope_rich_est_cont <- ggplot(taxa_link_slope_rich, aes(x = order, y = est
         axis.line = element_blank(), plot.margin = unit(c(1,0,0,0), "lines")); col_2_slope_rich_est_cont
 
 col_2_slope_abund_est_cont <- ggplot(taxa_link_slope_abund, aes(x = order, y = estimate, col = taxa_order)) + 
-  ylab(" ") + xlab(" ") + ggtitle("                        Abundance") + coord_flip() + 
+  ylab(" ") + xlab(" ") + ggtitle("                         Abundance") + coord_flip() + 
   geom_hline(yintercept = 0, alpha = 0.5, size = 0.8) + geom_point(size = 1.5) + 
   geom_linerange(aes(ymax = CI_80_upper, 
                      ymin = CI_80_lower), size = 1.1) +
@@ -809,7 +779,7 @@ col_2_slope_abund_est_cont <- ggplot(taxa_link_slope_abund, aes(x = order, y = e
                      ymin = CI_95_lower)) +
   scale_x_continuous(breaks = taxa_link_slope_abund_plot$order, 
                      labels = taxa_link_slope_abund_plot$link_plot, expand = c(0.02, 0)) +
-  scale_y_continuous(limits = c(-4, 4), breaks = seq(-4, 4, by = 2), expand = c(0.05, 0),
+  scale_y_continuous(limits = c(-4.5, 4.5), breaks = seq(-4, 4, by = 2), expand = c(0.05, 0),
                      sec.axis = sec_axis(~., breaks = c(-2,0,2), labels = c("Decreasing"," ","Increasing"))) +
   geom_text(aes(x = order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
   scale_color_viridis_d("Taxa") + theme_classic() + 
@@ -832,7 +802,7 @@ col_2_slope_rich_avg_cont <- ggplot(taxa_link_slope_rich_avg,
                      ymin = CI_95_lower)) +
   geom_text(aes(x = taxa_order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
   scale_x_discrete(labels = rev(c("Bats","Birds","      Small Mammals", "Amphibians"))) +
-  scale_y_continuous(limits = c(-4, 4), breaks = seq(-4, 4, by = 2), expand = c(0.05, 0), 
+  scale_y_continuous(limits = c(-4.5, 4.5), breaks = seq(-4, 4, by = 2), expand = c(0.05, 0), 
                      sec.axis = sec_axis(~., breaks = c(-2,0,2), labels = c("Decreasing"," ","Increasing"))) +
   scale_color_viridis_d("Taxa") + theme_classic() + 
   theme(legend.position = c(.5,-0.1), legend.direction = "horizontal", panel.border = element_rect(colour = "black", fill=NA, size=1), 
@@ -853,8 +823,9 @@ col_2_slope_abund_avg_cont <- ggplot(taxa_link_slope_abund_avg,
                      ymin = CI_95_lower)) +
   geom_text(aes(x = taxa_order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
   scale_x_discrete(labels = rev(c("Bats","Birds","      Small Mammals", "Amphibians"))) +
-  scale_y_continuous(limits = c(-4, 4), breaks = seq(-4, 4, by = 2), expand = c(0.05, 0), 
-                     sec.axis = sec_axis(~., breaks = c(-2,0,2), labels = c("Decreasing"," ","Increasing"))) +  scale_color_viridis_d(" ") + theme_classic() + 
+  scale_y_continuous(limits = c(-4.5, 4.5), breaks = seq(-4, 4, by = 2), expand = c(0.05, 0), 
+                     sec.axis = sec_axis(~., breaks = c(-2,0,2), labels = c("Decreasing"," ","Increasing"))) +  
+  scale_color_viridis_d(" ") + theme_classic() + 
   theme(legend.position = "none", panel.border = element_rect(colour = "black", fill=NA, size=1),
         axis.text.x.top = element_text(size = 8),
         axis.ticks.length.x.top = unit(0, "cm"),
@@ -884,7 +855,8 @@ ggplot(taxa_link_biomet_sum, aes(y = log((pos_sig+1)/(neg_sig+1)), x = factor(ta
   geom_hline(yintercept = 0, alpha = 0.5, size = 0.8) + ylim(c(-2,3)) +
   geom_bar(stat = "identity") + xlab("Taxa") + 
   ylab(log ~ italic(bgroup("(", over("frequency of positive slopes + 1", "frequency of negative slopes + 1"), ")"))) + 
-  facet_wrap(~facet) + 
+  facet_wrap(~factor(facet, levels = c("Change in richness with increasing strata",
+                                       "Change in abundance with increasing strata"))) + 
   scale_x_discrete(labels = c("Bats", "Birds", "Small mammals", "Amphibians")) +
   scale_fill_viridis_d("Taxa") + theme_classic() + theme(legend.position = "none") 
 ggsave("analysis/figures/model results/summary_slopes_taxa_biometric.jpeg", width = 8, height = 4, units = "in", dpi = 300)
@@ -1031,7 +1003,7 @@ sum_mods_cat_list <- list(
   lm(estimate ~ continent,        data = sm_abund_slope),
   lm(estimate ~ season,           data = sm_abund_slope),
   lm(estimate ~ forest_type_iucn, data = sm_abund_slope), 
-  lm(estimate ~ continent,        data = bat_abund_slope), #16 *
+  lm(estimate ~ continent,        data = bat_abund_slope), 
   lm(estimate ~ season,           data = bat_abund_slope),
   lm(estimate ~ forest_type_iucn, data = bat_abund_slope),
   lm(estimate ~ continent,        data = bird_abund_slope),
@@ -1041,12 +1013,16 @@ sum_mods_cat_list <- list(
   lm(estimate ~ season,           data = amph_abund_slope),
   lm(estimate ~ forest_type_iucn, data = amph_abund_slope)) #24 *
 
+confint(sum_mods_cat_list[[1]])
+
 mod_cat_sum <- data.frame(
   metric = rep(c("Richness","Abundance"), each = 12),
   taxa = rep(rep(c("Small mammals", "Bats","Birds" ,"Amphibians"), each = 3), 2),
   variables = rep(rep(c("continent","season","forest_type_iucn"),4), 2),
   estimate = unlist(lapply(sum_mods_cat_list, function(x){coef(x)[2]})),
   p_value = unlist(lapply(sum_mods_cat_list, function(x){anova(x)[1,5]})))
+
+write_csv(mod_cat_sum, "analysis/tables/mod_cat_sum.csv")
 
 which(mod_cat_sum$p_value < 0.05)
 
@@ -1078,9 +1054,6 @@ emmeans::emmeans(sum_mods_cat_list[[24]], pairwise~forest_type_iucn)$contrasts
 
 
 ```
-
-
-
 
 ###   Now try to select only studies that did both abundance and richness and plot the estimates against one another
 ```{r}
