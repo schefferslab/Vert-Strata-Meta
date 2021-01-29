@@ -1123,3 +1123,48 @@ ggsave("analysis/figures/study descriptions/abundance_richness_correlation.jpeg"
 
 
 ```
+
+###   Now making table S1 which has all of the basic meta data for the study units
+```{r}
+
+#here pulling in a different set of data columns from data_joined - including the references and things like that 
+dat_table <- read_csv("data/stripped_data/final/data_joined.csv") %>%
+  dplyr::filter(taxa != "All mammals") %>%
+  dplyr::filter(taxa != "Primates") %>%
+  dplyr::mutate(weight = spatial_rank + temporal_bredth_rank + temporal_resolution_rank,
+                taxa = as.factor(taxa),
+                taxa_order = factor(taxa, levels = c("Birds","Bats","Small mammals","Amphibians")),
+                elevation = as.numeric(elevation),
+                scaled_met = as.numeric(rescale(corrected_biodiversity_metric_value, to = c(0.00001, 0.99999))),
+                link = as.factor(link), 
+                method = as.factor(method), 
+                treatment = as.factor(treatment),
+                continent = as.factor(continent),
+                biodiversity_metric = as.factor(biodiversity_metric), 
+                season = as.factor(season), 
+                forest_type_iucn = as.factor(forest_type_iucn_new),  
+                mean_strata_height_p = as.numeric(mean_strata_height_p)) %>%
+  dplyr::select(link, study_id.x, sites, year, method, taxa, continent, country,biodiversity_metric, reference, taxa_order,
+                season,forest_type_iucn, elevation, canopy_height, latitude, longitude, weight,
+                scaled_met, strata = mean_strata_height_p) 
+
+tables_S1 = unique(dat_table[,c( "reference","link", "taxa", "weight", "continent" , "latitude", "longitude", "elevation", "forest_type_iucn", "canopy_height", "season")])
+
+#### needing to add if they recorded abundance or richness
+rich_studies = as.data.frame(rich_studies) ; rich_studies$richness = "Y"
+abund_studies = as.data.frame(abund_studies) ; abund_studies$abund = "Y"
+
+metrics_studies = merge(rich_studies, abund_studies, by = "link", all = T)
+
+## heres the final merge
+full_table_S1 =  cbind(tables_S1, metrics_studies[,2:3])
+
+# rename columns
+colnames(full_table_S1) = c( "Reference","Study Unit", "Taxa", "Study Quality", "Bioregion" , "Latitude", "Longitude", "Elevation", "Forest Type", "Canopy Height", "Season", "Richness", "Abundance")
+
+# save as CSV
+
+write.csv(full_table_S1, "analysis/tables/meta_data_table.csv")
+
+
+```

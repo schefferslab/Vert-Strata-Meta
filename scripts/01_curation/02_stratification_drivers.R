@@ -479,9 +479,3 @@ ggplot(years_grouped, aes(x = decade, y = n, fill = factor(taxa, levels= c( "Pri
 ggsave("analysis/figures/studies_decades.jpeg", width = 7, height = 7.5, units = "in", dpi = 350)
 
 
-
-
-locations_forest = dat[, c("latitude", "longitude", "taxa", "continent","country", "link", "method", "elevation", "year","forest_type", "forest_type_iucn")]
-locations_forest = unique(locations_forest)
-locations_forest_np = locations_forest %>%
-  filter(taxa != "Primates")
