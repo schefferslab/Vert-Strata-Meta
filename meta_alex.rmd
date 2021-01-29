@@ -1103,16 +1103,84 @@ abund_studies_matched = taxa_link_abund_slope %>%
 
 estimates_matched = merge(rich_studies_matched, abund_studies_matched, by = "link")
 
-ggplot(estimates_matched, aes(x = estimate_abund, y = estimate_rich, color = taxa_order.x))+
-         geom_point()+
-  scale_x_continuous(limits = c(-2,2)) +
-  scale_y_continuous(limits = c(-2,2)) +
-  geom_abline(slope=1)
+ggplot(estimates_matched, aes(x = estimate_abund, y = estimate_rich))+
+  geom_point(aes(color = taxa_order.x))+
+  geom_smooth( method = "lm") +
+  geom_abline(slope=1)+
+  ylab("Richness Coefficient Estimate") + 
+  xlab("Abundance Coefficient Estimate") + 
+  coord_fixed(ratio = 1, xlim = c(-1.75, 1.75),  ylim = c(-1.75, 1.75)) +
+  theme(legend.position = "bottom",legend.title = element_blank(),
+        axis.line = element_line(),
+        axis.ticks.y = element_blank())
+
+  
 
 #bernard , peters, rodriguez , pereira = odd ones out  
 
 
 ggsave("analysis/figures/study descriptions/abundance_richness_correlation.jpeg", width = 6, height = 4, units = "in", dpi = 300)
+
+
+```
+
+###   Now making table S1 which has all of the basic meta data for the study units
+```{r}
+
+#here pulling in a different set of data columns from data_joined - including the references and things like that 
+dat_table <- read_csv("data/stripped_data/final/data_joined.csv") %>%
+  dplyr::filter(taxa != "All mammals") %>%
+  dplyr::filter(taxa != "Primates") %>%
+  dplyr::mutate(weight = spatial_rank + temporal_bredth_rank + temporal_resolution_rank,
+                taxa = as.factor(taxa),
+                taxa_order = factor(taxa, levels = c("Birds","Bats","Small mammals","Amphibians")),
+                elevation = as.numeric(elevation),
+                scaled_met = as.numeric(rescale(corrected_biodiversity_metric_value, to = c(0.00001, 0.99999))),
+                link = as.factor(link), 
+                method = as.factor(method), 
+                treatment = as.factor(treatment),
+                continent = as.factor(continent),
+                biodiversity_metric = as.factor(biodiversity_metric), 
+                season = as.factor(season), 
+                forest_type_iucn = as.factor(forest_type_iucn_new),  
+                mean_strata_height_p = as.numeric(mean_strata_height_p)) %>%
+  dplyr::select(link, study_id.x, sites, year, method, taxa, continent, country,biodiversity_metric, reference, taxa_order,
+                season,forest_type_iucn, elevation, canopy_height, latitude, longitude, weight,
+                scaled_met, strata = mean_strata_height_p) 
+
+tables_S1 = unique(dat_table[,c( "reference","link", "taxa", "weight", "continent" , "latitude", "longitude", "elevation", "forest_type_iucn", "canopy_height", "season")])
+
+#### needing to add if they recorded abundance or richness
+rich_studies = as.data.frame(rich_studies) ; rich_studies$richness = "Y"
+abund_studies = as.data.frame(abund_studies) ; abund_studies$abund = "Y"
+
+metrics_studies = merge(rich_studies, abund_studies, by = "link", all = T)
+
+## heres the final merge
+full_table_S1 =  cbind(tables_S1, metrics_studies[,2:3])
+
+# reformatting the links to look more like citations
+
+full_table_S1 <- full_table_S1 %>% 
+  mutate(link = link %>% 
+           str_replace("_"," ") %>% 
+           str_replace(" _ ",": ") %>%
+           str_replace(": 1","") %>%
+           str_replace(": 2"," (2)") %>%
+           str_replace(": 3"," (3)") %>%
+           str_replace(": 4"," (4)") %>%
+           str_replace(": 5"," (5)") %>%
+           str_replace(": 6"," (6)") %>%
+           str_replace(": 7"," (7)") %>%
+           str_replace(": 8"," (8)") %>%
+           str_replace(": 9"," (9)"))
+
+# rename columns
+colnames(full_table_S1) = c( "Reference","Study Unit", "Taxa", "Study Quality", "Bioregion" , "Latitude", "Longitude", "Elevation", "Forest Type", "Canopy Height", "Season", "Richness", "Abundance")
+
+# save as CSV
+
+write.csv(full_table_S1, "analysis/tables/meta_data_table.csv")
 
 
 ```

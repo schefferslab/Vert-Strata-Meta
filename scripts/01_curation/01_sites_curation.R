@@ -100,8 +100,25 @@ sites <- sites %>%
 
 ## ....C. Extract IUCN fores types ----------
 
-source("scripts/00_source/extract_forest_types.R")
-sites <- extract_forest_types(sites)
+## Only perform this step if there are new coordinates added to the synthesis.
+## Determine this by checking coords in `sites` compared to coords in `final_sites.csv`
+
+input_coords <- dplyr::select(sites, latitude, longitude) %>% distinct()
+output_coords <- dplyr::select(read_csv("data/stripped_data/intermediate/intermediate_sites.csv"),
+                               latitude, longitude) %>% distinct()
+
+if (any(!input_coords %in% output_coords)) {
+  source("scripts/00_source/extract_forest_types.R")
+  sites <- extract_forest_types(sites)
+} else { # If no new coords, then just pull in the IUCN forest types from the
+  # already-curated data
+  output_forest_types <- dplyr::select(read_csv("data/stripped_data/intermediate/intermediate_sites.csv"),
+                                       latitude, longitude, forest_type_iucn_new) %>% distinct()
+  
+  sites <- sites %>% 
+    left_join(output_forest_types)
+}
+
 
 ## 3. Write out files ------------
 

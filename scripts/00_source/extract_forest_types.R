@@ -64,7 +64,7 @@ extract_forest_types <- function(sites_raw) {
     ## ....Import raster into R ------------------
     
     cat("Reading in forest raster", i, "\n")
-    jung2020v002_forest <- raster(paste0("data/remote_sensing/iucn_categories/jung_2020_v002/", 
+    jung2020v002_forest <- raster(paste0("data/remote_sensing/iucn_categories/jung_2020_v002/tropical_forest_rasters/", 
                                          raster_file_df$file_name[i]))
     
     ## ....Extract site coordinates from forest raster ----------------
