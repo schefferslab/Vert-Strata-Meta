@@ -42,4 +42,4 @@ vignettes/*.pdf
 *.ovr
 *.asc
 # All IUCN layers
-data/remote_sensing/iucn_categories/
+data/remote_sensing/
