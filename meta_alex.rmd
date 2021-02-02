@@ -28,17 +28,6 @@ library(bbmle)
 
 ## Loading data
 ```{r loading data}
-read_csv("data/stripped_data/final/data_joined.csv") %>%
-  glimpse() 
-
-var_bio_met <- read_csv("data/stripped_data/final/data_joined.csv") %>% 
-  dplyr::group_by(link, biodiversity_metric) %>%
-  dplyr::summarize(var_biodiversity_metric_mean = mean(var_biodiversity_metric))
-
-sum(is.na(var_bio_met$var_biodiversity_metric_mean[var_bio_met$biodiversity_metric == "abundance"]))/nrow(var_bio_met)
-sum(is.na(var_bio_met$var_biodiversity_metric_mean[var_bio_met$biodiversity_metric == "richness"]))/nrow(var_bio_met)
-
-
 dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
   dplyr::filter(taxa != "All mammals") %>%
   dplyr::filter(taxa != "Primates") %>%
@@ -57,8 +46,8 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
                 forest_type_iucn = as.factor(forest_type_iucn_new),  
                 mean_strata_height_p = as.numeric(scale(mean_strata_height_p)),
                 canopy_height = as.numeric(scale(canopy_height)),
-                latitude = as.numeric(scale(latitude)),
-                longitude = as.numeric(scale(longitude)),
+                latitude = as.numeric(latitude),
+                longitude = as.numeric(longitude),
                 strata = as.numeric(scale(mean_strata_height_p))) %>%
   dplyr::select(link, study_id.x, method, taxa, bin_weight, weight, indepedence_weight, 
                 continent, biodiversity_metric, taxa_order, treatment, season, forest_type_iucn, 
@@ -68,11 +57,16 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
                 forest_type_iucn = recode(forest_type_iucn, "dry forest" = "dry_forest"))
 
 abund <- dat %>%
-  dplyr::filter(biodiversity_metric == "abundance")
+  dplyr::filter(biodiversity_metric == "abundance") %>%
+  mutate(latitude = scale(abs(latitude)),
+         longitude = scale(as.numeric(longitude)))
 
 rich <- dat %>% 
-  dplyr::filter(biodiversity_metric == "richness")
+  dplyr::filter(biodiversity_metric == "richness") %>%
+  mutate(latitude = scale(abs(latitude)),
+         longitude = scale(as.numeric(longitude)))
 ```
+
 
 # Modeling species richness
 ## Richness GLMs
@@ -114,13 +108,13 @@ model_formulas_ch <- list("scaled_met ~ 1 +                                     
                           
                           "scaled_met ~ strata +              taxa + continent +        canopy_height + weight + (strata | link)",
                           "scaled_met ~ strata +              taxa + latitude +         canopy_height + weight + (strata | link)",
+
                           "scaled_met ~ strata +              taxa + longitude +        canopy_height + weight + (strata | link)",
                           "scaled_met ~ strata +              taxa + season +           canopy_height + weight + (strata | link)",
                           "scaled_met ~ strata +              taxa + forest_type_iucn + canopy_height + weight + (strata | link)",
 
                           "scaled_met ~ strata +              taxa + continent +        elevation +     weight + (strata | link)",
                           "scaled_met ~ strata +              taxa + canopy_height +    elevation +     weight + (strata | link)",
-                          "scaled_met ~ strata +              taxa + latitude +         elevation +     weight + (strata | link)",
                           "scaled_met ~ strata +              taxa + longitude +        elevation +     weight + (strata | link)",
                           "scaled_met ~ strata +              taxa + season +           elevation +     weight + (strata | link)",
                           "scaled_met ~ strata +              taxa + forest_type_iucn + elevation +     weight + (strata | link)")
@@ -379,7 +373,6 @@ ggplot(rich, aes(y = predictions_fit, x = strata,
   facet_grid(cols = vars(taxa), rows = vars(continent)) + theme_bw() +
   theme_bw() + theme(legend.position = "bottom")
 ggsave("analysis/figures/model results/richness_strata_full_continent.jpeg", width = 8, height = 6, units = "in", dpi = 300)
-
 
 ggplot(taxa_link_rich_order %>% filter(facet == "Change in richness with increasing strata"), 
        aes(y = estimate, x = abs(mean_latitude), col = taxa_order)) + 
@@ -762,7 +755,7 @@ col_2_slope_rich_est_cont <- ggplot(taxa_link_slope_rich, aes(x = order, y = est
   scale_y_continuous(limits = c(-4.5, 4.5), breaks = seq(-4, 4, by = 2), expand = c(0.05, 0),
                      sec.axis = sec_axis(~., breaks = c(-2,0,2), labels = c("Decreasing"," ","Increasing"))) +
   geom_text(aes(x = order, y = if_else(sign(estimate) == 1, CI_95_upper + 1, CI_95_lower - 1), label = sig), show.legend = F) +
-  annotate("text", x = seq(56, 54), y = rep(2,3), 
+  annotate("text", x = seq(59, 57), y = rep(3,3), 
            label = c("  * = 80% CI excludes 0"," ** = 95% CI excludes 0","*** = 99% CI excludes 0"), size = 3) +
   scale_color_viridis_d("Taxa") + theme_classic() +
   theme(legend.position = "none", axis.text.x.top = element_text(size = 8),
@@ -852,7 +845,7 @@ log((taxa_link_biomet_sum$pos_sig+1)/(taxa_link_biomet_sum$neg_sig+1))
 
 ggplot(taxa_link_biomet_sum, aes(y = log((pos_sig+1)/(neg_sig+1)), x = factor(taxa_order, levels = c("Bats", "Birds", "Small mammals", "Amphibians")), 
                                  fill = factor(taxa_order, levels = c("Bats", "Birds", "Small mammals", "Amphibians")))) + 
-  geom_hline(yintercept = 0, alpha = 0.5, size = 0.8) + ylim(c(-2,3)) +
+  geom_hline(yintercept = 0, alpha = 0.5, size = 0.8) + ylim(c(-2,2)) +
   geom_bar(stat = "identity") + xlab("Taxa") + 
   ylab(log ~ italic(bgroup("(", over("frequency of positive slopes + 1", "frequency of negative slopes + 1"), ")"))) + 
   facet_wrap(~factor(facet, levels = c("Change in richness with increasing strata",
@@ -866,7 +859,7 @@ ggsave("analysis/figures/model results/summary_slopes_taxa_biometric.jpeg", widt
 ## Analyzing the model coefficients for continuous variables
 ```{r}
 
-sm_rich_slope <- subset(taxa_link_rich_slope, taxa_order == "Small mammals")
+sm_rich_slope <- subset(taxa_link_rich_slope, taxa_order == "Small mammals") # taxa_link_rich_slope not found... 
 bat_rich_slope <- subset(taxa_link_rich_slope, taxa_order == "Bats")
 bird_rich_slope <- subset(taxa_link_rich_slope, taxa_order == "Birds")
 amph_rich_slope <- subset(taxa_link_rich_slope, taxa_order == "Amphibians")
@@ -1121,7 +1114,10 @@ dat_table <- read_csv("data/stripped_data/final/data_joined.csv") %>%
                 season,forest_type_iucn, elevation, canopy_height, latitude, longitude, weight,
                 scaled_met, strata = mean_strata_height_p) 
 
-tables_S1 = unique(dat_table[,c( "reference","link", "taxa", "weight", "continent" , "latitude", "longitude", "elevation", "forest_type_iucn", "canopy_height", "season")])
+tables_S1 = unique(dat_table[,c( "reference","link", "taxa", 
+                                 "weight","continent" ,"latitude", 
+                                 "longitude","elevation", 
+                                 "forest_type_iucn", "canopy_height", "season")])
 
 #### needing to add if they recorded abundance or richness
 rich_studies = as.data.frame(rich_studies) ; rich_studies$richness = "Y"
@@ -1149,7 +1145,11 @@ full_table_S1 <- full_table_S1 %>%
            str_replace(": 9"," (9)"))
 
 # rename columns
-colnames(full_table_S1) = c( "Reference","Study Unit", "Taxa", "Study Quality", "Bioregion" , "Latitude", "Longitude", "Elevation", "Forest Type", "Canopy Height", "Season", "Richness", "Abundance")
+colnames(full_table_S1) = c( "Reference","Study Unit", "Taxa", 
+                             "Study Quality", "Bioregion" , 
+                             "Latitude", "Longitude", "Elevation", 
+                             "Forest Type", "Canopy Height", 
+                             "Season", "Richness", "Abundance")
 
 # save as CSV
 
