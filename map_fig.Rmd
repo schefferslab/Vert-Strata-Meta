@@ -1,0 +1,90 @@
+---
+title: "map_fig"
+author: "Alex Baecher & Ed Basham"
+date: "2/2/2021"
+output: html_document
+---
+
+```{r libraries}
+library(tidyverse)
+library(elevatr)
+library(terra)
+library(ggthemes)
+library(raster)
+library(rgeos)
+library(smoothr)
+library(rnaturalearth)
+library(rnaturalearthdata)
+```
+
+```{r}
+ne_sp <- ne_countries(scale = "medium", returnclass = "sf") %>%
+  drop_crumbs(units::set_units(8000, km^2)) %>%
+  subset(!sov_a3 == "ATA")
+
+proj4string <- crs(ne_sp)
+
+gdem <- raster("data/demera5.tif") %>%
+  crop(ne_sp) %>%
+  mask(ne_sp)
+
+crs(gdem) <- proj4string
+```
+
+
+```{r}
+dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
+  dplyr::filter(taxa != "All mammals") %>%
+  dplyr::filter(taxa != "Primates") %>%
+  dplyr::mutate(taxa = as.factor(taxa),
+                taxa_order = factor(taxa, levels = c("Birds","Bats","Small mammals","Amphibians")),
+                elevation = as.numeric(scale(elevation)),
+                scaled_met = as.numeric(rescale(corrected_biodiversity_metric_value, to = c(1e-05, 0.99999))),
+                link = as.factor(link), 
+                method = as.factor(method), 
+                treatment = as.factor(treatment),
+                continent = as.factor(continent),
+                biodiversity_metric = as.factor(biodiversity_metric), 
+                season = as.factor(season), 
+                forest_type_iucn = as.factor(recode(forest_type_iucn_new, "dry forest" = "dry_forest")),
+                mean_strata_height_p = as.numeric(scale(mean_strata_height_p)),
+                canopy_height = as.numeric(scale(canopy_height)),
+                latitude = as.numeric(latitude),
+                longitude = as.numeric(longitude),
+                strata = as.numeric(scale(mean_strata_height_p))) %>%
+  dplyr::select(link, method, taxa, continent, biodiversity_metric, season, forest_type_iucn, 
+                elevation, canopy_height, latitude, longitude, scaled_met, strata) %>%
+  dplyr::mutate(forest_type_iucn = recode(forest_type_iucn, "dry forest" = "dry_forest"))
+
+dat_link <- dat %>%
+  dplyr::group_by(link, taxa, continent) %>%
+  dplyr::summarize(elevation = as.numeric(mean(elevation)),
+            latitude = as.numeric(mean(latitude)),
+            longitude = as.numeric(mean(longitude)),
+            canopy_height = as.numeric(mean(canopy_height)))
+
+dat_link_spdf <- SpatialPointsDataFrame(coords = cbind(dat_link$longitude,dat_link$latitude), 
+                                        data = dat_link,
+                                        proj4string = proj4string)
+```
+
+```{r}
+plot(gdem); points(dat_link$latitude~dat_link$longitude)
+
+ggplot() + geom_raster(data = as.data.frame(gdem, xy = T), aes(x = x, y = y, fill = demera5)) + 
+  geom_sf(data = ne_sp, col = "grey40", fill = NA, size = 1) +
+#  geom_point(data = dat_link, aes(x = longitude, y = longitude)) +
+  scale_fill_viridis_c(na.value = "white") + 
+  coord_quickmap() +
+  theme_map() + theme(legend.position = "bottom") 
+
+ggplot() + geom_point(data = dat_link, aes(x = longitude, y = longitude)) +
+  scale_fill_viridis_c(na.value = "white") + 
+  coord_quickmap() +
+  theme_map() + theme(legend.position = "bottom") 
+
+plot(latitude~longitude, data = dat_link)
+
+```
+
+
