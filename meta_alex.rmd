@@ -1023,9 +1023,15 @@ emmeans::emmeans(sum_mods_cat_list[[sig_mods[1]]], pairwise~"continent")$contras
 
 emmeans::emmeans(sum_mods_cat_list[[sig_mods[2]]],  pairwise~"season")$contrasts
  # contrast                estimate    SE df t.ratio p.value
+<<<<<<< HEAD
+ # Dry - Sampling combined    1.099 0.375 26  2.929  0.0185          # sampling combined in less upwardly stratified than data from the dry season 
+ # Dry - Wet                 -0.364 0.418 26 -0.871  0.6633 
+ # Sampling combined - Wet   -1.463 0.317 26 -4.611  0.0003          # sampling combined in less upwardly stratified than data from the wet season 
+=======
 #  Dry - Sampling combined    1.268 0.413 26  3.071  0.0133 
 #  Dry - Wet                 -0.386 0.460 26 -0.840  0.6819 
 #  Sampling combined - Wet   -1.655 0.349 26 -4.740  0.0002 
+>>>>>>> 1a99e26e02d7257d9e65cb78d9b8dfeb0e468be2
 
 
 emmeans::emmeans(sum_mods_cat_list[[sig_mods[3]]],  pairwise~"forest_type_iucn")$contrasts
@@ -1097,7 +1103,6 @@ ggsave("analysis/figures/study descriptions/abundance_richness_correlation.jpeg"
 
 ###   Now making table S1 which has all of the basic meta data for the study units
 ```{r}
-
 #here pulling in a different set of data columns from data_joined - including the references and things like that 
 dat_table <- read_csv("data/stripped_data/final/data_joined.csv") %>%
   dplyr::filter(taxa != "All mammals") %>%
@@ -1120,6 +1125,9 @@ dat_table <- read_csv("data/stripped_data/final/data_joined.csv") %>%
                 scaled_met, strata = mean_strata_height_p) 
 
 <<<<<<< HEAD
+tables_S1 = unique(dat_table[,c( "reference","link", "taxa", "method", "weight", "continent" ,"country", "latitude", "longitude", "elevation", "forest_type_iucn", "canopy_height", "season")])
+=======
+<<<<<<< HEAD
 tables_S1 = unique(dat_table[,c( "reference","link", "taxa", 
                                  "weight","continent" ,"latitude", 
                                  "longitude","elevation", 
@@ -1127,6 +1135,7 @@ tables_S1 = unique(dat_table[,c( "reference","link", "taxa",
 =======
 tables_S1 = unique(dat_table[,c( "reference","link", "taxa", "method", "weight", "continent" , "latitude", "longitude", "elevation", "forest_type_iucn", "canopy_height", "season")])
 >>>>>>> cd2f14f4ce3109a711342c79877fee1456317f14
+>>>>>>> 1a99e26e02d7257d9e65cb78d9b8dfeb0e468be2
 
 #### needing to add if they recorded abundance or richness
 rich_studies = as.data.frame(rich_studies) ; rich_studies$richness = "Y"
@@ -1135,7 +1144,7 @@ abund_studies = as.data.frame(abund_studies) ; abund_studies$abund = "Y"
 metrics_studies = merge(rich_studies, abund_studies, by = "link", all = T)
 
 ## heres the final merge
-full_table_S1 =  cbind(tables_S1, metrics_studies[,2:3])
+full_table_S1 =  merge(tables_S1, metrics_studies, by = "link")
 
 # reformatting the links to look more like citations
 
@@ -1155,6 +1164,9 @@ full_table_S1 <- full_table_S1 %>%
 
 # rename columns
 <<<<<<< HEAD
+colnames(full_table_S1) = c( "Study Unit","Reference", "Taxa", "Method", "Study Quality", "Bioregion" ,"Country", "Latitude", "Longitude", "Elevation", "Forest Type", "Canopy Height", "Season", "Richness", "Abundance")
+=======
+<<<<<<< HEAD
 colnames(full_table_S1) = c( "Reference","Study Unit", "Taxa", 
                              "Study Quality", "Bioregion" , 
                              "Latitude", "Longitude", "Elevation", 
@@ -1163,10 +1175,57 @@ colnames(full_table_S1) = c( "Reference","Study Unit", "Taxa",
 =======
 colnames(full_table_S1) = c( "Reference","Study Unit", "Taxa", "Method", "Study Quality", "Bioregion" , "Latitude", "Longitude", "Elevation", "Forest Type", "Canopy Height", "Season", "Richness", "Abundance")
 >>>>>>> cd2f14f4ce3109a711342c79877fee1456317f14
+>>>>>>> 1a99e26e02d7257d9e65cb78d9b8dfeb0e468be2
 
 # save as CSV
 
 write.csv(full_table_S1, "analysis/tables/meta_data_table.csv")
+
+
+```
+
+
+###   making summary statistics for the 
+```{r}
+
+
+
+
+#here pulling in a different set of data columns from data_joined - including the references and things like that 
+summary_dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
+  dplyr::filter(taxa != "All mammals") %>%
+  dplyr::filter(taxa != "Primates") %>%
+  dplyr::mutate(weight = spatial_rank + temporal_bredth_rank + temporal_resolution_rank,
+                taxa = as.factor(taxa),
+                taxa_order = factor(taxa, levels = c("Birds","Bats","Small mammals","Amphibians")),
+                elevation = as.numeric(scale(elevation)),
+                scaled_met = as.numeric(rescale(corrected_biodiversity_metric_value, to = c(1e-05, 0.99999))),
+                link = as.factor(link), 
+                method = as.factor(method), 
+                bin_weight = bin_weight/mean(bin_weight),
+                treatment = as.factor(treatment),
+                continent = as.factor(continent),
+                biodiversity_metric = as.factor(biodiversity_metric), 
+                season = as.factor(season), 
+                forest_type_iucn = as.factor(forest_type_iucn_new),  
+                mean_strata_height_p = as.numeric(mean_strata_height_p),
+                canopy_height = as.numeric(canopy_height),
+                latitude = as.numeric(latitude),
+                longitude = as.numeric(longitude),
+                strata = as.numeric(mean_strata_height_p)) %>%
+  dplyr::select(link, study_id.x, method, taxa, bin_weight, weight, indepedence_weight, 
+                continent, biodiversity_metric, taxa_order, treatment, season, forest_type_iucn, 
+                elevation, canopy_height, latitude, longitude, scaled_met, strata) %>%
+  dplyr::mutate(weight = as.numeric(scale(weight)*indepedence_weight),
+                forest_type_iucn = recode(forest_type_iucn, "dry forest" = "dry_forest"))
+
+
+# rename columns
+#colnames(full_table_S1) = c( "Study Unit","Reference", "Taxa", "Method", "Study Quality", "Bioregion" ,"Country", "Latitude", "Longitude", "Elevation", "Forest Type", "Canopy Height", "Season", "Richness", "Abundance")
+
+# save as CSV
+
+#write.csv(full_table_S1, "analysis/tables/meta_data_table.csv")
 
 
 ```
