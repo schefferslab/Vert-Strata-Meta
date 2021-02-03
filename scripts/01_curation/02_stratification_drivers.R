@@ -113,7 +113,7 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
                 forest_type = as.factor(forest_type),  
                 mean_strata_height_p = as.numeric(mean_strata_height_p)) %>%
   dplyr::select(link, study_id.x,year, method, taxa, continent,country, biodiversity_metric, taxa_order,
-                treatment, season,forest_type, forest_type_iucn, elevation, canopy_height, latitude, longitude, 
+                treatment, season, forest_type, forest_type_iucn_new, elevation, canopy_height, latitude, longitude, 
                 scaled_met, strata = mean_strata_height_p) 
 
 #     unique(study.id)   from data including abundance and richness
@@ -166,8 +166,8 @@ triple_groups$investigated_percent = (triple_groups$n.investigated / triple_grou
 ##   justify inclusions 
 ##
 
-specifics = triple_groups %>% filter(factors %in% c("food", "structure","climate", "morphology", "shelter", "species_interactions", "sex","age",  "seasonality", "diurnality", "light")
-                                     )
+specifics = triple_groups %>% filter(factors %in% c("food", "structure","climate", "morphology", "shelter", 
+                                                    "species_interactions", "sex","age",  "seasonality", "diurnality", "light"))
 
 specifics_tall <- specifics %>% gather(key = Level, value = Value, theorised_percent:investigated_percent)
 
@@ -229,11 +229,11 @@ f_labels <- data.frame(taxa = c("Amphibians", "Bats", "Birds", "Small mammals"),
 
 ggplot(specifics_tall_select, aes(x = factors, y = Value, fill = Level)) + 
   geom_col(position = "identity") +
-  geom_text(x = 10, y = 80, aes(label = label, fill = NULL, size = 1), data = f_labels, show.legend = FALSE) +
-  geom_text(x = 10, y = 80, aes(label = label, fill = NULL, size = 1), data = f_labels, show.legend = FALSE) +
+  # geom_text(x = 10, y = 80, aes(label = label, fill = NULL, size = 1), data = f_labels, show.legend = FALSE) +
+  # geom_text(x = 10, y = 80, aes(label = label, fill = NULL, size = 1), data = f_labels, show.legend = FALSE) +
   facet_wrap(~taxa, ncol = 1) +
   ylab("Percent of Studies") + xlab("Stratification Factors") +
-  scale_fill_brewer(palette = "Set1", labels = c("Investigated", "Referenced"), guide = guide_legend(reverse=TRUE)) +
+  scale_fill_brewer(palette = "Greys", labels = c("Investigated", "Referenced"), guide = guide_legend(reverse=TRUE)) +
   ######  scale x discrete labels will need to be changed if the plot changes is updated!    or it will show the wrong labels because it is overriting thrm
   scale_x_discrete(labels=c("Habitat Structure", "Food / Foraging","Climate", "Species Interactions","Morphology", "Seasonality", "Nesting / Roosting","light",  "Diurnality",  "Age", "Sex")) +
   theme(legend.position = "top", legend.title = element_blank(),

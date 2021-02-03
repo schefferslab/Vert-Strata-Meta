@@ -128,3 +128,4 @@ if (exists("global_canopy_height") & !file.exists("data/remote_sensing/canopy_he
 }
 
 write_csv(sites, "data/stripped_data/intermediate/intermediate_sites.csv")
+

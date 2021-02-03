@@ -4,41 +4,60 @@ author: "Alex Baecher & Ed Basham"
 date: "2/2/2021"
 output: html_document
 ---
+# Load libraries
+```{r Load libraries}
+devtools::source_url("https://raw.githubusercontent.com/slamander/load_packages/main/prepare_libraries.R", sha1 = "609d531a319fcd855804de6bdcfe737cd6515332")
 
-```{r libraries}
-library(tidyverse)
-library(elevatr)
-library(terra)
-library(ggthemes)
-library(raster)
-library(rgeos)
-library(smoothr)
-library(rnaturalearth)
-library(rnaturalearthdata)
+packages <- c("tidyverse",
+              "ggthemes",
+              "RColorBrewer",
+              "scales",
+              "raster",
+              "rgeos",
+              "unikn",
+              "ggnewscale",
+              "sf",
+              "viridis",
+              "wesanderson",
+              "smoothr",
+              "rnaturalearth",
+              "rnaturalearthdata")
+
+prepare_libraries(packages)
 ```
 
-```{r}
-ne_sp <- ne_countries(scale = "medium", returnclass = "sf") %>%
-  drop_crumbs(units::set_units(8000, km^2)) %>%
-  subset(!sov_a3 == "ATA")
+# Get global shapefile and DEM
+```{r Get global shapefile and DEM}
+islands <- 8000
+
+ne_sf <- ne_countries(scale = "medium", returnclass = "sf") %>%
+  subset(!sov_a3 == "ATA") %>%
+  drop_crumbs(units::set_units(islands, km^2))
+
+ne_sp <- ne_countries(scale = "medium", returnclass = "sp") %>%
+  subset(!sov_a3 == "ATA") %>%
+  drop_crumbs(units::set_units(islands, km^2)); plot(ne_sp)
 
 proj4string <- crs(ne_sp)
 
 gdem <- raster("data/demera5.tif") %>%
-  crop(ne_sp) %>%
-  mask(ne_sp)
+  raster::crop(ne_sp) %>%
+  raster::mask(ne_sp) 
 
-crs(gdem) <- proj4string
+gdem_sm <- raster("data/demera5.tif") %>%
+  raster::disaggregate(4, method='bilinear') %>%
+  raster::crop(ne_sp) %>%
+  raster::mask(ne_sp)
 ```
 
-
-```{r}
+# Read in data
+```{r Read in data}
 dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
   dplyr::filter(taxa != "All mammals") %>%
   dplyr::filter(taxa != "Primates") %>%
   dplyr::mutate(taxa = as.factor(taxa),
-                taxa_order = factor(taxa, levels = c("Birds","Bats","Small mammals","Amphibians")),
-                elevation = as.numeric(scale(elevation)),
+                taxa_order = factor(taxa, levels = c("Bats","Birds","Small mammals","Amphibians")),
+                elevation = as.numeric(elevation),
                 scaled_met = as.numeric(rescale(corrected_biodiversity_metric_value, to = c(1e-05, 0.99999))),
                 link = as.factor(link), 
                 method = as.factor(method), 
@@ -52,39 +71,99 @@ dat <- read_csv("data/stripped_data/final/data_joined.csv") %>%
                 latitude = as.numeric(latitude),
                 longitude = as.numeric(longitude),
                 strata = as.numeric(scale(mean_strata_height_p))) %>%
-  dplyr::select(link, method, taxa, continent, biodiversity_metric, season, forest_type_iucn, 
-                elevation, canopy_height, latitude, longitude, scaled_met, strata) %>%
+  dplyr::select(link, method, taxa_order, continent, biodiversity_metric, season, forest_type_iucn, 
+                elevation, canopy_height, latitude, longitude, scaled_met, strata, year) %>%
   dplyr::mutate(forest_type_iucn = recode(forest_type_iucn, "dry forest" = "dry_forest"))
 
 dat_link <- dat %>%
-  dplyr::group_by(link, taxa, continent) %>%
+  dplyr::group_by(link, taxa_order, continent, year) %>%
   dplyr::summarize(elevation = as.numeric(mean(elevation)),
             latitude = as.numeric(mean(latitude)),
             longitude = as.numeric(mean(longitude)),
-            canopy_height = as.numeric(mean(canopy_height)))
-
-dat_link_spdf <- SpatialPointsDataFrame(coords = cbind(dat_link$longitude,dat_link$latitude), 
-                                        data = dat_link,
-                                        proj4string = proj4string)
+            canopy_height = as.numeric(mean(canopy_height)),
+            year = mean(year)) %>%
+  dplyr::mutate(decade = (year %/% 10)*10)
 ```
 
-```{r}
-plot(gdem); points(dat_link$latitude~dat_link$longitude)
-
-ggplot() + geom_raster(data = as.data.frame(gdem, xy = T), aes(x = x, y = y, fill = demera5)) + 
-  geom_sf(data = ne_sp, col = "grey40", fill = NA, size = 1) +
-#  geom_point(data = dat_link, aes(x = longitude, y = longitude)) +
-  scale_fill_viridis_c(na.value = "white") + 
-  coord_quickmap() +
-  theme_map() + theme(legend.position = "bottom") 
-
-ggplot() + geom_point(data = dat_link, aes(x = longitude, y = longitude)) +
-  scale_fill_viridis_c(na.value = "white") + 
-  coord_quickmap() +
-  theme_map() + theme(legend.position = "bottom") 
-
-plot(latitude~longitude, data = dat_link)
+# Create base plot
+```{r Create base plot}
+{ggplot() + 
+    geom_raster(data = as.data.frame(gdem, xy = T), aes(x = x, y = y, fill = demera5)) + 
+    scale_fill_gradientn("Elevation (m)", colors = rev(wes_palette(name = "Royal2", n = 100, type = "continuous")), na.value = "#CCEEF9") + 
+    geom_sf(data = ne_sf, col = "grey20", fill = NA, size = 0.2) +
+    geom_hline(yintercept = c(-30,30), col = "grey60", linetype = "longdash") +
+    new_scale_fill() +
+    geom_point(data = dat_link, aes(x = longitude, y = latitude, fill = taxa_order), size = 2, shape = 21, stroke = 0.5, col = "white") +
+    scale_fill_manual("Taxa", values = viridis(4, option = "viridis")) +
+    theme_map() + theme(legend.position = c(0.5,0),
+                        legend.direction = "horizontal",
+                        legend.background = element_rect(fill="#CCEEF9"),
+                        legend.key=element_blank(),
+                        plot.background = element_rect(fill="#CCEEF9"));
+ggsave("analysis/figures/study descriptions/rmap_royal2_rev_#CCEEF9_point.jpeg", width = 15, height = 6.07, units = "in", dpi = 600)}
 
 ```
 
+# Create inset plots
+```{r Create inset plots}
+dat_link_study <- dat %>%
+  dplyr::group_by(link, biodiversity_metric, taxa_order, continent, year, method) %>%
+  dplyr::summarize(elevation = as.numeric(mean(elevation)),
+            latitude = as.numeric(mean(latitude)),
+            longitude = as.numeric(mean(longitude)),
+            canopy_height = as.numeric(mean(canopy_height)),
+            year = mean(year)) %>%
+  dplyr::mutate(decade = (year %/% 10)*10)
+
+{ggplot(dat_link_study) + 
+  geom_boxplot(aes(x = taxa_order, y = elevation, fill = taxa_order), size = 1) + 
+  ylab("Elevation (m)") + xlab("Taxa") +
+  scale_fill_viridis_d() +
+  theme_classic() +
+  theme(legend.position = "none",
+        panel.border = element_rect(linetype = "solid", colour = "black", fill = NA, size=1),
+        axis.title.x = element_text(face = "bold", vjust = -0.5, size = rel(1.5)),
+        axis.title.y = element_text(face = "bold", vjust = 2.5, size = rel(1.5)),
+        plot.margin=unit(c(0.5,0.5,0.5,0.5),"cm")) 
+ggsave("analysis/figures/study descriptions/elevation_taxa.jpeg", width = 4.5, height = 4, units = "in", dpi = 300)}
+
+{ggplot(dat_link_study) + 
+  geom_bar(aes(x = factor(decade), fill = taxa_order), size = 1) + 
+  ylab("# of study units") + xlab("Decade") + ylim(0,50) +
+  scale_fill_viridis_d() +
+  theme_classic() +
+  theme(legend.position = "none",
+        panel.border = element_rect(linetype = "solid", colour = "black", fill = NA, size=1),
+        axis.title.x = element_text(face = "bold", vjust = -0.5, size = rel(1.5)),
+        axis.title.y = element_text(face = "bold", vjust = 2.5, size = rel(1.5)),
+        plot.margin=unit(c(0.5,0.5,0.5,0.5),"cm")) 
+ggsave("analysis/figures/study descriptions/decade_taxa.jpeg", width = 5, height = 3, units = "in", dpi = 300)}
+
+{ggplot(dat_link_study) + 
+  geom_bar(aes(x = biodiversity_metric, fill = taxa_order), size = 1) + 
+  ylab("# of study units") + xlab("Biodiversity metric") +
+  scale_fill_viridis_d() +
+  theme_classic() +
+  theme(legend.position = "none",
+        panel.border = element_rect(linetype = "solid", colour = "black", fill = NA, size=1),
+        axis.title.x = element_text(face = "bold", vjust = -0.5, size = rel(1.5)),
+        axis.title.y = element_text(face = "bold", vjust = 2.5, size = rel(1.5)),
+        plot.margin=unit(c(0.5,0.5,0.5,0.5),"cm")) 
+ggsave("analysis/figures/study descriptions/metric_taxa.jpeg", width = 3, height = 3, units = "in", dpi = 300)}
+
+{ggplot(dat_link_study) + 
+  geom_bar(aes(x = biodiversity_metric, fill = taxa_order), size = 1) + 
+  ylab("# of study units") + xlab("Biodiversity metric") +
+  scale_fill_viridis_d("Taxa") +
+  theme_classic() +
+  theme(panel.border = element_rect(linetype = "solid", colour = "black", fill = NA, size=1),
+        axis.title.x = element_text(face = "bold", vjust = -0.5, size = rel(1.5)),
+        axis.title.y = element_text(face = "bold", vjust = 2.5, size = rel(1.5)),
+        plot.margin=unit(c(0.5,0.5,0.5,0.5),"cm"),
+        legend.background = element_rect(fill="#CCEEF9"),
+        legend.key=element_blank(),
+        plot.background = element_rect(fill="#CCEEF9")) 
+ggsave("analysis/figures/study descriptions/metric_taxa_legend.jpeg", width = 4, height = 3, units = "in", dpi = 300)}
+
+```
 
