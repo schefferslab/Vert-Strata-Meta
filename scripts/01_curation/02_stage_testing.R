@@ -189,6 +189,6 @@ ggplot(data = stages_coef) +
                 position = position_dodge2(width = 0.5, reverse = T), width = 0.5, size = 0.5) + 
   scale_color_viridis_d("Data Stages") + theme_classic() + 
   theme(legend.position = "bottom")
-ggsave("analysis/figures/model results/coef_stages.jpeg", width = 6, height = 8, units = "in", dpi = 300)
+ggsave("analysis/figures/model results/coef_stages.jpeg", width = 6, height = 8, units = "in", dpi = 600)
 
 

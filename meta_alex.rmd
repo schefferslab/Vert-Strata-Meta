@@ -1070,9 +1070,6 @@ emmeans::emmeans(sum_mods_cat_list[[sig_mods[6]]], pairwise~"forest_type_iucn")$
  # moist_lowland_forest - moist_montane_forest    1.411 0.421 25  3.352  0.0070  
 
 # Bird abundance in the moist lowland forest is more upwardly stratified than moist montane forest
-
-
-
 ```
 
 ###   Now try to select only studies that did both abundance and richness and plot the estimates against one another
