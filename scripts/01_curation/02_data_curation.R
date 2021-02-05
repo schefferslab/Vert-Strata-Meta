@@ -154,7 +154,7 @@ rich_abund_join <- site_plot_corrected %>%
            # highest richness...
            ifelse(biodiversity_metric == "richness" & complete.cases(max_richness),
                   # make corrected biodiverse value a proportion of this max richness
-                    corrected_biodiversity_metric_value / max_richness * 100,
+                    corrected_biodiversity_metric_value / max_richness,
                   # Otherwise keep as-is
                   corrected_biodiversity_metric_value)) %>% 
   # Do the same thing for abundance
@@ -163,7 +163,7 @@ rich_abund_join <- site_plot_corrected %>%
            # highest richness...
            ifelse(biodiversity_metric == "abundance" & complete.cases(max_abundance),
                   # make corrected biodiverse value a proportion of this max richness
-                    corrected_biodiversity_metric_value / max_abundance * 100,
+                    corrected_biodiversity_metric_value / max_abundance,
                   # Otherwise keep as-is
                   corrected_biodiversity_metric_value))
   
@@ -221,6 +221,10 @@ data_joined = data_joined %>%
   filter(study_id.x != "Derlindati_2005")
 
 data_joined = rbind(data_joined, derlin)
+
+## scaling biodiversity metrics to remove 0's and 1's 
+data_joined$corrected_biodiversity_metric_value[data_joined$corrected_biodiversity_metric_value == 0] <- 1e-05
+data_joined$corrected_biodiversity_metric_value[data_joined$corrected_biodiversity_metric_value == 1] <- 0.99999
 
 
 ## ....E. Unjoin for writing out ---------------
