@@ -201,6 +201,28 @@ if (nrow(foo <- filter(data_joined, canopy_height > 70)) > 0) {
 # }
 
 
+###########   Averaging Derlindati_2005
+
+
+derlin <- data_joined[data_joined$link %like% "Derlindati", ]
+
+derlin$corrected_biodiversity_metric_value[1] = (derlin$corrected_biodiversity_metric_value[1] + derlin$corrected_biodiversity_metric_value[5]) / 2
+derlin$corrected_biodiversity_metric_value[2] = (derlin$corrected_biodiversity_metric_value[2] + derlin$corrected_biodiversity_metric_value[8]) / 2
+derlin$corrected_biodiversity_metric_value[3] = (derlin$corrected_biodiversity_metric_value[3] + derlin$corrected_biodiversity_metric_value[7]) / 2
+derlin$corrected_biodiversity_metric_value[4] = (derlin$corrected_biodiversity_metric_value[4] + derlin$corrected_biodiversity_metric_value[6]) / 2
+
+derlin = derlin[1:4,]
+derlin$method = "Mist nets + Human Observation"
+
+derlin$link = "Derlindati_2005"
+derlin$linking_id = 1
+derlin$sites = 1
+data_joined = data_joined %>%
+  filter(study_id.x != "Derlindati_2005")
+
+data_joined = rbind(data_joined, derlin)
+
+
 ## ....E. Unjoin for writing out ---------------
 
 plots <- data_joined %>%

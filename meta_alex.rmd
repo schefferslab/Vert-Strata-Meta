@@ -1037,9 +1037,21 @@ emmeans::emmeans(sum_mods_cat_list[[sig_mods[1]]], pairwise~"continent")$contras
 
 emmeans::emmeans(sum_mods_cat_list[[sig_mods[2]]],  pairwise~"season")$contrasts
  # contrast                estimate    SE df t.ratio p.value
+
+
+ # Dry - Sampling combined    1.099 0.375 26  2.929  0.0185          # sampling combined in less upwardly stratified than data from the dry season 
+ # Dry - Wet                 -0.364 0.418 26 -0.871  0.6633 
+ # Sampling combined - Wet   -1.463 0.317 26 -4.611  0.0003          # sampling combined in less upwardly stratified than data from the wet season 
+
 #  Dry - Sampling combined    1.268 0.413 26  3.071  0.0133 
 #  Dry - Wet                 -0.386 0.460 26 -0.840  0.6819 
 #  Sampling combined - Wet   -1.655 0.349 26 -4.740  0.0002 
+
+
+#  Dry - Sampling combined    1.268 0.413 26  3.071  0.0133 
+#  Dry - Wet                 -0.386 0.460 26 -0.840  0.6819 
+#  Sampling combined - Wet   -1.655 0.349 26 -4.740  0.0002 
+
 
 
 emmeans::emmeans(sum_mods_cat_list[[sig_mods[3]]],  pairwise~"forest_type_iucn")$contrasts
@@ -1134,12 +1146,17 @@ dat_table <- read_csv("data/stripped_data/final/data_joined.csv") %>%
                 scaled_met, strata = mean_strata_height_p) 
 
 
+
+tables_S1 = unique(dat_table[,c( "reference","link", "taxa", "method", "weight", "continent" ,"country", "latitude", "longitude", "elevation", "forest_type_iucn", "canopy_height", "season")])
+
+
 tables_S1 = unique(dat_table[,c( "reference","link", "taxa", 
                                  "weight","continent" ,"latitude", 
                                  "longitude","elevation", 
                                  "forest_type_iucn", "canopy_height", "season")])
 
 tables_S1 = unique(dat_table[,c( "reference","link", "taxa", "method", "weight", "continent" , "latitude", "longitude", "elevation", "forest_type_iucn", "canopy_height", "season")])
+
 
 #### needing to add if they recorded abundance or richness
 rich_studies = as.data.frame(rich_studies) ; rich_studies$richness = "Y"
@@ -1167,15 +1184,19 @@ full_table_S1 <- full_table_S1 %>%
            str_replace(": 9"," (9)"))
 
 # rename columns
-<<<<<<< HEAD
+
+
+colnames(full_table_S1) = c( "Study Unit","Reference", "Taxa", "Method", "Study Quality", "Bioregion" ,"Country", "Latitude", "Longitude", "Elevation", "Forest Type", "Canopy Height", "Season", "Richness", "Abundance")
+
+
 colnames(full_table_S1) = c( "Reference","Study Unit", "Taxa", 
                              "Study Quality", "Bioregion" , 
                              "Latitude", "Longitude", "Elevation", 
                              "Forest Type", "Canopy Height", 
                              "Season", "Richness", "Abundance")
-=======
+
 colnames(full_table_S1) = c( "Reference","Study Unit", "Taxa", "Method", "Study Quality", "Bioregion" , "Latitude", "Longitude", "Elevation", "Forest Type", "Canopy Height", "Season", "Richness", "Abundance")
->>>>>>> cd2f14f4ce3109a711342c79877fee1456317f14
+
 
 # save as CSV
 
