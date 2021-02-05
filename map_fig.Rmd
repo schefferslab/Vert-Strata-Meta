@@ -44,10 +44,6 @@ gdem <- raster("data/demera5.tif") %>%
   raster::crop(ne_sp) %>%
   raster::mask(ne_sp) 
 
-gdem_sm <- raster("data/demera5.tif") %>%
-  raster::disaggregate(4, method='bilinear') %>%
-  raster::crop(ne_sp) %>%
-  raster::mask(ne_sp)
 ```
 
 # Read in data
@@ -101,6 +97,78 @@ dat_link <- dat %>%
                         legend.key=element_blank(),
                         plot.background = element_rect(fill="#CCEEF9"));
 ggsave("analysis/figures/study descriptions/rmap_royal2_rev_#CCEEF9_point.jpeg", width = 15, height = 6.07, units = "in", dpi = 600)}
+
+
+
+{ggplot() + 
+    geom_raster(data = as.data.frame(gdem, xy = T), aes(x = x, y = y, fill = demera5)) + 
+    scale_fill_gradientn("Elevation (m)", colors = rev(grey.colors(256)), na.value = "white") + 
+    geom_sf(data = ne_sf, col = "grey20", fill = NA, size = 0.2) +
+    geom_hline(yintercept = c(-30,30), col = "grey60", linetype = "longdash") +
+    new_scale_fill() +
+    geom_point(data = dat_link, aes(x = longitude, y = latitude, fill = taxa_order), size = 2, shape = 21, stroke = 0.5, col = "grey20") +
+    scale_fill_manual("Taxa", values = viridis(4, option = "viridis")) +
+    theme_map() + theme(legend.position = c(0.5,0),
+                        legend.direction = "horizontal",
+                        legend.key=element_blank());
+ggsave("analysis/figures/study descriptions/rmap_royal2_rev_grey_point.jpeg", width = 15, height = 6.07, units = "in", dpi = 600)}
+
+```
+
+```{r}
+central_america <- st_crop(ne_sf, ymin = 5, ymax = 15, xmin = -88, xmax = -75) %>%
+  as("Spatial")
+
+ca_dem <- gdem %>%
+  raster::crop(central_america) %>%
+  raster::mask(central_america)
+
+coords <- dat_link %>%
+  ungroup() %>%
+  dplyr::select(latitude, longitude)
+
+coordinates(coords) <- ~ longitude + latitude
+crs(coords) <- proj4string
+
+coords_ca <- coords[central_america]@coords %>%
+  as.data.frame()
+
+panama <- ne_sf %>%
+  filter(name == "Panama") %>%
+  as("Spatial")
+
+coordinates(coords_ca) <- ~ longitude + latitude
+crs(coords_ca) <- proj4string
+
+coords_pan <- coords_ca[panama]@coords %>%
+  as.data.frame()
+
+dat_link_ca <- dat_link[row.names(coords_ca)[5:14],]
+
+dat_link_pan <- dat_link[row.names(coords_pan),] %>%
+  mutate(longitude_j = longitude + runif(1,-1,3),
+         latitude_j = latitude + runif(1,-1,3))
+
+dat_link_pan_jittered <- dat_link_pan %>%
+  rename(longitude_o = longitude, 
+         latitude_o = latitude) %>%
+  pivot_longer(c(longitude_o, longitude_j, latitude_o, latitude_j), names_to = c(".value","Category"), names_sep = "_") 
+
+{ggplot() + 
+    # geom_raster(data = as.data.frame(ca_dem, xy = T), aes(x = x, y = y, fill = demera5)) + 
+    # scale_fill_gradientn("Elevation (m)", colors = rev(grey.colors(256)), na.value = "white") + 
+    geom_sf(data = st_as_sf(central_america), col = "grey20", fill = "grey80", size = 0.5) +
+    new_scale_fill() +
+    geom_point(data = dat_link_ca, aes(x = longitude, y = latitude, fill = taxa_order), size = 5, shape = 21, stroke = 0.5, col = "grey20") +
+    geom_point(data = dat_link_pan, aes(x = longitude_j, y = latitude_j, fill = taxa_order), size = 5, shape = 21, stroke = 0.5, col = "grey20") +
+    geom_path(data = dat_link_pan_jittered, aes(x = longitude, y = latitude, group = link)) + 
+    scale_fill_manual("Taxa", values = viridis(4, option = "viridis")) +
+    annotate("rect", ymin = 5, ymax = 15, xmin = -88, xmax = -75, fill=NA, color = "black", size = 0.5) +
+    theme_map() + theme(legend.position = "none",
+                        legend.direction = "horizontal",
+                        legend.key=element_blank());
+ggsave("analysis/figures/study descriptions/rmap_royal2_rev_grey_point_inset.jpeg", width = 5, height = 4, units = "in", dpi = 600)
+    }
 
 ```
 
@@ -159,10 +227,7 @@ ggsave("analysis/figures/study descriptions/metric_taxa.jpeg", width = 3, height
   theme(panel.border = element_rect(linetype = "solid", colour = "black", fill = NA, size=1),
         axis.title.x = element_text(face = "bold", vjust = -0.5, size = rel(1.5)),
         axis.title.y = element_text(face = "bold", vjust = 2.5, size = rel(1.5)),
-        plot.margin=unit(c(0.5,0.5,0.5,0.5),"cm"),
-        legend.background = element_rect(fill="#CCEEF9"),
-        legend.key=element_blank(),
-        plot.background = element_rect(fill="#CCEEF9")) 
+        plot.margin=unit(c(0.5,0.5,0.5,0.5),"cm")) 
 ggsave("analysis/figures/study descriptions/metric_taxa_legend.jpeg", width = 4, height = 3, units = "in", dpi = 300)}
 
 ```

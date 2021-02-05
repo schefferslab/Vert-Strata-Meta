@@ -10,20 +10,24 @@ output:
 ## Calling libraries
 
 ```{r load packages, message=TRUE, warning=TRUE}
-library(lme4)
-library(AICcmodavg)
-library(glmmTMB)
-library(TMB)
-library(emmeans)
-library(tidyverse)
-library(readr)
-library(scales)
-library(formula.tools)
-library(sjPlot)
-library(ggpubr)
-library(Hmisc)
-library(visreg)
-library(bbmle)
+devtools::source_url("https://raw.githubusercontent.com/slamander/load_packages/main/prepare_libraries.R", sha1 = "609d531a319fcd855804de6bdcfe737cd6515332")
+
+packages <- c("lme4",
+              "AICcmodavg",
+              "glmmTMB",
+              "TMB",
+              "emmeans",
+              "tidyverse",
+              "readr",
+              "scales",
+              "formula.tools",
+              "sjPlot",
+              "ggpubr",
+              "Hmisc",
+              "visreg",
+              "bbmle")
+
+prepare_libraries(packages)
 ```
 
 ## Loading data
@@ -118,6 +122,15 @@ model_formulas_ch <- list("scaled_met ~ 1 +                                     
                           "scaled_met ~ strata +              taxa + season +           elevation +     weight + (strata | link)",
                           "scaled_met ~ strata +              taxa + forest_type_iucn + elevation +     weight + (strata | link)")
 
+```
+
+
+```{r}
+glmmTMB(scaled_met ~ strata + taxa + (strata | link), family = beta_family(link = "logit"), weights = bin_weight, REML = F, data = rich)
+glmmTMB(scaled_met ~ strata + taxa + (strata | link), family = beta_family(link = "logit"), 
+          weights = bin_weight, 
+          REML = F,
+          data = rich)
 ```
 
 

@@ -52,6 +52,9 @@ lentijo_df_rich <- lentijo_df %>%
 
 lentijo_vert_rich = as.data.frame(colSums(lentijo_df_rich[,7:ncol(lentijo_df_rich)]))
 
+lentijo_df
+lentijo_vert_rich
+
 ## Abundance 
 lentijo_df_abund <- lentijo_df %>% 
   dplyr::mutate(range_min = round(range_min, 0),
