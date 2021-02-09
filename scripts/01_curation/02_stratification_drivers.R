@@ -225,22 +225,22 @@ n_studs = studies %>%
   count(taxa)
 
 #input those numbers here manually
-f_labels <- data.frame(taxa = c("Amphibians", "Bats", "Birds", "Small mammals"), label = c("n = 4", "n = 21", "n = 18", "n = 15"))
+f_labels <- data.frame(taxa = c("Amphibians", "Bats", "Birds", "Small mammals"), label = c("n = 4", "n = 22", "n = 19", "n = 17"))
 
 ggplot(specifics_tall_select, aes(x = factors, y = Value, fill = Level)) + 
   geom_col(position = "identity") +
-  # geom_text(x = 10, y = 80, aes(label = label, fill = NULL, size = 1), data = f_labels, show.legend = FALSE) +
+  geom_text(x = 10, y = 80, aes(label = label, fill = NULL, size = 1), data = f_labels, show.legend = FALSE) +
   # geom_text(x = 10, y = 80, aes(label = label, fill = NULL, size = 1), data = f_labels, show.legend = FALSE) +
   facet_wrap(~taxa, ncol = 1) +
   ylab("Percent of Studies") + xlab("Stratification Factors") +
-  scale_fill_brewer(palette = "Greys", labels = c("Investigated", "Referenced"), guide = guide_legend(reverse=TRUE)) +
+  scale_fill_brewer(palette = "Paired", labels = c("Investigated", "Referenced"), guide = guide_legend(reverse=TRUE)) +
   ######  scale x discrete labels will need to be changed if the plot changes is updated!    or it will show the wrong labels because it is overriting thrm
-  scale_x_discrete(labels=c("Habitat Structure", "Food / Foraging","Climate", "Species Interactions","Morphology", "Seasonality", "Nesting / Roosting","light",  "Diurnality",  "Age", "Sex")) +
+  scale_x_discrete(labels=c("Habitat Structure", "Food / Foraging","Climate","Morphology", "Species Interactions", "Seasonality", "Nesting / Roosting","Light",  "Diurnality",  "Age", "Sex")) +
   theme(legend.position = "top", legend.title = element_blank(),
         strip.background = element_rect(colour="black", fill="white"),
         panel.background = element_blank(),
         panel.grid = element_blank(),
-        axis.text.x = element_text(colour="black", angle = 45, hjust = 1),
+        axis.text.x = element_text(colour="black", angle = 45, size =  rel(1.35), hjust = 1),
         axis.title.x = element_text(colour="black", vjust= -4, size =  rel(1.5)),
         axis.title.y = element_text(colour="black", vjust = 5, size =  rel(1.5)),
         strip.text.x = element_text(size = 11, face = "bold"),
@@ -249,6 +249,30 @@ ggplot(specifics_tall_select, aes(x = factors, y = Value, fill = Level)) +
         plot.margin = margin(1,1,1,1, "cm"))
 
 ggsave("analysis/figures/drivers_3_taxa.jpeg", width = 5, height = 10, units = "in", dpi = 300)
+
+
+
+
+
+
+
+
+
+
+####################################################       
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## 3. Draw a world map
 ###
