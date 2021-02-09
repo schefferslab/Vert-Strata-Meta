@@ -844,27 +844,56 @@ ggsave("analysis/figures/model results/parm_taxa_4_panel.jpeg", width = 10, heig
 ```
 
 ```{r}
-taxa_link_biomet_order <- full_join(taxa_link_abund_order,taxa_link_rich_order) %>%
-  filter(!facet %in% c("Abundance at lowest strata", "Richness at lowest strata"))
+
+taxa_link_biomet_order <- full_join(taxa_link_slope_abund, taxa_link_slope_rich)
 
 taxa_link_biomet_sum <- taxa_link_biomet_order %>%
   mutate(sign = sign(estimate)) %>%
-  group_by(taxa_order, facet) %>%
-  dplyr::summarize(pos_sig = sum(sign == 1 & sig == "*"),
-                   neg_sig = sum(sign == -1 & sig == "*"))
+  group_by(taxa_order, metric) %>%
+  dplyr::summarize(sig_pos_80 = sum(sign == 1 &  sig_80 == "*"),
+                   sig_neg_80 = sum(sign == -1 & sig_80 == "*"),
+                   sig_pos_95 = sum(sign == 1 &  sig_95 == "*"),
+                   sig_neg_95 = sum(sign == -1 & sig_95 == "*"),
+                   sig_pos_99 = sum(sign == 1 &  sig_99 == "*"),
+                   sig_neg_99 = sum(sign == -1 & sig_99 == "*"))
 
-log((taxa_link_biomet_sum$pos_sig+1)/(taxa_link_biomet_sum$neg_sig+1))
+taxa_link_biomet_sum_80 <- taxa_link_biomet_sum[c("taxa_order", "metric", "sig_pos_80","sig_neg_80")]
+taxa_link_biomet_sum_95 <- taxa_link_biomet_sum[c("taxa_order", "metric", "sig_pos_95","sig_neg_95")]
+taxa_link_biomet_sum_99 <- taxa_link_biomet_sum[c("taxa_order", "metric", "sig_pos_99","sig_neg_99")]
 
-ggplot(taxa_link_biomet_sum, aes(y = log((pos_sig+1)/(neg_sig+1)), x = factor(taxa_order, levels = c("Bats", "Birds", "Small mammals", "Amphibians")), 
+colnames(taxa_link_biomet_sum_80) <- c("taxa_order", "metric","sig_pos","sig_neg")
+colnames(taxa_link_biomet_sum_95) <- c("taxa_order", "metric","sig_pos","sig_neg")
+colnames(taxa_link_biomet_sum_99) <- c("taxa_order", "metric","sig_pos","sig_neg")
+
+taxa_link_biomet_sig <- rbind(data.frame(taxa_link_biomet_sum_80, Significance = "80%"),
+                              data.frame(taxa_link_biomet_sum_95, Significance = "95%"),
+                              data.frame(taxa_link_biomet_sum_99, Significance = "99%"))
+
+taxa_link_biomet_freq <- taxa_link_biomet_sig %>%
+  mutate(freq = log((sig_pos + 1)/(sig_neg + 1))) 
+
+taxa_link_biomet_freq$metric[taxa_link_biomet_freq$metric == "richness"] <- "Richness"
+taxa_link_biomet_freq$metric[taxa_link_biomet_freq$metric == "abundance"] <- "Abundance"
+
+ggplot(taxa_link_biomet_freq, aes(y = freq, x = factor(taxa_order, levels = c("Bats", "Birds", "Small mammals", "Amphibians")), 
                                  fill = factor(taxa_order, levels = c("Bats", "Birds", "Small mammals", "Amphibians")))) + 
-  geom_hline(yintercept = 0, alpha = 0.5, size = 0.8) + ylim(c(-2,2)) +
-  geom_bar(stat = "identity") + xlab("Taxa") + 
+  geom_hline(yintercept = 0, alpha = 0.5, size = 0.8) + 
+  geom_col(position = "identity", aes(alpha = Significance)) + xlab("Taxa") + 
   ylab(log ~ italic(bgroup("(", over("frequency of positive slopes + 1", "frequency of negative slopes + 1"), ")"))) + 
-  facet_wrap(~factor(facet, levels = c("Change in richness with increasing strata",
-                                       "Change in abundance with increasing strata"))) + 
+  facet_wrap(~factor(metric, levels = c("Richness","Abundance")), labeller = labeller(richness = "Richness", abundance = "Abundance")) +
   scale_x_discrete(labels = c("Bats", "Birds", "Small mammals", "Amphibians")) +
-  scale_fill_viridis_d("Taxa") + theme_classic() + theme(legend.position = "none") 
-ggsave("analysis/figures/model results/summary_slopes_taxa_biometric.jpeg", width = 8, height = 4, units = "in", dpi = 600)
+  scale_fill_viridis_d(" ") + theme_classic() + theme(legend.position = "bottom") + guides(fill = F)
+ggsave("analysis/figures/model results/summary_slopes_taxa_biometric.jpeg", width = 8, height = 5, units = "in", dpi = 600)
+
+ggplot(taxa_link_biomet_freq, aes(y = freq, x = factor(taxa_order, levels = c("Bats", "Birds", "Small mammals", "Amphibians")), 
+                                 fill = factor(taxa_order, levels = c("Bats", "Birds", "Small mammals", "Amphibians")))) + 
+  geom_hline(yintercept = 0, alpha = 0.5, size = 0.8) + 
+  geom_col(position = "identity", aes(alpha = Significance)) + xlab("Taxa") + 
+  ylab(log ~ italic(bgroup("(", over("frequency of positive slopes + 1", "frequency of negative slopes + 1"), ")"))) + 
+  facet_wrap(~factor(metric, levels = c("Richness","Abundance")), labeller = labeller(richness = "Richness", abundance = "Abundance"), nrow = 2) +
+  scale_x_discrete(labels = c("Bats", "Birds", "Small mammals", "Amphibians")) +
+  scale_fill_viridis_d(" ") + theme_classic() + theme(legend.position = "bottom") + guides(fill = F)
+ggsave("analysis/figures/model results/summary_slopes_taxa_biometric_vert.jpeg", width = 5, height = 8, units = "in", dpi = 600)
 ```
 
 
