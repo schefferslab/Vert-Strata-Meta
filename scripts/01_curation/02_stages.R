@@ -6,56 +6,21 @@
 ## ....Load packages -------------
 
 library(tidyverse)
-library(readxl)
 library(data.table)
-library(googlesheets4)
 
 ## ....Load in data ---------------
 
-## If googlesheets4 is installed....
-if("googlesheets4" %in% rownames(installed.packages()) == TRUE) {
-  big_data_url <- "https://docs.google.com/spreadsheets/d/1-kY3Ono0ypzgahjbH8YyaZwFqB6zTwXkiQ96zOPixCw/edit?usp=sharing"
-  papers <- try(read_sheet(big_data_url, sheet = "2020 Papers"))
-}
-
-if ("googlesheets4" %in% rownames(installed.packages()) == FALSE | any(class(papers) == "try-error")){
-  papers <- read_excel("data/stripped_data/original/Big data.xlsx", sheet = "2020 Papers")
-}
-
-sites <- suppressMessages(read_csv(Sys.glob("data/*/*/intermediate_sites.csv")))
-plots <- suppressMessages(read_csv(Sys.glob("data/*/*/intermediate_plots.csv")))
-
-## 2. Data curation -------------
-
-## A. Check to confirm that the right sheets were imported -------------
-
-if (!"Person Data Stripped" %in% colnames(papers)) {
-  stop("Papers sheet was not imported in properly.")
-}
-
-if (!"forest_type" %in% colnames(sites)) {
-  stop("Sites sheet was not imported in properly.")
-}
-
-if (!"min_strata_height" %in% colnames(plots)) {
-  stop("Raw data sheet was not imported in properly.")
-}
-
-## B. Join data --------------
-
-sites$link <- paste(sites$study_id, "_", sites$sites) 
-plots$link <- paste(plots$study_id, "_", plots$linking_id)
-
+sites <- read_csv("data/stripped_data/curation/sites.csv") 
+plots <- read_csv("data/stripped_data/curation/plots.csv")
 
 site_plot_merge <- merge(sites, plots, by = "link")
 site_plot_merge$study_id <- site_plot_merge$study_id.x
-
 
 ## C. Filter down data according to study bounds ------------
 
 site_plot_filter <- site_plot_merge %>% 
   # Has a data quality flag
-  filter(!is.na(spatial_rank), !is.na(data_quality),
+  filter(!is.na(spatial_rank), 
          # Is in the tropics or sub-tropics
          latitude >= -30 & latitude <= 30, 
          # Only undisturbed forest
